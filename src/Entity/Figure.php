@@ -29,13 +29,13 @@ class Figure
     private $description;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\figuregroup", inversedBy="figures")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Figuregroup", inversedBy="figures")
      * @ORM\JoinColumn(nullable=false)
      */
     private $idfiguregroup;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\comments", inversedBy="figures")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Comments", inversedBy="figures")
      */
     private $idcomment;
 

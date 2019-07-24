@@ -13,8 +13,6 @@ class TestController extends AbstractController
      */
     public function index()
     {
-        var_dump(phpinfo());
-        print_r(get_loaded_extensions());
         return $this->render('test/index.html.twig', [
             'controller_name' => 'TestController',
         ]);

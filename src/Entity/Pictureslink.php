@@ -22,14 +22,10 @@ class Pictureslink
     private $linkpictures;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\figure", inversedBy="pictureslinks")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Figure", inversedBy="pictureslinks")
      */
     private $figure;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\user", inversedBy="pictureslinks")
-     */
-    private $user;
 
     public function getId(): ?int
     {
@@ -60,15 +56,4 @@ class Pictureslink
         return $this;
     }
 
-    public function getUser(): ?user
-    {
-        return $this->user;
-    }
-
-    public function setUser(?user $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
 }

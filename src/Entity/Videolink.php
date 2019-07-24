@@ -22,7 +22,7 @@ class Videolink
     private $linkvideo;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\figure", inversedBy="videolinks")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Figure", inversedBy="videolinks")
      * @ORM\JoinColumn(nullable=false)
      */
     private $figure;

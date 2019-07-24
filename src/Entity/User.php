@@ -2,14 +2,18 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(
+ *     fields={"mail"},
+ *     message="Ce mail est déjà utilisé"
+ * )
  */
-class User
+class User implements UserInterface
 {
     /**
      * @ORM\Id()
@@ -49,13 +53,14 @@ class User
     private $mail;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Pictureslink", mappedBy="user")
+     * @ORM\Column(type="string", length=355)
      */
-    private $pictureslinks;
+    private $picturelink;
+
 
     public function __construct()
     {
-        $this->pictureslinks = new ArrayCollection();
+        return false;
     }
 
     public function getId(): ?int
@@ -63,14 +68,9 @@ class User
         return $this->id;
     }
 
-    public function getIduser(): ?int
+    public function setId(int $id): self
     {
-        return $this->iduser;
-    }
-
-    public function setIduser(int $iduser): self
-    {
-        $this->iduser = $iduser;
+        $this->id = $id;
 
         return $this;
     }
@@ -147,34 +147,24 @@ class User
         return $this;
     }
 
-    /**
-     * @return Collection|Pictureslink[]
-     */
-    public function getPictureslinks(): Collection
+    public function getPicturelink(): ?string
     {
-        return $this->pictureslinks;
+        return $this->picturelink;
     }
 
-    public function addPictureslink(Pictureslink $pictureslink): self
+    public function setPicturelink(string $picturelink): self
     {
-        if (!$this->pictureslinks->contains($pictureslink)) {
-            $this->pictureslinks[] = $pictureslink;
-            $pictureslink->setUser($this);
-        }
+        $this->picturelink = $picturelink;
 
         return $this;
     }
 
-    public function removePictureslink(Pictureslink $pictureslink): self
-    {
-        if ($this->pictureslinks->contains($pictureslink)) {
-            $this->pictureslinks->removeElement($pictureslink);
-            // set the owning side to null (unless already changed)
-            if ($pictureslink->getUser() === $this) {
-                $pictureslink->setUser(null);
-            }
-        }
 
-        return $this;
+    public function eraseCredentials(){}
+    public function getSalt(){}
+    public function getRoles(){
+        return ['ROLE_ADMIN'];
     }
+
+    public function getUsername(){}
 }
