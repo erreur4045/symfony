@@ -32,15 +32,23 @@ class Comments
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateupdate;
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class)
-     */
-    protected $iduser;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Figure", mappedBy="idcomment")
      */
     private $figures;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Figure", inversedBy="comments")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $idfigure;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
 
     public function __construct()
     {
@@ -115,6 +123,30 @@ class Comments
                 $figure->setIdcomment(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIdfigure(): ?Figure
+    {
+        return $this->idfigure;
+    }
+
+    public function setIdfigure(?Figure $idfigure): self
+    {
+        $this->idfigure = $idfigure;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

@@ -35,11 +35,6 @@ class Figure
     private $idfiguregroup;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Comments", inversedBy="figures")
-     */
-    private $idcomment;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Pictureslink", mappedBy="figure")
      */
     private $pictureslinks;
@@ -49,10 +44,23 @@ class Figure
      */
     private $videolinks;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comments", mappedBy="idfigure", orphanRemoval=true)
+     */
+    private $comments;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="figures")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+
     public function __construct()
     {
         $this->pictureslinks = new ArrayCollection();
         $this->videolinks = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -92,18 +100,6 @@ class Figure
     public function setIdfiguregroup(?figuregroup $idfiguregroup): self
     {
         $this->idfiguregroup = $idfiguregroup;
-
-        return $this;
-    }
-
-    public function getIdcomment(): ?comments
-    {
-        return $this->idcomment;
-    }
-
-    public function setIdcomment(?comments $idcomment): self
-    {
-        $this->idcomment = $idcomment;
 
         return $this;
     }
@@ -169,4 +165,48 @@ class Figure
 
         return $this;
     }
+
+    /**
+     * @return Collection|Comments[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comments $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setIdfigure($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comments $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getIdfigure() === $this) {
+                $comment->setIdfigure(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
 }
