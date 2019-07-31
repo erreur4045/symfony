@@ -8,20 +8,33 @@
     background-size: cover;
 }
 
-body{margin-top:20px;}
+.fullimage{
+    height: 100vh;
+}
+.bg {
+    /* The image used */
+    background-image: url("https://www.imperiumsnow.com/upload/content_team_082817_47898_snowboard_rocker_lg.jpg");
 
-.comment-wrapper .panel-body {
-    max-height:650px;
-    overflow:auto;
+    /* Full height */
+    height: 93vh;
+    width: 100vw;
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: x-large;
+    font-style: normal;
+    font-weight: bold;
+    color: #00B8F5;
 }
 
-.comment-wrapper .media-list .media img {
-    width:64px;
-    height:64px;
-    border:2px solid #e5e7e8;
+body {
+    margin-top: 56px;
 }
 
-.comment-wrapper .media-list .media {
-    border-bottom:1px dashed #efefef;
-    margin-bottom:25px;
-}
