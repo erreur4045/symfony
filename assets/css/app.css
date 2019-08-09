@@ -23,6 +23,20 @@
     background-repeat: no-repeat;
     background-size: cover;
 }
+
+.bgtrick {
+    /* The image used */
+    /*background-image: url("https://www.imperiumsnow.com/upload/content_team_082817_47898_snowboard_rocker_lg.jpg");*/
+
+    /* Full height */
+    height: 50vh;
+    width: 100vw;
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    z-index: 0;
+}
 .centered {
     position: absolute;
     top: 50%;
@@ -38,3 +52,30 @@ body {
     margin-top: 56px;
 }
 
+.trickblock{
+}
+
+.test, .cattrick{
+    display: inline-block;
+    border: solid 5px;
+}
+
+.commentinblock{
+    display: inline-block;
+}
+.descfigure{
+
+}
+
+.trickblock{
+    border: solid 4px red;
+    z-index: 1;
+}
+
+.blocktrickview{
+    z-index: 0;
+}
+
+.userimg{
+    max-width: 65px;
+}
