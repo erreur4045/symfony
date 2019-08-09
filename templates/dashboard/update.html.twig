@@ -4,24 +4,31 @@
 
 {% block body %}
     <div class="container mt-4">
-        <h1>Liste des figures</h1>
+        <h1>Editer la figure </h1>
         <table class="table table-striped">
             <thead>
             <tr>
                 <th>titre figure</th>
                 <th>description</th>
+                <th>valider</th>
             </tr>
             </thead>
             <tbody>
-            {% for figure in figure %}
-                <tr>
-                    <td>
-                        {{ figure.name }}
-                    </td>
-                    <td><a href="{{ path('savetrickswithid', {id: figure.id}) }}" class="btn btn-secondary">Edite</a></td>
-                </tr>
-            {% endfor %}
+            <tr>
+                <td>
+
+                </td>
+                <td>
+
+                </td>
+                <td><a href="">Edite</a></td>
+            </tr>
             </tbody>
         </table>
+        <div class="container">
+            {{ form_start(form) }}
+            {{ form_rest(form) }}
+            {{ form_end(form) }}
+        </div>
     </div>
 {% endblock %}

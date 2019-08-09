@@ -3,118 +3,40 @@
 {% block title %}Hello TricksController!{% endblock %}
 
 {% block body %}
-    <div class="container">
+    <img class="bgtrick" src="https://www.imperiumsnow.com/upload/content_team_082817_47898_snowboard_rocker_lg.jpg"
+         alt="">
+    <div class="blocktrickview container">
 
-        <h1 class="font-weight-light text-center text-lg-left mt-4 mb-0">Thumbnail Gallery</h1>
+    <div class="container trickblock">
+        <div class="col-md-12 commentinblock">
+        {% for image in image %}
 
-        <hr class="mt-2 mb-5">
+            <img src="{{ image.linkpictures }}" class="rounded mt-4" style="max-height: 200px; max-width: 200px" alt="">
 
-        <div class="row text-center text-lg-left">
-
-            <div class="col-lg-3 col-md-4 col-6">
-                <a href="#" class="d-block mb-4 h-100">
-                    <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/AvhMzHwiE_0/400x300" alt="">
-                </a>
-            </div>
-            <div class="col-lg-3 col-md-4 col-6">
-                <a href="#" class="d-block mb-4 h-100">
-                    <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/2gYsZUmockw/400x300" alt="">
-                </a>
-            </div>
-            <div class="col-lg-3 col-md-4 col-6">
-                <a href="#" class="d-block mb-4 h-100">
-                    <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/EMSDtjVHdQ8/400x300" alt="">
-                </a>
-            </div>
-            <div class="col-lg-3 col-md-4 col-6">
-                <a href="#" class="d-block mb-4 h-100">
-                    <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/8mUEy0ABdNE/400x300" alt="">
-                </a>
-            </div>
-            <div class="col-lg-3 col-md-4 col-6">
-                <a href="#" class="d-block mb-4 h-100">
-                    <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/G9Rfc1qccH4/400x300" alt="">
-                </a>
-            </div>
-            <div class="col-lg-3 col-md-4 col-6">
-                <a href="#" class="d-block mb-4 h-100">
-                    <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/aJeH0KcFkuc/400x300" alt="">
-                </a>
-            </div>
-            <div class="col-lg-3 col-md-4 col-6">
-                <a href="#" class="d-block mb-4 h-100">
-                    <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/p2TQ-3Bh3Oo/400x300" alt="">
-                </a>
-            </div>
+        {% endfor %}
         </div>
-
+        <div class="col-md-12 mt-3 mb-3">
+            <h1>description figure</h1>
+            <p>{{ data.description }}</p>
+            <h1></h1>
+        </div>
+        <div class="col-md-12 mt-4 cattrick">
+            <h1>Categories de la figure</h1>
+            <p>{{ data.idfiguregroup.name }}</p>
+        </div>
+        <form action="" class="form-contact mt-4 mb-4">
+            <input type="text">
+            <button class="btn btn-primary btn-md">Laisser un commentaire <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
+        <h1>Commentaires :</h1>
+        {% for comment in comment %}
+            <h3 class=""></h3>
+            <img src="{{ comment.user.picturelink }}" class="mr-3 rounded-circle embed-responsive commentinblock userimg"
+                 alt="">
+            <h3 class = "commentinblock">{{ comment.user.name }} </h3> <label for="">à écrit :</label>
+            <section class="test2 commentinblock">{{ comment.text }}</section>
+        {% endfor %}
     </div>
 
-    <div class="container d-flex justify-content-center">
-        <div class="row bootstrap snippets">
-            <div class="col-md-6 col-md-offset-2 col-sm-12">
-                <div class="comment-wrapper">
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            Comment panel
-                        </div>
-                        <div class="panel-body">
-                            <textarea class="form-control" placeholder="write a comment..." rows="3"></textarea>
-                            <br>
-                            <button type="button" class="btn btn-info pull-right">Post</button>
-                            <div class="clearfix"></div>
-                            <hr>
-                            <ul class="media-list">
-                                <li class="media">
-                                    <a href="#" class="pull-left">
-                                        <img src="https://bootdey.com/img/Content/user_1.jpg" alt="" class="img-circle">
-                                    </a>
-                                    <div class="media-body">
-                                <span class="text-muted pull-right">
-                                    <small class="text-muted">30 min ago</small>
-                                </span>
-                                        <strong class="text-success">@MartinoMont</strong>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                            Lorem ipsum dolor sit amet, <a href="#">#consecteturadipiscing </a>.
-                                        </p>
-                                    </div>
-                                </li>
-                                <li class="media">
-                                    <a href="#" class="pull-left">
-                                        <img src="https://bootdey.com/img/Content/user_2.jpg" alt="" class="img-circle">
-                                    </a>
-                                    <div class="media-body">
-                                <span class="text-muted pull-right">
-                                    <small class="text-muted">30 min ago</small>
-                                </span>
-                                        <strong class="text-success">@LaurenceCorreil</strong>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                            Lorem ipsum dolor <a href="#">#ipsumdolor </a>adipiscing elit.
-                                        </p>
-                                    </div>
-                                </li>
-                                <li class="media">
-                                    <a href="#" class="pull-left">
-                                        <img src="https://bootdey.com/img/Content/user_3.jpg" alt="" class="img-circle">
-                                    </a>
-                                    <div class="media-body">
-                                <span class="text-muted pull-right">
-                                    <small class="text-muted">30 min ago</small>
-                                </span>
-                                        <strong class="text-success">@JohnNida</strong>
-                                        <p>
-                                            Lorem ipsum dolor <a href="#">#sitamet</a> sit amet, consectetur adipiscing
-                                            elit.
-                                        </p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock %}
