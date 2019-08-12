@@ -6,12 +6,25 @@
     <div class="container ">
         <div class="row ">
             <div class="col-md-12">
-                <div class="text-center py-4">
-                    <button class="btn btn-primary btn-md">Envoyer <i class="fas fa-paper-plane"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <h1>test</h1>
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success">{{ message }}</div>
+                {% endfor %}
+                <h1>Liste des figures</h1>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Nom de la figure</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for trick in tricks %}
+                        <tr>
+                            <td><a href="{{ path('trick', {id: trick.id}) }}">{{ trick.name }}</a></td>
+                            <td><a href="{{ path('edit.trick', {id: trick.id}) }}" class="btn btn-secondary">Modifier</a></td>
+                            <td><a href="{{ path('delete.trick', {id: trick.id}) }}" class="btn btn-danger" onclick="return confirm('Êtes vous vraiment sûr ?')">Supprimer</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
 {% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TricksController!{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Editer une figure</h1>
+        <div class="row-md-12">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button class="btn btn-primary">Sauvegarder</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
