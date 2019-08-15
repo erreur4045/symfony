@@ -15,25 +15,29 @@ use Twig\Environment;
 
 class TricksController
 {
-    /** @var TricksController * */
+    /** @var TricksController **/
     private $trick;
 
-    /** @var Environment * */
+    /** @var Environment **/
     private $templating;
 
+    /** @var FigureType **/
+    private $figureType;
 
-    public function __construct(FigureRepository $trick, Environment $templating)
+    public function __construct(FigureRepository $trick, Environment $templating, FigureType $figureType)
     {
         $this->trick = $trick;
         $this->templating = $templating;
+        $this->figureType = $figureType;
     }
 
     /**
      * @Route("/tricks", name="tricks")
+     *
      */
     public function index()
     {
-        $tricks = $this->trick->findAll();
+        $tricks = $this->trick->findBy(array(),array(),$limit = 10);
         return new Response($this->templating->render('tricks/index.html.twig', [
             'tricks' => $tricks
         ]));
@@ -45,9 +49,8 @@ class TricksController
      */
     public function addTrick(ObjectManager $manager, Request $request)
     {
-        $user = $this->getUser();
         $figure = new Figure();
-        $form = $this->createForm(FigureType::class, $figure);
+        $form = $this->figureType->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
         dump($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -113,4 +116,5 @@ class TricksController
             'comment' => $comments
         ]);
     }
+
 }
