@@ -7,7 +7,6 @@ use App\Entity\Figure;
 use App\Entity\Pictureslink;
 use App\Form\FigureType;
 use App\Repository\FigureRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\ControllerTrait;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +17,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-
+use Doctrine\ORM\EntityManagerInterface;
 
 class TricksController
 {
@@ -40,6 +39,9 @@ class TricksController
     /** @var FlashBagInterface */
     private $bag;
 
+    /** @var EntityManagerInterface */
+    private $managerr;
+
 
     public function __construct(
         FigureRepository $trick,
@@ -47,7 +49,8 @@ class TricksController
         FigureType $figureType,
         FormFactoryInterface $formFactory,
         UrlGeneratorInterface $router,
-        FlashBagInterface $bag
+        FlashBagInterface $bag,
+        EntityManagerInterface $managerr
     )
     {
         $this->trick = $trick;
@@ -56,6 +59,7 @@ class TricksController
         $this->formFactory = $formFactory;
         $this->router = $router;
         $this->bag = $bag;
+        $this->managerr = $managerr;
     }
 
     /**
@@ -126,18 +130,19 @@ class TricksController
     /**
      * @Route("/trick/{id}", name="trick")
      */
-    public function getTrick($id, Figure $figure)
+    public function getTrick($id)
     {
         //todo : verrifier si l'id existe pas (demander au prof)
-        $image = $this->getDoctrine()->getRepository(Pictureslink::class)->findBy(['figure' => $id]);
-        $datatricks = $this->getDoctrine()->getRepository(Figure::class)->find($id);
-        $comments = $this->getDoctrine()->getRepository(Comments::class)->findBy(['idfigure' => $id]);
+        //$image = $this->getDoctrine()->getRepository(Pictureslink::class)->findBy(['figure' => $id]);
+        $image = $this->managerr->getRepository(Pictureslink::class)->findBy(['figure' => $id]);
+        $datatricks = $this->managerr->getRepository(Figure::class)->find($id);
+        $comments = $this->managerr->getRepository(Comments::class)->findBy(['idfigure' => $id]);
         dump($image);
-        return $this->templating->render('tricks/trick.html.twig', [
+        return new Response($this->templating->render('tricks/trick.html.twig', [
             'image' => $image,
             'data' => $datatricks,
             'comment' => $comments
-        ]);
+        ]));
     }
 
 }
