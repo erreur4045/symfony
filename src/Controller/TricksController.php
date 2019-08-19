@@ -7,11 +7,16 @@ use App\Entity\Figure;
 use App\Entity\Pictureslink;
 use App\Form\FigureType;
 use App\Repository\FigureRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\ControllerTrait;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class TricksController
 {
@@ -24,11 +29,25 @@ class TricksController
     /** @var FigureType **/
     private $figureType;
 
-    public function __construct(FigureRepository $trick, Environment $templating, FigureType $figureType)
+    /** @var FormFactory **/
+    private $formFactory;
+
+    /** @var  UrlGeneratorInterface */
+    private $router;
+
+    public function __construct(
+        FigureRepository $trick,
+        Environment $templating,
+        FigureType $figureType,
+        FormFactoryInterface $formFactory,
+        UrlGeneratorInterface $router
+    )
     {
         $this->trick = $trick;
         $this->templating = $templating;
         $this->figureType = $figureType;
+        $this->formFactory = $formFactory;
+        $this->router = $router;
     }
 
     /**
@@ -37,7 +56,7 @@ class TricksController
      */
     public function index()
     {
-        $tricks = $this->trick->findBy(array(),array(),$limit = 10);
+        $tricks = $this->trick->findBy(array(), ['id' => 'DESC'], $limit = 25);
         return new Response($this->templating->render('tricks/index.html.twig', [
             'tricks' => $tricks
         ]));
@@ -50,20 +69,18 @@ class TricksController
     public function addTrick(ObjectManager $manager, Request $request)
     {
         $figure = new Figure();
-        $form = $this->figureType->createForm(FigureType::class, $figure);
+        $form = $this->formFactory->create(FigureType::class, $figure);
         $form->handleRequest($request);
-        dump($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $manager->persist($figure);
             $manager->flush();
-            $this->addFlash('success', 'Votre figure a été ajouté');
-
-            return $this->redirectToRoute('tricks');
+            return new RedirectResponse($this->router->generate('tricks'));
         }
-        return $this->render('tricks/edittrick.html.twig', [
+        return new Response($this->templating->render('tricks/edittrick.html.twig', [
             'figure' => $figure,
             'form' => $form->createView()
-        ]);
+        ]));
     }
 
     /**
@@ -71,19 +88,19 @@ class TricksController
      */
     public function editTrick(Figure $figure, ObjectManager $manager, Request $request)
     {
-        $form = $this->createForm(FigureType::class, $figure);
+        $form = $this->formFactory->create(FigureType::class, $figure);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $manager->persist($figure);
             $manager->flush();
             $this->addFlash('success', 'Votre figure a été mise a jour');
 
-            return $this->redirectToRoute('tricks');
+            return new RedirectResponse($this->router->generate('tricks'));
         }
-        return $this->render('tricks/edittrick.html.twig', [
+        return new Response($this->templating->render('tricks/edittrick.html.twig', [
             'figure' => $figure,
             'form' => $form->createView()
-        ]);
+        ]));
     }
 
     /**
@@ -95,8 +112,7 @@ class TricksController
         $manager->remove($figure);
         $manager->flush();
         $this->addFlash('success', 'Votre figure a été supprimé');
-
-        return $this->redirectToRoute('tricks');
+        return new RedirectResponse($this->router->generate('tricks'));
 
     }
 
@@ -110,7 +126,7 @@ class TricksController
         $datatricks = $this->getDoctrine()->getRepository(Figure::class)->find($id);
         $comments = $this->getDoctrine()->getRepository(Comments::class)->findBy(['idfigure' => $id]);
         dump($image);
-        return $this->render('tricks/trick.html.twig', [
+        return $this->templating->render('tricks/trick.html.twig', [
             'image' => $image,
             'data' => $datatricks,
             'comment' => $comments
