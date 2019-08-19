@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+
 
 class TricksController
 {
@@ -35,12 +37,17 @@ class TricksController
     /** @var  UrlGeneratorInterface */
     private $router;
 
+    /** @var FlashBagInterface */
+    private $bag;
+
+
     public function __construct(
         FigureRepository $trick,
         Environment $templating,
         FigureType $figureType,
         FormFactoryInterface $formFactory,
-        UrlGeneratorInterface $router
+        UrlGeneratorInterface $router,
+        FlashBagInterface $bag
     )
     {
         $this->trick = $trick;
@@ -48,6 +55,7 @@ class TricksController
         $this->figureType = $figureType;
         $this->formFactory = $formFactory;
         $this->router = $router;
+        $this->bag = $bag;
     }
 
     /**
@@ -93,8 +101,7 @@ class TricksController
         if ($form->isSubmitted() && $form->isValid()) {
             $manager->persist($figure);
             $manager->flush();
-            $this->addFlash('success', 'Votre figure a été mise a jour');
-
+            $this->bag->add('success', 'Votre figure a été mise a jour');
             return new RedirectResponse($this->router->generate('tricks'));
         }
         return new Response($this->templating->render('tricks/edittrick.html.twig', [
@@ -111,7 +118,7 @@ class TricksController
         //todo : boucle pour supp video et image associer
         $manager->remove($figure);
         $manager->flush();
-        $this->addFlash('success', 'Votre figure a été supprimé');
+        $this->bag->add('success', 'Votre figure a été supprimé');
         return new RedirectResponse($this->router->generate('tricks'));
 
     }
