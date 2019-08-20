@@ -5,28 +5,37 @@ namespace App\Controller;
 use App\Entity\Figure;
 use App\Entity\Pictureslink;
 use App\Entity\User;
-use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\Tests\Compiler\F;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Faker;
+use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
 
-class HomeController extends AbstractController
+class HomeController
 {
+    /** @var EntityManagerInterface */
+    private $manager;
 
+    /** @var Environment **/
+    private $environment;
+
+    public function __construct(EntityManagerInterface $manager, Environment $environment)
+    {
+        $this->manager = $manager;
+        $this->environment = $environment;
+}
     /**
      * @Route("/home", name="home")
      */
     public function index()
     {
-        $figure = $this->getDoctrine()->getRepository(Figure::class)->find(142);
-        $image = $this->getDoctrine()->getRepository(Pictureslink::class)->find(142);
+        $figure = $this->manager->getRepository(Figure::class)->find(142);
+        $image = $this->manager->getRepository(Pictureslink::class)->find(142);
 
-        return $this->render('home/index.html.twig', [
+        return new Response($this->environment->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
             'figure' => $figure,
             'image' => $image
-        ]);
+        ]));
     }
 
     /**
@@ -34,13 +43,10 @@ class HomeController extends AbstractController
      */
     public function getUserData($id)
     {
-        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
-
-        //$datauser = $user->findOneBy(['id' => $id]);
-    dump($user);
-        return $this->render('home/index.html.twig', [
+        $user = $this->manager->getRepository(User::class)->find($id);
+        return new Response($this->environment->render('home/index.html.twig', [
            'datauserview' => $user,
-        ]);
+        ]));
     }
 
 

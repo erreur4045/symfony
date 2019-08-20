@@ -5,15 +5,43 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationType;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Twig\Environment;
 
-class SecurityController extends AbstractController
+class SecurityController
 {
+    /** @var Environment */
+    private $environement;
+
+    /** @var FormFactory */
+    private $formFactory;
+
+    /** @var UrlGeneratorInterface */
+    private $generator;
+
+    /** @var FlashBagInterface */
+    private $bag;
+
+    public function __construct(
+        Environment $environment,
+        FormFactoryInterface $formFactory,
+        UrlGeneratorInterface $generator,
+        FlashBagInterface $bag
+    ) {
+        $this->environement = $environment;
+        $this->formFactory = $formFactory;
+        $this->generator = $generator;
+        $this->bag = $bag;
+    }
+
     /**
      * @Route("/login", name="app_login")
      */
@@ -24,7 +52,8 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return new Response($this->environement->render('security/login.html.twig',
+            ['last_username' => $lastUsername, 'error' => $error]));
     }
 
     /**
@@ -33,7 +62,7 @@ class SecurityController extends AbstractController
     public function registration(ObjectManager $manager, Request $request, UserPasswordEncoderInterface $encoder)
     {
         $user = new User();
-        $form = $this->createForm(RegistrationType::class, $user);
+        $form = $this->formFactory->create(RegistrationType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if (!$user->getId()) {
@@ -45,13 +74,13 @@ class SecurityController extends AbstractController
 
             $manager->persist($user);
             $manager->flush();
-
-            return $this->redirectToRoute('app_login');
+            $this->bag->add('success', 'Votre inscription est ok');
+            return new RedirectResponse($this->generator->generate('app_login'));
 
         }
-        return $this->render('security/registration.html.twig', [
+        return new Response($this->environement->render('security/registration.html.twig', [
             'form' => $form->createView()
-        ]);
+        ]));
     }
 
     /**
@@ -59,8 +88,8 @@ class SecurityController extends AbstractController
      */
     public function logout()
     {
-        // controller can be blank: it will never be executed!
-        return $this->redirectToRoute('home');
+        // controller can be blank: it will  never be executed!
+        return new RedirectResponse($this->environement->render('home'));
         throw new \Exception('Don\'t forget to activate logout in security.yaml');
     }
 
