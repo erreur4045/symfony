@@ -28,13 +28,11 @@ class HomeController
      */
     public function index()
     {
-        $figure = $this->manager->getRepository(Figure::class)->find(142);
-        $image = $this->manager->getRepository(Pictureslink::class)->find(142);
+        $figures = $this->manager->getRepository(Figure::class)->findBy(array(), ['id' => 'DESC'], $limit = 24);
 
         return new Response($this->environment->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
-            'figure' => $figure,
-            'image' => $image
+            'figures' => $figures
         ]));
     }
 

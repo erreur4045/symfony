@@ -10,15 +10,16 @@
             <tr>
                 <th>titre figure</th>
                 <th>description</th>
+                <th>suppression</th>
             </tr>
             </thead>
             <tbody>
             {% for figure in figure %}
                 <tr>
-                    <td>
-                        {{ figure.name }}
-                    </td>
-                    <td><a href="{{ path('savetrickswithid', {id: figure.id}) }}" class="btn btn-secondary">Edite</a></td>
+                    <td>{{ figure.name }}</td>
+                    <td>{{ figure.description }}</td>
+                    <td><a href="{{ path('delete.trickgroup', {id: figure.id}) }}" class="btn btn-danger">Supprimer</a></td>
+                    <td>{{ figure.user }}</td>
                 </tr>
             {% endfor %}
             </tbody>
