@@ -10,6 +10,7 @@ use App\Repository\FigureRepository;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,17 +81,16 @@ class TricksController
      */
     public function addTrick(ObjectManager $manager, Request $request)
     {
-        $figure = new Figure();
-        $form = $this->formFactory->create(FigureType::class, $figure);
+        $form = $this->formFactory->create(FigureType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $figure = $form->getData();
             $manager->persist($figure);
             $manager->flush();
             return new RedirectResponse($this->router->generate('tricks'));
         }
         return new Response($this->templating->render('tricks/edittrick.html.twig', [
-            'figure' => $figure,
             'form' => $form->createView()
         ]));
     }
@@ -128,32 +128,22 @@ class TricksController
     }
 
     /**
-     * @Route("/delete/{id}", name="delete.trickgroup")
-     */
-    public function deleteGroupTrick(Figure $figure, ObjectManager $manager)
-    {
-        //todo : boucle pour supp video et image associer
-        $manager->remove($figure);
-        $manager->flush();
-        $this->bag->add('success', 'Votre figure a été supprimé');
-        return new RedirectResponse($this->router->generate('tricks'));
-
-    }
-
-    /**
      * @Route("/trick/{id}", name="trick")
      */
     public function getTrick($id)
     {
         //todo : verrifier si l'id existe pas (demander au prof)
-        $image = $this->managerr->getRepository(Pictureslink::class)->findBy(['figure' => $id]);
         $datatricks = $this->managerr->getRepository(Figure::class)->find($id);
+        if(is_null($datatricks)) {
+          throw new NotFoundHttpException('Trick n\'existe pas');
+          // todo : https://symfony.com/doc/current/controller/error_pages.html
+        }
+        $image = $this->managerr->getRepository(Pictureslink::class)->findBy(['figure' => $id]);
         $comments = $this->managerr->getRepository(Comments::class)->findBy(['idfigure' => $id]);
         return new Response($this->templating->render('tricks/trick.html.twig', [
-            'image' => $image,
             'data' => $datatricks,
+            'image' => $image,
             'comment' => $comments
         ]));
     }
-
 }

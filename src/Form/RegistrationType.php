@@ -16,9 +16,7 @@ class RegistrationType extends AbstractType
         $builder
             ->add('name')
             ->add('surname')
-            ->add('datesub', HiddenType::class)
             ->add('password', PasswordType::class)
-            ->add('grade', HiddenType::class)
             ->add('mail')
         ;
     }

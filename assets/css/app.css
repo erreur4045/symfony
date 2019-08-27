@@ -12,22 +12,15 @@
     height: 100vh;
 }
 .bg {
-    /* The image used */
     background-image: url("https://www.imperiumsnow.com/upload/content_team_082817_47898_snowboard_rocker_lg.jpg");
-
-    /* Full height */
     height: 93vh;
     width: 100vw;
-    /* Center and scale the image nicely */
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
 }
 
 .bgtrick {
-    /* The image used */
-    /*background-image: url("https://www.imperiumsnow.com/upload/content_team_082817_47898_snowboard_rocker_lg.jpg");*/
-
     /* Full height */
     height: 50vh;
     width: 100vw;
@@ -41,6 +34,17 @@
     position: absolute;
     top: 50%;
     left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: x-large;
+    font-style: normal;
+    font-weight: bold;
+    color: black;
+}
+
+.centeredright {
+    position: absolute;
+    top: 90%;
+    left: 80%;
     transform: translate(-50%, -50%);
     font-size: x-large;
     font-style: normal;
@@ -63,9 +67,6 @@ body {
 .commentinblock{
     display: inline-block;
 }
-.descfigure{
-
-}
 
 .trickblock{
     border: solid 4px red;
@@ -78,4 +79,5 @@ body {
 
 .userimg{
     max-width: 65px;
+    display: block;
 }

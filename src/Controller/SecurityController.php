@@ -21,7 +21,7 @@ class SecurityController
     /** @var Environment */
     private $environement;
 
-    /** @var FormFactory */
+    /** @var FormFactoryInterface */
     private $formFactory;
 
     /** @var UrlGeneratorInterface */
@@ -61,17 +61,14 @@ class SecurityController
      */
     public function registration(ObjectManager $manager, Request $request, UserPasswordEncoderInterface $encoder)
     {
-        $user = new User();
-        $form = $this->formFactory->create(RegistrationType::class, $user);
+        $form = $this->formFactory->create(RegistrationType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if (!$user->getId()) {
-                $user->setDatesub(new \DateTime());
-            }
+            //todo ROLES
+            $user = $form->getData();
             $user->setGrade(1);
             $hash = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hash);
-
             $manager->persist($user);
             $manager->flush();
             $this->bag->add('success', 'Votre inscription est ok');
@@ -82,15 +79,4 @@ class SecurityController
             'form' => $form->createView()
         ]));
     }
-
-    /**
-     * @Route("/logout", name="app_logout", methods={"GET"})
-     */
-    public function logout()
-    {
-        // controller can be blank: it will  never be executed!
-        return new RedirectResponse($this->environement->render('home'));
-        throw new \Exception('Don\'t forget to activate logout in security.yaml');
-    }
-
 }

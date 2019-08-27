@@ -73,9 +73,9 @@ class User implements UserInterface
     public function __construct()
     {
         $this->setPicturelink('https://lorempixel.com/640/480/?39861');
-        return false;
         $this->figures = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        //todo : datesub
     }
 
     public function __toString()

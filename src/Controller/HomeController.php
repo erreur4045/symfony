@@ -20,15 +20,16 @@ class HomeController
 
     public function __construct(EntityManagerInterface $manager, Environment $environment)
     {
+        //todo : figurerepository service
         $this->manager = $manager;
         $this->environment = $environment;
-}
+    }
     /**
      * @Route("/home", name="home")
      */
     public function index()
     {
-        $figures = $this->manager->getRepository(Figure::class)->findBy(array(), ['id' => 'DESC'], $limit = 24);
+        $figures = $this->manager->getRepository(Figure::class)->findBy([], ['id' => 'DESC'], $limit = 24);
 
         return new Response($this->environment->render('home/index.html.twig', [
             'controller_name' => 'HomeController',

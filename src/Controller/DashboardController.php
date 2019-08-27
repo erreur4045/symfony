@@ -31,7 +31,8 @@ class DashboardController
      */
     public function index(UserInterface $user)
     {
-        $figures = $this->figure->findBy(array('user' => $user->getId()));
+        $figures = $this->figure->findBy(['user' => $user->getId()]);
+
         return new Response($this->environment->render('dashboard/index.html.twig', [
             'controller_name' => 'Mon Dashboard',
             'title' => 'Mon Dashboard',
