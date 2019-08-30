@@ -41,7 +41,7 @@ class TricksController
     private $bag;
 
     /** @var EntityManagerInterface */
-    private $managerr;
+    private $manager;
 
 
     public function __construct(
@@ -51,7 +51,7 @@ class TricksController
         FormFactoryInterface $formFactory,
         UrlGeneratorInterface $router,
         FlashBagInterface $bag,
-        EntityManagerInterface $managerr
+        EntityManagerInterface $manager
     )
     {
         $this->trick = $trick;
@@ -60,7 +60,7 @@ class TricksController
         $this->formFactory = $formFactory;
         $this->router = $router;
         $this->bag = $bag;
-        $this->managerr = $managerr;
+        $this->manager = $manager;
     }
 
     /**
@@ -130,16 +130,15 @@ class TricksController
     /**
      * @Route("/trick/{id}", name="trick")
      */
-    public function getTrick($id)
+    public function getTrick(Request $request)
     {
-        //todo : verrifier si l'id existe pas (demander au prof)
-        $datatricks = $this->managerr->getRepository(Figure::class)->find($id);
+        $datatricks = $this->manager->getRepository(Figure::class)->find($request->attributes->get('id'));
         if(is_null($datatricks)) {
-          throw new NotFoundHttpException('Trick n\'existe pas');
+          throw new ExceptionContro('Trick n\'existe pas');
           // todo : https://symfony.com/doc/current/controller/error_pages.html
         }
-        $image = $this->managerr->getRepository(Pictureslink::class)->findBy(['figure' => $id]);
-        $comments = $this->managerr->getRepository(Comments::class)->findBy(['idfigure' => $id]);
+        $image = $this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $request->attributes->get('id')]);
+        $comments = $this->manager->getRepository(Comments::class)->findBy(['idfigure' => $request->attributes->get('id')]);
         return new Response($this->templating->render('tricks/trick.html.twig', [
             'data' => $datatricks,
             'image' => $image,

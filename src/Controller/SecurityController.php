@@ -73,7 +73,6 @@ class SecurityController
             $manager->flush();
             $this->bag->add('success', 'Votre inscription est ok');
             return new RedirectResponse($this->generator->generate('app_login'));
-
         }
         return new Response($this->environement->render('security/registration.html.twig', [
             'form' => $form->createView()
