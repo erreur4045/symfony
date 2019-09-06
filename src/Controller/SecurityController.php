@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Form\RegistrationType;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -18,7 +17,11 @@ use Twig\Environment;
 
 class SecurityController
 {
-    /** @var Environment */
+    /**
+     * Desciption :
+     *
+     * @var Environment
+     */
     private $environement;
 
     /** @var FormFactoryInterface */
@@ -40,10 +43,12 @@ class SecurityController
         $this->formFactory = $formFactory;
         $this->generator = $generator;
         $this->bag = $bag;
+
     }
 
     /**
      * @Route("/login", name="app_login")
+     * @return Response
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
