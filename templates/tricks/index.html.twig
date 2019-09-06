@@ -9,6 +9,9 @@
                 {% for message in app.flashes('success') %}
                     <div class="alert alert-success">{{ message }}</div>
                 {% endfor %}
+                {% for message in app.flashes('warning') %}
+                    <div class="alert alert-danger">{{ message }}</div>
+                {% endfor %}
                 <h1>Liste des figures</h1>
                 <table class="table table-striped">
                     <thead>

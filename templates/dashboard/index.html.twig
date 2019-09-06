@@ -8,18 +8,19 @@
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>titre figure</th>
-                <th>description</th>
-                <th>suppression</th>
+                <th>Titre figure</th>
+                <th>Id</th>
+                <th>Description</th>
+                <th>Suppression</th>
             </tr>
             </thead>
             <tbody>
             {% for figure in figure %}
                 <tr>
-                    <td>{{ figure.name }}</td>
-                    <td>{{ figure.description }}</td>
-                    <td><a href="{{ path('delete.trickgroup', {id: figure.id}) }}" class="btn btn-danger">Supprimer</a></td>
-                    <td>{{ figure.user }}</td>
+                    <td>{{ figure.name |capitalize }}</td>
+                    <td>{{ figure.id |capitalize }}</td>
+                    <td>{{ figure.description| capitalize }}</td>
+                    <td><a href="{{ path('delete.trick', {id: figure.id}) }}" class="btn btn-danger">Supprimer</a></td>
                 </tr>
             {% endfor %}
             </tbody>
