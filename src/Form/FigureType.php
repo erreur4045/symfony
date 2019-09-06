@@ -17,7 +17,6 @@ class FigureType extends AbstractType
             ->add('name', TextType::class,['label' => 'Titre de la figure'])
             ->add('description',TextareaType::class,['label' => 'Description'])
             ->add('idfiguregroup')
-            ->add('user')
         ;
     }
 
