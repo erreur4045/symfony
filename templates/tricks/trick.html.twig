@@ -3,40 +3,70 @@
 {% block title %}Hello TricksController!{% endblock %}
 
 {% block body %}
+    <div class="">
     <img class="bgtrick" src="https://www.imperiumsnow.com/upload/content_team_082817_47898_snowboard_rocker_lg.jpg"
          alt="">
-    <div class="blocktrickview container">
-
     <div class="container trickblock">
-        <div class="col-md-12 commentinblock">
-        {% for image in image %}
-
-            <img src="{{ image.linkpictures }}" class="rounded mt-4" style="max-height: 200px; max-width: 200px" alt="">
-
-        {% endfor %}
+        {% if app.user %}
+        <div class="d-flex align-items-end flex-column">
+            <span class="d-inline-block">
+            <a href="{{ path('edit.trick', {id: data.id}) }}"><i class="material-icons">create</i></a>
+            <a href="{{ path('delete.trick', {id: data.id}) }}"><i class="material-icons">delete_sweep</i></a>
+        </span>
         </div>
-        <div class="col-md-12 mt-3 mb-3">
-            <h1>description figure</h1>
+        {% endif %}
+        <div class="col-md-12 titletrick">
+            <h1>{{ data.name }}</h1>
+        </div>
+
+        <div class="col-md-12 ">
+            {% for image in image %}
+                <img src="{{ image.linkpictures }}" class="rounded mt-4" style="max-height: 200px; max-width: 200px"
+                     alt="">
+            {% endfor %}
+            {% for video in video %}
+                <img src="{{ video.linkvideo }}" class="rounded mt-4" style="max-height: 200px; max-width: 200px"
+                     alt="">
+            {% endfor %}
+        </div>
+
+        <div class="col-md-12 mt-3 mb-3 align-middle">
             <p>{{ data.description }}</p>
         </div>
-        <div class="col-md-12 mt-4 cattrick">
-            <h1>Categories de la figure</h1>
-            <p>{{ data.idfiguregroup.name }}</p>
+
+        <div class="col-md-12 mt-4 d-inline-block">
+            <p>Catégorie : <span class="badge badge-secondary">{{ data.idfiguregroup.name }}</span>
+                Créée le : <span class="badge badge-secondary">{{ data.datecreate|date('d-m-Y') }}</span>
+                {% if data.dateupdate is defined %}
+                    Modifié le : <span class="badge badge-secondary"> {{ data.dateupdate|date('d-m-Y') }}</span>
+                {% endif %}</p>
         </div>
+        <hr>
         {% if app.user %}
-        {{ form_start(form) }}
-        {{ form_row(form.text) }}
-        <button class="btn btn-primary">Laisser un commentaire</button>
-        {{ form_end(form) }}
+            {{ form_start(form) }}
+            {{ form_row(form.text) }}
+            <button class="btn btn-primary">Laisser un commentaire</button>
+            {{ form_end(form) }}
+            <hr>
         {% endif %}
-        <h1>Commentaires :</h1>
+        <h1 id="comment" class="text-center">Commentaires :</h1>
         {% for comment in comment %}
             <h3 class=""></h3>
-            <img src="{{ comment.user.picturelink }}" class="mr-3 rounded-circle embed-responsive commentinblock userimg"
+            <img src="{{ comment.user.picturelink }}"
+                 class="mr-3 rounded-circle embed-responsive d-inline-flex userimg"
                  alt="">
-            <h3 class = "commentinblock">{{ comment.user.name }} </h3> <label for="">à écrit :</label>
+            <h3 class="d-inline-flex">{{ comment.user.name }} </h3> <label for="">à écrit :</label>
             <section class="test2 commentinblock">{{ comment.text }}</section>
+            {% if user.name is defined %}
+                {% if comment.user.name == user.name %}
+                    <button class="btn btn-danger text-right"><a href="{{ path('delete.comment', {id: comment.id}) }}"
+                                                                 class="btn btn-danger">Supprimer</a></button>
+                {% endif %}
+            {% endif %}
         {% endfor %}
+        <div class="pagination" style="margin-top: 5px">
+            {{ knp_pagination_render(comment) }}
+        </div>
     </div>
 
 {% endblock %}

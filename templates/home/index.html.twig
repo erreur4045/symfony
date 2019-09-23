@@ -9,7 +9,9 @@
              alt="">
         <div class="centered">Phrase d'accroche</div>
         <a href="#tricks">
-            <span class="glyphicon glyphicon-circle-arrow-down centeredright">dsf</span>
+            <i class="material-icons centeredright">
+                arrow_downward
+            </i>
         </a>
     </div>
     <div class="container">
@@ -19,14 +21,26 @@
             {% for figures in figures %}
                 <div class="col-lg-4 col-sm-6 mb-4">
                     <div class="card h-100">
+
                         {#todo : recuperer l'image de la figure#}
-                        <a href="{{ path('trick', {id: figures.id}) }}"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
+                        <a href="{{ path('trick', {id: figures.id}) }}"><img class="card-img-top"
+                                                                             src="http://placehold.it/700x400"
+                                                                             alt=""></a>
                         <div class="card-body">
                             <h4 class="card-title">
                                 <a href="{{ path('trick', {id: figures.id}) }}">{{ figures.name }}</a>
                             </h4>
                             <p class="card-text">{{ figures.description }}</p>
+                            {% if app.user %}
+                                <div class="d-flex align-items-end flex-column">
+            <span class="d-inline-block">
+            <a href="{{ path('edit.trick', {id: figures.id}) }}"><i class="material-icons">create</i></a>
+            <a href="{{ path('delete.trick', {id: figures.id}) }}"><i class="material-icons">delete_sweep</i></a>
+        </span>
+                                </div>
+                            {% endif %}
                         </div>
+
                     </div>
                 </div>
             {% endfor %}
