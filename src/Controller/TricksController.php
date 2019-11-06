@@ -5,9 +5,14 @@ namespace App\Controller;
 use App\Entity\Comments;
 use App\Entity\Figure;
 use App\Entity\Pictureslink;
+use App\Entity\Videolink;
 use App\Form\CommentType;
 use App\Form\FigureType;
 use App\Repository\FigureRepository;
+use Doctrine\ORM\EntityNotFoundException;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +31,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  * Class TricksController
  * @package App\Controller
  */
-class TricksController
+class TricksController extends AbstractController
 {
     /** @var TricksController **/
     private $trick;
@@ -111,14 +116,12 @@ class TricksController
             $figure->setUser($user);
             $manager->persist($figure);
             $manager->flush();
-            return new RedirectResponse($this->router->generate('tricks'));
+            return new RedirectResponse($this->router->generate('home'));
         }
         return new Response($this->templating->render('tricks/newtrick.html.twig', [
             'form' => $form->createView()
         ]));
     }
-
-
 
     /**
      * @Route("/delete/{id}", name="delete.trick")
@@ -128,12 +131,11 @@ class TricksController
      */
     public function deleteTrick(Figure $figure, ObjectManager $manager)
     {
-        //todo : PRIORITY 2 -> boucle pour supp video et image associer
-       if ($figure->getUser()->getName() == $this->tokenStorage->getToken()->getUser()) {
+        if ($this->tokenStorage->getToken()->getUser()) {
            $manager->remove($figure);
            $manager->flush();
            $this->bag->add('success', 'Votre figure a été supprimé');
-           return new RedirectResponse($this->router->generate('tricks'));
+           return new RedirectResponse($this->router->generate('home'));
        }
        else $this->bag->add('warning', 'Vous ne pouvez pas supprimer cette figure');
         return new RedirectResponse($this->router->generate('tricks'));
@@ -141,60 +143,57 @@ class TricksController
 
     /**
      * @Route("/trick/{id}", name="trick")
-     * @param Request $request
-     * @param ObjectManager $manager
-     * @param Figure $figure
-     * @return RedirectResponse|Response
      */
-    public function getTrick(Request $request, ObjectManager $manager, Figure $figure)
+    public function getTrick(Request $request, ObjectManager $manager, PaginatorInterface $paginator)
     {
-
         $datatricks = $this->manager->getRepository(Figure::class)->find($request->attributes->get('id'));
         if(is_null($datatricks)) {
-          throw new ExceptionContr('Cette figure n\'existe pas');
+          throw new EntityNotFoundException('Cette figure n\'existe pas');
           // todo : https://symfony.com/doc/current/controller/error_pages.html
         }
         $form = $this->formFactory->create(CommentType::class);
         $form->handleRequest($request);
         $user = $this->tokenStorage->getToken()->getUser();
-        // todo : condition is connect
-        if($form->isSubmitted() && $form->isValid()) {
-            //todo : ajouter les champs datetime, user
+        if($form->isSubmitted() && $form->isValid() && $user != null) {
             $comment = $form->getData();
             $comment->setDatecreate(new \DateTime());
-            $comment->setIdfigure($figure);
+            $comment->setIdfigure($datatricks);
             $comment->setUser($user);
             $manager->persist($comment);
             $manager->flush();
-            $this->bag->add('success', 'Votre comemntaire a été ajouter');
-            return new RedirectResponse($this->router->generate('tricks'));
+            $this->bag->add('success', 'Votre commentaire a été ajouter');
+            return new RedirectResponse($this->router->generate('trick', ['id' => $datatricks->getId()]));
         }
+
         $image = $this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $request->attributes->get('id')]);
-        $comments = $this->manager->getRepository(Comments::class)->findBy(['idfigure' => $request->attributes->get('id')]);
+        $video = $this->manager->getRepository(Videolink::class)->findBy(['figure' => $request->attributes->get('id')]);
+        $comments = $paginator->paginate(
+            $this->manager
+                ->getRepository(Comments::class)
+                ->findBy(['idfigure' => $request->attributes->get('id')]),
+            $request->query->getInt('page',1)
+            , 5);
         return new Response($this->templating->render('tricks/trick.html.twig', [
             'form' => $form->createView(),
             'data' => $datatricks,
             'image' => $image,
-            'comment' => $comments
+            'video' => $video,
+            'comment' => $comments,
+            'user' => $user
         ]));
     }
 
     /**
      * @Route("/edit/{id}", name="edit.trick")
      */
-
+    // todo : slug
     public function editTrick(Figure $figure, ObjectManager $manager, Request $request)
     {
         $datatricks = $this->manager->getRepository(Figure::class)->find($request->attributes->get('id'));
-        dump($datatricks);
+
         if(is_null($datatricks)) {
             throw new NotFoundHttpException('Trick n\'existe pas');
             // todo : https://symfony.com/doc/current/controller/error_pages.html
-        }
-
-        if ($this->tokenStorage->getToken()->getUser() != $figure->getUser()){
-            throw new NotFoundHttpException('Vous ne pouvez pas changer cette 
-            figure car vous en etes pas l\'auteur');
         }
 
         $form = $this->formFactory->create(FigureType::class, $figure);
@@ -203,7 +202,7 @@ class TricksController
             $manager->persist($figure);
             $manager->flush();
             $this->bag->add('success', 'Votre figure a été mise a jour');
-            return new RedirectResponse($this->router->generate('tricks'));
+            return new RedirectResponse($this->router->generate('trick', ['id' => $figure->getId()]));
         }
 
         return new Response($this->templating->render('tricks/edittrick.html.twig', [

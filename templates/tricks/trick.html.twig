@@ -7,6 +7,9 @@
     <img class="bgtrick" src="https://www.imperiumsnow.com/upload/content_team_082817_47898_snowboard_rocker_lg.jpg"
          alt="">
     <div class="container trickblock">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
         {% if app.user %}
         <div class="d-flex align-items-end flex-column">
             <span class="d-inline-block">

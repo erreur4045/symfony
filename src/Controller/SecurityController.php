@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\RegistrationType;
 use Doctrine\Common\Persistence\ObjectManager;
+use Faker\Provider\DateTime;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,6 +75,7 @@ class SecurityController
             $user->setGrade(1);
             $hash = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hash);
+            $user->setDatesub(new \DateTime());
             $manager->persist($user);
             $manager->flush();
             $this->bag->add('success', 'Votre inscription est ok');

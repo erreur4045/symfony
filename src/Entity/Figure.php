@@ -55,6 +55,16 @@ class Figure
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $datecreate;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dateupdate;
+
 
     public function __construct()
     {
@@ -205,6 +215,30 @@ class Figure
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getDatecreate(): ?\DateTimeInterface
+    {
+        return $this->datecreate;
+    }
+
+    public function setDatecreate(\DateTimeInterface $datecreate): self
+    {
+        $this->datecreate = $datecreate;
+
+        return $this;
+    }
+
+    public function getDateupdate(): ?\DateTimeInterface
+    {
+        return $this->dateupdate;
+    }
+
+    public function setDateupdate(?\DateTimeInterface $dateupdate): self
+    {
+        $this->dateupdate = $dateupdate;
 
         return $this;
     }

@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190730091713 extends AbstractMigration
+final class Version20190906204129 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,9 +22,9 @@ final class Version20190730091713 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
+        $this->addSql('ALTER TABLE figure ADD datecreate DATETIME DEFAULT NULL, ADD dateupdate DATETIME DEFAULT NULL');
         $this->addSql('ALTER TABLE comments ADD CONSTRAINT FK_5F9E962AA76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
         $this->addSql('CREATE INDEX IDX_5F9E962AA76ED395 ON comments (user_id)');
-        $this->addSql('ALTER TABLE user CHANGE picturelink picturelink VARCHAR(355) DEFAULT NULL');
     }
 
     public function down(Schema $schema) : void
@@ -34,6 +34,6 @@ final class Version20190730091713 extends AbstractMigration
 
         $this->addSql('ALTER TABLE comments DROP FOREIGN KEY FK_5F9E962AA76ED395');
         $this->addSql('DROP INDEX IDX_5F9E962AA76ED395 ON comments');
-        $this->addSql('ALTER TABLE user CHANGE picturelink picturelink VARCHAR(355) NOT NULL COLLATE utf8mb4_unicode_ci');
+        $this->addSql('ALTER TABLE figure DROP datecreate, DROP dateupdate');
     }
 }
