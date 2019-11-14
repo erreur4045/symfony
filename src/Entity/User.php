@@ -60,6 +60,11 @@ class User implements UserInterface
     private $picturelink;
 
     /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Figure", mappedBy="user")
      */
     private $figures;
@@ -75,7 +80,6 @@ class User implements UserInterface
         $this->setPicturelink('https://lorempixel.com/640/480/?39861');
         $this->figures = new ArrayCollection();
         $this->comments = new ArrayCollection();
-        //todo : datesub
     }
 
     public function __toString()
@@ -183,8 +187,12 @@ class User implements UserInterface
     public function eraseCredentials(){}
     public function getSalt(){}
 
-    public function getRoles(){
-        return ['ROLE_ADMIN'];
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
 
     public function getUsername(){}
