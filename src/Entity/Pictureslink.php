@@ -26,6 +26,16 @@ class Pictureslink
      */
     private $figure;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $first_image;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $alt;
+
 
     public function getId(): ?int
     {
@@ -52,6 +62,30 @@ class Pictureslink
     public function setFigure(?figure $figure): self
     {
         $this->figure = $figure;
+
+        return $this;
+    }
+
+    public function getFirstImage(): ?bool
+    {
+        return $this->first_image;
+    }
+
+    public function setFirstImage(?bool $first_image): self
+    {
+        $this->first_image = $first_image;
+
+        return $this;
+    }
+
+    public function getAlt(): ?string
+    {
+        return $this->alt;
+    }
+
+    public function setAlt(?string $alt): self
+    {
+        $this->alt = $alt;
 
         return $this;
     }
