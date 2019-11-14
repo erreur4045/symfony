@@ -114,12 +114,15 @@ class TricksController extends AbstractController
         if($form->isSubmitted() && $form->isValid()) {
             $figure = $form->getData();
             $figure->setUser($user);
+            $figure->setDatecreate(new \DateTime('now'));
             $manager->persist($figure);
             $manager->flush();
+            $this->bag->add('success', 'Votre figure a été ajouter');
             return new RedirectResponse($this->router->generate('home'));
         }
         return new Response($this->templating->render('tricks/newtrick.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'h1' => 'Ajout d\'une figure'
         ]));
     }
 
@@ -142,27 +145,27 @@ class TricksController extends AbstractController
     }
 
     /**
-     * @Route("/trick/{id}", name="trick")
+     * @Route("/trick/{slug}", name="trick")
      */
-    public function getTrick(Request $request, ObjectManager $manager, PaginatorInterface $paginator)
+    public function getTrick(Request $request, ObjectManager $manager, PaginatorInterface $paginator, $slug)
     {
-        $datatricks = $this->manager->getRepository(Figure::class)->find($request->attributes->get('id'));
+        $datatricks = $this->manager->getRepository(Figure::class)->findOneBy(['slug' => $request->attributes->get('slug')]);
         if(is_null($datatricks)) {
           throw new EntityNotFoundException('Cette figure n\'existe pas');
-          // todo : https://symfony.com/doc/current/controller/error_pages.html
         }
         $form = $this->formFactory->create(CommentType::class);
         $form->handleRequest($request);
         $user = $this->tokenStorage->getToken()->getUser();
         if($form->isSubmitted() && $form->isValid() && $user != null) {
             $comment = $form->getData();
+            // todo : $comment->setDatecreate(new \DateTime())->->setIdfigure($datatricks)->setUser($user); ?
             $comment->setDatecreate(new \DateTime());
             $comment->setIdfigure($datatricks);
             $comment->setUser($user);
             $manager->persist($comment);
             $manager->flush();
             $this->bag->add('success', 'Votre commentaire a été ajouter');
-            return new RedirectResponse($this->router->generate('trick', ['id' => $datatricks->getId()]));
+            return new RedirectResponse($this->router->generate('trick', ['slug' => $datatricks->getSlug()]));
         }
 
         $image = $this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $request->attributes->get('id')]);
@@ -186,19 +189,18 @@ class TricksController extends AbstractController
     /**
      * @Route("/edit/{id}", name="edit.trick")
      */
-    // todo : slug
     public function editTrick(Figure $figure, ObjectManager $manager, Request $request)
     {
         $datatricks = $this->manager->getRepository(Figure::class)->find($request->attributes->get('id'));
 
         if(is_null($datatricks)) {
             throw new NotFoundHttpException('Trick n\'existe pas');
-            // todo : https://symfony.com/doc/current/controller/error_pages.html
         }
 
         $form = $this->formFactory->create(FigureType::class, $figure);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()) {
+            $figure->setDateupdate(new \DateTime('now'));
             $manager->persist($figure);
             $manager->flush();
             $this->bag->add('success', 'Votre figure a été mise a jour');
@@ -207,7 +209,8 @@ class TricksController extends AbstractController
 
         return new Response($this->templating->render('tricks/edittrick.html.twig', [
             'figure' => $figure,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'h1' => 'Modification d\'une figure'
         ]));
     }
 }

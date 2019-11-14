@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FigureRepository")
@@ -24,6 +25,12 @@ class Figure
     private $name;
 
     /**
+     * @Gedmo\Slug(fields={"name"})
+     * @ORM\Column( unique=true, nullable=true, length=255)
+     */
+    private $slug;
+
+    /**
      * @ORM\Column(type="string", length=512)
      */
     private $description;
@@ -35,12 +42,12 @@ class Figure
     private $idfiguregroup;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Pictureslink", mappedBy="figure")
+     * @ORM\OneToMany(targetEntity="App\Entity\Pictureslink", mappedBy="figure", cascade={"remove"})
      */
     private $pictureslinks;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Videolink", mappedBy="figure")
+     * @ORM\OneToMany(targetEntity="App\Entity\Videolink", mappedBy="figure", cascade={"remove"})
      */
     private $videolinks;
 
@@ -88,6 +95,11 @@ class Figure
         $this->name = $name;
 
         return $this;
+    }
+
+    public function getSlug()
+    {
+        return $this->slug;
     }
 
     public function getDescription(): ?string
