@@ -4,7 +4,7 @@
 
 {% block body %}
     <div class="container">
-        <h1>Editer une figure</h1>
+        <h1 class="text-center">{{ h1 }}</h1>
         <div class="row-md-12">
             {% for flash_message in app.session.flashBag.get('success') %}
                 <div class="alert alert-success">
@@ -13,7 +13,8 @@
             {% endfor %}
             {{ form_start(form) }}
             {{ form_widget(form) }}
-            <button class="btn btn-primary">Sauvegarder</button>
+            <div class="d-flex justify-content-center">
+            <button class="btn btn-primary">Sauvegarder</button></div>
             {{ form_end(form) }}
         </div>
     </div>

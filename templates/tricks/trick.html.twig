@@ -3,20 +3,46 @@
 {% block title %}Hello TricksController!{% endblock %}
 
 {% block body %}
-    <div class="">
+
     <img class="bgtrick" src="https://www.imperiumsnow.com/upload/content_team_082817_47898_snowboard_rocker_lg.jpg"
          alt="">
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
     <div class="container trickblock">
-        {% for message in app.flashes('success') %}
-            <div class="alert alert-success">{{ message }}</div>
-        {% endfor %}
         {% if app.user %}
         <div class="d-flex align-items-end flex-column">
             <span class="d-inline-block">
-            <a href="{{ path('edit.trick', {id: data.id}) }}"><i class="material-icons">create</i></a>
-            <a href="{{ path('delete.trick', {id: data.id}) }}"><i class="material-icons">delete_sweep</i></a>
+                <!-- Button trigger modal -->
+<button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#exampleModal">
+  <i class="material-icons">delete_sweep</i>
+</button>
+
+                <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Etes-vous sûr de vouloir supprimer cette figure ?
+      </div>
+      <div class="modal-footer">
+          <button onclick="location.href='{{ path('delete.trick', {id: data.id}) }} '" type="button" class="btn btn-primary">
+         <i class="material-icons">delete_sweep</i></button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+      </div>
+    </div>
+  </div>
+</div>
+            <button type="button" class="btn btn-outline-primary"><a href="{{ path('edit.trick', {id: data.id}) }}"><i class="material-icons">create</i></a></button>
         </span>
         </div>
+
         {% endif %}
         <div class="col-md-12 titletrick">
             <h1>{{ data.name }}</h1>
@@ -62,14 +88,16 @@
             <section class="test2 commentinblock">{{ comment.text }}</section>
             {% if user.name is defined %}
                 {% if comment.user.name == user.name %}
-                    <button class="btn btn-danger text-right"><a href="{{ path('delete.comment', {id: comment.id}) }}"
-                                                                 class="btn btn-danger">Supprimer</a></button>
+                    <button class="btn btn-danger text-right"><a href="{{ path('delete.comment', {id: comment.id}) }}">Supprimer</a>
+                    </button>
+                    <button class="btn btn-info text-right"><a href="{{ path('edit.comment', {id: comment.id}) }}">Modifier</a>
+                    </button>
                 {% endif %}
             {% endif %}
         {% endfor %}
         <div class="pagination" style="margin-top: 5px">
             {{ knp_pagination_render(comment) }}
         </div>
-    </div>
+        </div>
 
 {% endblock %}

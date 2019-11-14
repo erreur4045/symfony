@@ -54,44 +54,22 @@
 {% block javascripts %}{% endblock %}
 </body>
 <footer>
-    <!-- Footer -->
     <footer class="page-footer font-small teal pt-4">
-
-        <!-- Footer Text -->
         <div class="container-fluid text-center text-md-left">
-
-            <!-- Grid row -->
             <div class="row">
-
-                <!-- Grid column -->
                 <div class="col-md-6 mt-md-0 mt-3">
-
-                    <!-- Content -->
-                    <h5 class="text-uppercase font-weight-bold">Footer text 1</h5>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Expedita sapiente sint, nulla, nihil
-                        repudiandae commodi voluptatibus corrupti animi sequi aliquid magnam debitis, maxime quam recusandae
-                        harum esse fugiat. Itaque, culpa?</p>
-
+                    <h5 class="text-uppercase font-weight-bold">Strucure du site</h5>
+                    <p><a href="/home">Accueil</a></p>
+                    <p><a href="/addtrick">Trick</a></p>
+                    <p><a href="/dashboard">Mon compte</a></p>
                 </div>
-                <!-- Grid column -->
-
                 <hr class="clearfix w-100 d-md-none pb-3">
-
-                <!-- Grid column -->
                 <div class="col-md-6 mb-md-0 mb-3">
-
-                    <!-- Content -->
-                    <h5 class="text-uppercase font-weight-bold">Footer text 2</h5>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Optio deserunt fuga perferendis modi earum
-                        commodi aperiam temporibus quod nulla nesciunt aliquid debitis ullam omnis quos ipsam, aspernatur id
-                        excepturi hic.</p>
+                    <h5 class="text-uppercase font-weight-bold">Site creer par Maxime THIERRY</h5>
+                    <a href="https://www.maximethierry.xyz/">Mon Blog</a>
 
                 </div>
-                <!-- Grid column -->
-
             </div>
-            <!-- Grid row -->
-
         </div>
     </footer>
     <!-- Footer -->
@@ -104,8 +82,34 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
-    <div class="footer-copyright text-center py-3">© 2018 Copyright:
-        <a href=href="{{ path('home')}}> MDBootstrap.com</a>
-    </div>
+    {% block custompage_script %}
+        <script>
+
+            jQuery(document).ready(function () {
+                jQuery('.add-another-collection-widget').click(function (e) {
+                    var list = jQuery(jQuery(this).attr('data-list-selector'));
+                    // Try to find the counter of the list or use the length of the list
+                    var counter = list.data('widget-counter') || list.children().length;
+
+                    // grab the prototype template
+                    var newWidget = list.attr('data-prototype');
+                    // replace the "__name__" used in the id and name of the prototype
+                    // with a number that's unique to your emails
+                    // end name attribute looks like name="contact[emails][2]"
+                    newWidget = newWidget.replace(/__name__/g, counter);
+                    // Increase the counter
+                    counter++;
+                    // And store it, the length cannot be used if deleting widgets is allowed
+                    list.data('widget-counter', counter);
+
+                    // create a new list element and add it to the list
+                    var newElem = jQuery(list.attr('data-widget-tags')).html(newWidget);
+                    newElem.appendTo(list);
+                });
+            });
+
+
+        </script>
+    {% endblock %} {# custompage_script #}
 </footer>
 </html>
