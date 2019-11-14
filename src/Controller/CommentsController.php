@@ -46,4 +46,23 @@ class CommentsController
         else $this->bag->add('warning', 'Vous ne pouvez pas supprimer ce commentaire');
         return new RedirectResponse($this->router->generate('tricks'));
     }
+
+    //todo : creer page avec form contenant le commentaire puis MAJ
+    /**
+     * @Route("/editcom/{id}", name="edit.comment")
+     * @param Comments $comment
+     * @param ObjectManager $manager
+     * @return RedirectResponse
+     */
+    public function editCom(Comments $comment, ObjectManager $manager)
+    {
+        if ($comment->getUser()->getName() == $this->tokenStorage->getToken()->getUser() OR $this->tokenStorage->getToken()->getUser()) {
+            $manager->edit($comment);
+            $manager->flush();
+            $this->bag->add('success', 'Votre commentaire a été modifié');
+            return new RedirectResponse($this->router->generate('tricks'));
+        }
+        else $this->bag->add('warning', 'Vous ne pouvez pas modifier ce commentaire');
+        return new RedirectResponse($this->router->generate('tricks'));
+    }
 }
