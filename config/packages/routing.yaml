@@ -1,4 +1,7 @@
 framework:
     router:
+<<<<<<< HEAD
         strict_requirements: ~
+=======
+>>>>>>> Add initial set of files
         utf8: true
