@@ -143,7 +143,7 @@ class TricksController extends AbstractController
     }
 
     /**
-     * @Route("/delete/{id}", name="delete.trick")
+     * @Route("/delete/{slug}", name="delete.trick")
      * @param Figure $figure
      * @param ObjectManager $manager
      * @return RedirectResponse
