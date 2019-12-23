@@ -20,15 +20,15 @@ class PictureslinkRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return Pictureslink[] Returns an array of Pictureslink objects
+    //  * @return Videolink[] Returns an array of Videolink objects
     //  */
     /*
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
+        return $this->createQueryBuilder('v')
+            ->andWhere('v.exampleField = :val')
             ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
+            ->orderBy('v.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
@@ -37,10 +37,10 @@ class PictureslinkRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Pictureslink
+    public function findOneBySomeField($value): ?Videolink
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
+        return $this->createQueryBuilder('v')
+            ->andWhere('v.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()
