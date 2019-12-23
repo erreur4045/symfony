@@ -44,10 +44,6 @@ class User implements UserInterface
      */
     private $password;
 
-    /**
-     * @ORM\Column(type="smallint")
-     */
-    private $grade;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -55,9 +51,9 @@ class User implements UserInterface
     private $mail;
 
     /**
-     * @ORM\Column(type="string", length=355)
+     * @ORM\Column(type="json")
      */
-    private $picturelink;
+    private $roles = [];
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Figure", mappedBy="user")
@@ -69,15 +65,25 @@ class User implements UserInterface
      */
     private $comments;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $profilePicture;
 
     public function __construct()
     {
-        $this->setPicturelink('https://lorempixel.com/640/480/?39861');
-        return false;
         $this->figures = new ArrayCollection();
         $this->comments = new ArrayCollection();
     }
 
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
+
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -138,18 +144,6 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getGrade(): ?int
-    {
-        return $this->grade;
-    }
-
-    public function setGrade(int $grade): self
-    {
-        $this->grade = $grade;
-
-        return $this;
-    }
-
     public function getMail(): ?string
     {
         return $this->mail;
@@ -162,23 +156,15 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getPicturelink(): ?string
-    {
-        return $this->picturelink;
-    }
-
-    public function setPicturelink(string $picturelink): self
-    {
-        $this->picturelink = $picturelink;
-
-        return $this;
-    }
-
-
     public function eraseCredentials(){}
     public function getSalt(){}
-    public function getRoles(){
-        return ['ROLE_ADMIN'];
+
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
 
     public function getUsername(){}
@@ -244,4 +230,17 @@ class User implements UserInterface
 
         return $this;
     }
+
+    public function getProfilePicture(): ?string
+    {
+        return $this->profilePicture;
+    }
+
+    public function setProfilePicture(string $profilePicture): self
+    {
+        $this->profilePicture = $profilePicture;
+
+        return $this;
+    }
+
 }

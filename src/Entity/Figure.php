@@ -5,9 +5,12 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FigureRepository")
+ * @UniqueEntity("name", message="Une figure a déjà ce titre, veuillez changer de titre")
  */
 class Figure
 {
@@ -24,6 +27,12 @@ class Figure
     private $name;
 
     /**
+     * @Gedmo\Slug(fields={"name"})
+     * @ORM\Column( unique=true, nullable=true, length=255)
+     */
+    private $slug;
+
+    /**
      * @ORM\Column(type="string", length=512)
      */
     private $description;
@@ -35,12 +44,12 @@ class Figure
     private $idfiguregroup;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Pictureslink", mappedBy="figure")
+     * @ORM\OneToMany(targetEntity="App\Entity\Pictureslink", mappedBy="figure", cascade={"persist", "remove"})
      */
     private $pictureslinks;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Videolink", mappedBy="figure")
+     * @ORM\OneToMany(targetEntity="App\Entity\Videolink", mappedBy="figure", cascade={"persist", "remove"})
      */
     private $videolinks;
 
@@ -55,12 +64,27 @@ class Figure
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $datecreate;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dateupdate;
+
 
     public function __construct()
     {
         $this->pictureslinks = new ArrayCollection();
         $this->videolinks = new ArrayCollection();
         $this->comments = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+       return $this->name;
     }
 
     public function getId(): ?int
@@ -78,6 +102,11 @@ class Figure
         $this->name = $name;
 
         return $this;
+    }
+
+    public function getSlug()
+    {
+        return $this->slug;
     }
 
     public function getDescription(): ?string
@@ -205,6 +234,30 @@ class Figure
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getDatecreate(): ?\DateTimeInterface
+    {
+        return $this->datecreate;
+    }
+
+    public function setDatecreate(\DateTimeInterface $datecreate): self
+    {
+        $this->datecreate = $datecreate;
+
+        return $this;
+    }
+
+    public function getDateupdate(): ?\DateTimeInterface
+    {
+        return $this->dateupdate;
+    }
+
+    public function setDateupdate(?\DateTimeInterface $dateupdate): self
+    {
+        $this->dateupdate = $dateupdate;
 
         return $this;
     }

@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CommentsController!{% endblock %}
+
+{% block body %}
+    <div class="container">
+    <h1 class="text-center">Modifier votre commentaire</h1>
+    {{ form_start(form) }}
+    {{ form_row(form.text, {'value' : comment}) }}
+    <div class="d-flex justify-content-center">
+        <button class="btn btn-primary text-center">Envoyer</button>
+    </div>
+    {{ form_end(form) }}
+    </div>
+{% endblock %}

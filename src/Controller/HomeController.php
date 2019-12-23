@@ -5,43 +5,49 @@ namespace App\Controller;
 use App\Entity\Figure;
 use App\Entity\Pictureslink;
 use App\Entity\User;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\Tests\Compiler\F;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Faker;
+use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
 
 class HomeController extends AbstractController
 {
+    /** @var EntityManagerInterface */
+    private $manager;
+
+    /** @var Environment **/
+    private $environment;
+
+    public function __construct(EntityManagerInterface $manager, Environment $environment)
+    {
+        $this->manager = $manager;
+        $this->environment = $environment;
+    }
 
     /**
-     * @Route("/home", name="home")
+     * @Route("/", name="home")
      */
     public function index()
     {
-        $figure = $this->getDoctrine()->getRepository(Figure::class)->find(142);
-        $image = $this->getDoctrine()->getRepository(Pictureslink::class)->find(142);
-
-        return $this->render('home/index.html.twig', [
+        //todo : c'est salement sale  !
+        //todo : $figure ne contient pas les collections photos/videos
+        $user = $this->getUser();
+        dump($user);
+        //recuperer les photos de la figures ?
+        /** @var Figure $figures */
+        $figures = $this->manager->getRepository(Figure::class)->findBy([], ['id' => 'DESC'], $limit = 10);
+        /** @var Figure $figure_picture */
+        foreach ($figures as $figure_picture){
+            /** @var Pictureslink $image */
+            $image[] = $this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $figure_picture->getId()]);
+        }
+        return new Response($this->environment->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
-            'figure' => $figure,
-            'image' => $image
-        ]);
+            'figures' => $figures,
+            'images' => $image
+        ]));
     }
-
-    /**
-     * @Route("/user/{id}", name="userfind")
-     */
-    public function getUserData($id)
-    {
-        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
-
-        //$datauser = $user->findOneBy(['id' => $id]);
-    dump($user);
-        return $this->render('home/index.html.twig', [
-           'datauserview' => $user,
-        ]);
-    }
-
 
 }

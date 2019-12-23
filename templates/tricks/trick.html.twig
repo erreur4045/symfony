@@ -3,118 +3,113 @@
 {% block title %}Hello TricksController!{% endblock %}
 
 {% block body %}
-    <div class="container">
+    <img class="bgtrick" src="https://www.imperiumsnow.com/upload/content_team_082817_47898_snowboard_rocker_lg.jpg"
+         alt="">
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+    <div class="container trickblock">
+        {% if app.user %}
+            <div class="d-flex align-items-end flex-column">
+            <span class="d-inline-block">
+                <!-- Button trigger modal -->
+<button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#exampleModal">
+  <i class="material-icons">delete_sweep</i>
+</button>
 
-        <h1 class="font-weight-light text-center text-lg-left mt-4 mb-0">Thumbnail Gallery</h1>
+                <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Attention</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Etes-vous sûr de vouloir supprimer cette figure ?
+      </div>
+      <div class="modal-footer">
+          <button onclick="location.href='{{ path('delete.trick', {id: data.id}) }} '" type="button"
+                  class="btn btn-primary">
+         <i class="material-icons">delete_sweep</i></button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+      </div>
+    </div>
+  </div>
+</div>
+            <button type="button" class="btn btn-outline-primary"><a href="{{ path('edit.trick', {slug: data.slug}) }}"><i
+                            class="material-icons">create</i></a></button>
+        </span>
+            </div>
 
-        <hr class="mt-2 mb-5">
-
-        <div class="row text-center text-lg-left">
-
-            <div class="col-lg-3 col-md-4 col-6">
-                <a href="#" class="d-block mb-4 h-100">
-                    <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/AvhMzHwiE_0/400x300" alt="">
-                </a>
-            </div>
-            <div class="col-lg-3 col-md-4 col-6">
-                <a href="#" class="d-block mb-4 h-100">
-                    <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/2gYsZUmockw/400x300" alt="">
-                </a>
-            </div>
-            <div class="col-lg-3 col-md-4 col-6">
-                <a href="#" class="d-block mb-4 h-100">
-                    <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/EMSDtjVHdQ8/400x300" alt="">
-                </a>
-            </div>
-            <div class="col-lg-3 col-md-4 col-6">
-                <a href="#" class="d-block mb-4 h-100">
-                    <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/8mUEy0ABdNE/400x300" alt="">
-                </a>
-            </div>
-            <div class="col-lg-3 col-md-4 col-6">
-                <a href="#" class="d-block mb-4 h-100">
-                    <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/G9Rfc1qccH4/400x300" alt="">
-                </a>
-            </div>
-            <div class="col-lg-3 col-md-4 col-6">
-                <a href="#" class="d-block mb-4 h-100">
-                    <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/aJeH0KcFkuc/400x300" alt="">
-                </a>
-            </div>
-            <div class="col-lg-3 col-md-4 col-6">
-                <a href="#" class="d-block mb-4 h-100">
-                    <img class="img-fluid img-thumbnail" src="https://source.unsplash.com/p2TQ-3Bh3Oo/400x300" alt="">
-                </a>
+        {% endif %}
+        <div class="col-md-12 titletrick">
+            <h1>{{ data.name }}</h1>
+        </div>
+        <div class="row">
+            <div class="col-md-12 ">
+                {% for images in image %}
+                    <img src="{{ asset('uploads/figureimage/') ~ images.linkpictures }}" class="rounded mt-4"
+                         style="max-height: 200px; max-width: 200px"
+                         alt="">
+                {% endfor %}
+                {% for video in video %}
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item" src="{{ video.linkvideo }}" allowfullscreen></iframe>
+                    </div>
+                {% endfor %}
             </div>
         </div>
-
-    </div>
-
-    <div class="container d-flex justify-content-center">
-        <div class="row bootstrap snippets">
-            <div class="col-md-6 col-md-offset-2 col-sm-12">
-                <div class="comment-wrapper">
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            Comment panel
-                        </div>
-                        <div class="panel-body">
-                            <textarea class="form-control" placeholder="write a comment..." rows="3"></textarea>
-                            <br>
-                            <button type="button" class="btn btn-info pull-right">Post</button>
-                            <div class="clearfix"></div>
-                            <hr>
-                            <ul class="media-list">
-                                <li class="media">
-                                    <a href="#" class="pull-left">
-                                        <img src="https://bootdey.com/img/Content/user_1.jpg" alt="" class="img-circle">
-                                    </a>
-                                    <div class="media-body">
-                                <span class="text-muted pull-right">
-                                    <small class="text-muted">30 min ago</small>
-                                </span>
-                                        <strong class="text-success">@MartinoMont</strong>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                            Lorem ipsum dolor sit amet, <a href="#">#consecteturadipiscing </a>.
-                                        </p>
-                                    </div>
-                                </li>
-                                <li class="media">
-                                    <a href="#" class="pull-left">
-                                        <img src="https://bootdey.com/img/Content/user_2.jpg" alt="" class="img-circle">
-                                    </a>
-                                    <div class="media-body">
-                                <span class="text-muted pull-right">
-                                    <small class="text-muted">30 min ago</small>
-                                </span>
-                                        <strong class="text-success">@LaurenceCorreil</strong>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                            Lorem ipsum dolor <a href="#">#ipsumdolor </a>adipiscing elit.
-                                        </p>
-                                    </div>
-                                </li>
-                                <li class="media">
-                                    <a href="#" class="pull-left">
-                                        <img src="https://bootdey.com/img/Content/user_3.jpg" alt="" class="img-circle">
-                                    </a>
-                                    <div class="media-body">
-                                <span class="text-muted pull-right">
-                                    <small class="text-muted">30 min ago</small>
-                                </span>
-                                        <strong class="text-success">@JohnNida</strong>
-                                        <p>
-                                            Lorem ipsum dolor <a href="#">#sitamet</a> sit amet, consectetur adipiscing
-                                            elit.
-                                        </p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+        <hr>
+        <div class="row">
+            <div class="col-12"><h1 class="text-center">Description de la figure</h1>
+                <div class="col-md-12 mt-4 d-inline-block">
+                    <p>Catégorie : <span class="badge badge-secondary">{{ data.idfiguregroup.name }}</span>
+                        Créée le : <span class="badge badge-secondary">{{ data.datecreate|date('d-m-Y') }}</span>
+                        {% if data.dateupdate is not null %}
+                            Modifié le : <span class="badge badge-secondary"> {{ data.dateupdate|date('d-m-Y') }}</span>
+                        {% endif %}</p>
+                </div>
+                <div class="col-md-12 mt-3 mb-3 align-middle">
+                    <p>{{ data.description|capitalize }}</p>
                 </div>
             </div>
         </div>
+        <hr>
+        {% if app.user %}
+            {{ form_start(form) }}
+            {{ form_row(form.text) }}
+            <button class="btn btn-primary">Laisser un commentaire</button>
+            {{ form_end(form) }}
+            <hr>
+        {% endif %}
+        {% if comment.items %}
+            <h1 id="comment" class="text-center">Commentaires :</h1>
+            {% for comment in comment %}
+                <h3 class=""></h3>
+                <img src="{{ asset('uploads/profilepicture/' ~ comment.user.profilePicture) }}"
+                     class="mr-3 rounded-circle embed-responsive d-inline-flex userimg"
+                     alt="{{ 'image_utilisateur' }}">
+                <h3 class="d-inline-flex">{{ comment.user.name }} </h3> <label for=""> Le {{ comment.datecreate|date("d/m/Y")}}</label>&nbsp;<label for=""> a écrit :</label>
+                <section class="test2 commentinblock">{{ comment.text }}</section>
+                {% if user.name is defined %}
+                    {% if comment.user.name == user.name %}
+                        <button class="btn btn-outline-danger text-right btn_comm"><a
+                                    href="{{ path('delete.comment', {id: comment.id}) }}">Supprimer</a>
+                        </button>
+                        <button class="btn btn-outline-info text-right btn_comm"><a
+                                    href="{{ path('edit.comment', {id: comment.id}) }}">Modifier</a>
+                        </button>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        <div class="pagination" style="margin-top: 5px">
+            {{ knp_pagination_render(comment) }}
+        </div>
     </div>
+
 {% endblock %}

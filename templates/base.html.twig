@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+    <script src="https://kit.fontawesome.com/21a4e0e6d5.js" crossorigin="anonymous"></script>
+
     <title>{% block title %}Welcome!{% endblock %}</title>
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
@@ -14,19 +18,19 @@
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="#">Start Bootstrap</a>
+            <a class="navbar-brand" href="{{ path('home')}}">SnowTricks</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">Home
+                        <a class="nav-link" href="{{ path('home')}}">Home
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('tricks') }}">Tricks</a>
+                        <a class="nav-link" href="{{ path('addtrick') }}">Tricks</a>
                     </li>
                     {% if app.user %}
                         <li class="nav-item">
@@ -39,6 +43,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('app_login') }}">Login</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('registration') }}">Inscription</a>
+                        </li>
                     {% endif %}
                 </ul>
             </div>
@@ -49,8 +56,28 @@
 {% block body %}{% endblock %}
 
 {% block javascripts %}{% endblock %}
-</body>
 <footer>
+    <footer class="page-footer font-small teal pt-4">
+        <div class="container-fluid text-center text-md-left">
+            <div class="row">
+                <div class="col-md-6 mt-md-0 mt-3">
+                    <h5 class="text-uppercase font-weight-bold">Strucure du site</h5>
+                    <p><a href="/home">Accueil</a></p>
+                    <p><a href="/addtrick">Trick</a></p>
+                    {% if app.user %}
+                    <p><a href="/dashboard">Mon compte</a></p>
+                    {% endif %}
+                </div>
+                <hr class="clearfix w-100 d-md-none pb-3">
+                <div class="col-md-6 mb-md-0 mb-3">
+                    <h5 class="text-uppercase font-weight-bold">Site creer par Maxime THIERRY</h5>
+                    <a href="https://www.maximethierry.xyz/">Mon Blog</a>
+
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
             crossorigin="anonymous"></script>
@@ -60,5 +87,10 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
+    {% block custompage_script %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %} {# custompage_script #}
 </footer>
+</body>
+
 </html>
