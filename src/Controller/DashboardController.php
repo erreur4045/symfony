@@ -61,8 +61,12 @@ class DashboardController extends AbstractController
      * @Route("/dashboard", name="app_dashboard")
      */
 
-    public function index(UserInterface $user, ObjectManager $manager, Request $request, ObjectManager $managerORM)
+    public function index(UserInterface $user = null, ObjectManager $manager, Request $request, ObjectManager $managerORM)
     {
+        if ($user == null){
+            return new Response($this->environment->render('block_for_include/no_connect.html.twig', [
+            ]));
+        }
         /** @var Figure $figures */
         $figures = $this->figure->findBy(['user' => $user->getId()]);
         /** @var User $user_data */

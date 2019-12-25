@@ -25,6 +25,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Twig\Environment;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -148,8 +149,13 @@ class TricksController extends AbstractController
      * @param ObjectManager $manager
      * @return RedirectResponse
      */
-    public function deleteTrick(Figure $figure, ObjectManager $manager)
+    public function deleteTrick(UserInterface $user = null, Figure $figure, ObjectManager $manager)
     {
+        if($user == null){
+            return new Response($this->templating->render('block_for_include/no_connect.html.twig', [
+            ]));
+        }
+
         if ($this->tokenStorage->getToken()->getUser()) {
             dump($figure);
             /** @var Pictureslink $image */
