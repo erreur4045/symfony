@@ -54,7 +54,7 @@ class CommentsController
         /** @var Figure $datatricks */
         $datatricks = $this->manager->getRepository(Figure::class)->findOneBy(['id' => $request->attributes->get('comment')->getIdfigure()->getId()]);
 
-        if ($comment->getUser()->getName() == $this->tokenStorage->getToken()->getUser() OR $this->tokenStorage->getToken()->getUser()) {
+        if ($comment->getUser()->getMail() == $this->tokenStorage->getToken()->getUser()->getMail()) {
             $manager->remove($comment);
             $manager->flush();
             $this->bag->add('success', 'Votre commentaire a été supprimé');
@@ -79,7 +79,7 @@ class CommentsController
         }
         /** @var Figure $datatricks */
         $datatricks = $this->manager->getRepository(Figure::class)->findOneBy(['id' => $request->attributes->get('comment')->getIdfigure()->getId()]);
-        if ($comment->getUser()->getMail() == $this->tokenStorage->getToken()->getUser()->getMail() OR $this->tokenStorage->getToken()->getUser()) {
+        if ($comment->getUser()->getMail() == $this->tokenStorage->getToken()->getUser()->getMail()) {
             $form = $this->formFactory->create(EditComType::class);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
