@@ -53,7 +53,7 @@
                                         <a href="{{ path('trick', {'slug': figure.slug}) }}">{{ figure.name |capitalize }}</a>
                                     </td>
                                     <td>{{ figure.description| capitalize }}</td>
-                                    <td><a href="{{ path('delete.trick', {id: figure.id}) }}" class="btn btn-danger">Supprimer</a>
+                                    <td><a href="{{ path('delete.trick', {slug: figure.slug}) }}" class="btn btn-danger">Supprimer</a>
                                     </td>
                                 </tr>
                             {% endfor %}
