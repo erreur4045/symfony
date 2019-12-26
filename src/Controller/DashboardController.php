@@ -15,6 +15,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -38,6 +39,9 @@ class DashboardController extends AbstractController
     /** @var Filesystem */
     private $filesystem;
 
+    /** @var FlashBagInterface */
+    private $bag;
+
     public function __construct
     (
         FigureRepository $figure,
@@ -46,7 +50,8 @@ class DashboardController extends AbstractController
         TokenStorageInterface $tokenStorage,
         FormFactoryInterface $formFactory,
         EntityManagerInterface $manager,
-        Filesystem $filesystem
+        Filesystem $filesystem,
+        FlashBagInterface $bag
     ) {
         $this->figure = $figure;
         $this->user = $user;
@@ -55,14 +60,19 @@ class DashboardController extends AbstractController
         $this->formFactory = $formFactory;
         $this->manager = $manager;
         $this->filesystem = $filesystem;
+        $this->bag = $bag;
     }
 
     /**
      * @Route("/dashboard", name="app_dashboard")
      */
 
-    public function index(UserInterface $user, ObjectManager $manager, Request $request, ObjectManager $managerORM)
+    public function index(UserInterface $user = null, ObjectManager $manager, Request $request, ObjectManager $managerORM)
     {
+        if ($user == null){
+            return new Response($this->environment->render('block_for_include/no_connect.html.twig', [
+            ]));
+        }
         /** @var Figure $figures */
         $figures = $this->figure->findBy(['user' => $user->getId()]);
         /** @var User $user_data */
@@ -99,6 +109,7 @@ class DashboardController extends AbstractController
                     $managerORM->persist($userdata);
                     $managerORM->flush();
                 }
+                $this->bag->add('success', 'Votre avatar a été modifié');
                 return $this->redirect($this->generateUrl('app_dashboard'));
             }
             return new Response($this->environment->render('dashboard/index.html.twig', [

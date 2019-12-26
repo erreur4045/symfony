@@ -34,7 +34,6 @@ class HomeController extends AbstractController
         //todo : c'est salement sale  !
         //todo : $figure ne contient pas les collections photos/videos
         $user = $this->getUser();
-        dump($user);
         //recuperer les photos de la figures ?
         /** @var Figure $figures */
         $figures = $this->manager->getRepository(Figure::class)->findBy([], ['id' => 'DESC'], $limit = 10);

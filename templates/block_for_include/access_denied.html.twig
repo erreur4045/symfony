@@ -1,0 +1,26 @@
+<div class="jumbotron d-flex align-items-center min-vh-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <img src="{{ asset('uploads/image_for_design/95458.png ') }}" alt="Attention" class="rounded mx-auto d-block">
+                <h1 class="text-center">Vous devez être connecté pour accéder à cette page.</h1>
+                <div class="d-flex justify-content-around">
+                    <div class="card text-center" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title"></h5>
+                            <p class="card-text">Pour accéder à cette page, vous devez être connecté.</p>
+                            <a href="{{ path('app_login') }}" class="btn btn-primary">Je me connecte.</a>
+                        </div>
+                    </div>
+                    <div class="card text-center" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title"></h5>
+                            <p class="card-text">Vous n'êtes pas inscrits ? Vous pouvez vous inscrire ci-dessous.</p>
+                            <a href="{{ path('registration') }}" class="btn btn-primary">Je m'inscris.</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

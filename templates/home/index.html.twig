@@ -19,51 +19,30 @@
         </h1>
         <div class="row">
             {% if figures is defined %}
-            {% for figures in figures %}
+            {% for figure in figures %}
                 <div class="col-lg-4 col-sm-6 mb-4">
                     <div class="card h-100">
                         {#todo : recuperer l'image de la figure#}
-                        <a href="{{ path('trick', {slug: figures.slug}) }}"><img class="card-img-top"
+                        <a href="{{ path('trick', {slug: figure.slug}) }}"><img class="card-img-top"
                                                                              src="http://placehold.it/700x400"
                                                                              alt=""></a>
                         <div class="card-body">
                             <h4 class="card-title">
-                                <a href="{{ path('trick', {slug: figures.slug}) }}">{{ figures.name }}</a>
+                                <a href="{{ path('trick', {slug: figure.slug}) }}">{{ figure.name }}</a>
                             </h4>
-                            <p class="card-text">{{ figures.description }}</p>
+                            <p class="card-text">{{ figure.description }}</p>
                             {% if app.user %}
                                 <div class="d-flex align-items-end flex-column">
             <span class="d-inline-block">
                 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                    {{ include('block_for_include/modal_delete_trick.html.twig') }}
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{ figure.slug }}">
   <i class="material-icons">delete_sweep</i>
 </button>
 
-                <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        Etes-vous sûr de vouloir supprimer cette figure ?
-      </div>
-      <div class="modal-footer">
-          <button onclick="location.href='{{ path('delete.trick', {id: figures.id}) }}'" type="button"
-                  class="btn btn-primary">
-         <i class="material-icons">delete_sweep</i></button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
-      </div>
-    </div>
-  </div>
-</div>
+
             <button type="button" class="btn btn-outline-primary"><a
-                        href="{{ path('edit.trick', {slug: figures.slug}) }}"><i
+                        href="{{ path('edit.trick', {slug: figure.slug}) }}"><i
                             class="material-icons">create</i></a></button>
         </span>
                                 </div>
@@ -73,30 +52,9 @@
                     </div>
                 </div>
             {% endfor %}
+                {% else %}
+                {# todo Ajouter un block "pas de figure"#}
             {% endif %}
         </div>
-        <ul class="pagination justify-content-center">
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">Previous</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="#">1</a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="#">2</a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="#">3</a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Next</span>
-                </a>
-            </li>
-        </ul>
     </div>
 {% endblock %}

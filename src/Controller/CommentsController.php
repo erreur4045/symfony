@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Twig\Environment;
 
 class CommentsController
@@ -43,12 +44,17 @@ class CommentsController
     /**
      * @Route("/deletecom/{id}", name="delete.comment")
      */
-    public function deleteCom(Comments $comment, ObjectManager $manager, Request $request)
+    public function deleteCom(UserInterface $user = null, Comments $comment, ObjectManager $manager, Request $request)
     {
+        if($user == null){
+            return new Response($this->templating->render('block_for_include/no_connect.html.twig', [
+            ]));
+        }
+
         /** @var Figure $datatricks */
         $datatricks = $this->manager->getRepository(Figure::class)->findOneBy(['id' => $request->attributes->get('comment')->getIdfigure()->getId()]);
 
-        if ($comment->getUser()->getName() == $this->tokenStorage->getToken()->getUser() OR $this->tokenStorage->getToken()->getUser()) {
+        if ($comment->getUser()->getMail() == $this->tokenStorage->getToken()->getUser()->getMail()) {
             $manager->remove($comment);
             $manager->flush();
             $this->bag->add('success', 'Votre commentaire a été supprimé');
@@ -65,11 +71,15 @@ class CommentsController
      * @param ObjectManager $manager
      * @return Response
      */
-    public function editCom(Comments $comment, ObjectManager $manager, Request $request)
+    public function editCom(UserInterface $user = null,Comments $comment, ObjectManager $manager, Request $request)
     {
+        if($user == null){
+            return new Response($this->templating->render('block_for_include/no_connect.html.twig', [
+            ]));
+        }
         /** @var Figure $datatricks */
         $datatricks = $this->manager->getRepository(Figure::class)->findOneBy(['id' => $request->attributes->get('comment')->getIdfigure()->getId()]);
-        if ($comment->getUser()->getName() == $this->tokenStorage->getToken()->getUser()->getName() OR $this->tokenStorage->getToken()->getUser()) {
+        if ($comment->getUser()->getMail() == $this->tokenStorage->getToken()->getUser()->getMail()) {
             $form = $this->formFactory->create(EditComType::class);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
