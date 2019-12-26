@@ -157,7 +157,6 @@ class TricksController extends AbstractController
         }
 
         if ($this->tokenStorage->getToken()->getUser()) {
-            dump($figure);
             /** @var Pictureslink $image */
             $image = $this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $figure->getId()]);
             foreach ($image as $images) {
