@@ -3,6 +3,7 @@
 {% block title %}{{ h1 }}{% endblock %}
 
 {% block body %}
+    {% if is_granted('ROLE_USER') %}
     <h1 class="text-center">{{ h1 }}</h1>
     <div class="container">
         <div class="row">
@@ -46,6 +47,9 @@
             </div>
         </div>
     </div>
+    {% else %}
+    {{ include('block_for_include/access_denied.html.twig') }}
+    {% endif %}
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}

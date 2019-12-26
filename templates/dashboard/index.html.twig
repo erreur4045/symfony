@@ -6,6 +6,7 @@
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">{{ message }}</div>
     {% endfor %}
+    {% if is_granted('ROLE_USER') %}
     <div class="container ">
         <h1 class="text-center">Votre dashboard</h1>
         <div class="row">
@@ -52,7 +53,10 @@
                                         <a href="{{ path('trick', {'slug': figure.slug}) }}">{{ figure.name |capitalize }}</a>
                                     </td>
                                     <td>{{ figure.description| capitalize }}</td>
-                                    <td><a href="{{ path('delete.trick', {id: figure.id}) }}" class="btn btn-danger">Supprimer</a>
+                                    <td>                    {{ include('block_for_include/modal_delete_trick.html.twig') }}
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{ figure.slug }}">
+                                            <i class="material-icons">delete_sweep</i>
+                                        </button>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -63,4 +67,7 @@
             </div>
         </div>
     </div>
+    {% else %}
+    {{ include('block_for_include/access_denied.html.twig') }}
+    {% endif %}
 {% endblock %}
