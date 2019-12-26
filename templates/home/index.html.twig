@@ -35,34 +35,12 @@
                                 <div class="d-flex align-items-end flex-column">
             <span class="d-inline-block">
                 <!-- Button trigger modal -->
+                    {{ include('block_for_include/modal_delete_trick.html.twig') }}
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{ figure.slug }}">
   <i class="material-icons">delete_sweep</i>
 </button>
 
-                {# todo : take modal block for include here#}
-                <!-- Modal -->
-<div class="modal fade" id="exampleModal{{ figure.slug }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        Etes-vous sûr de vouloir supprimer cette figure ?
-      </div>
-      <div class="modal-footer">
-          <button onclick="location.href='{{ path('delete.trick', {slug: figure.slug}) }}'" type="button"
-                  class="btn btn-primary">
-         <i class="material-icons">delete_sweep</i></button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
-      </div>
-    </div>
-  </div>
-</div>
+
             <button type="button" class="btn btn-outline-primary"><a
                         href="{{ path('edit.trick', {slug: figure.slug}) }}"><i
                             class="material-icons">create</i></a></button>
