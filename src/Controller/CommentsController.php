@@ -52,7 +52,9 @@ class CommentsController
         }
 
         /** @var Figure $datatricks */
-        $datatricks = $this->manager->getRepository(Figure::class)->findOneBy(['id' => $request->attributes->get('comment')->getIdfigure()->getId()]);
+        $datatricks = $this->manager
+            ->getRepository(Figure::class)
+            ->findOneBy(['id' => $request->attributes->get('comment')->getIdfigure()->getId()]);
 
         if ($comment->getUser()->getMail() == $this->tokenStorage->getToken()->getUser()->getMail()) {
             $manager->remove($comment);

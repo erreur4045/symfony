@@ -31,21 +31,12 @@ class HomeController extends AbstractController
      */
     public function index()
     {
-        //todo : c'est salement sale  !
-        //todo : $figure ne contient pas les collections photos/videos
-        $user = $this->getUser();
-        //recuperer les photos de la figures ?
         /** @var Figure $figures */
-        $figures = $this->manager->getRepository(Figure::class)->findBy([], ['id' => 'DESC'], $limit = 10);
-        /** @var Figure $figure_picture */
-        foreach ($figures as $figure_picture){
-            /** @var Pictureslink $image */
-            $image[] = $this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $figure_picture->getId()]);
-        }
+        $figures = $this->manager->getRepository(Figure::class)->findAll();
+
         return new Response($this->environment->render('home/index.html.twig', [
-            'controller_name' => 'HomeController',
             'figures' => $figures,
-            'images' => $image
+            'title' => 'SnowTricks'
         ]));
     }
 

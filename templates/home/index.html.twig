@@ -1,58 +1,64 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}{{title}}{% endblock %}
 
 {% block body %}
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">{{ message }}</div>
     {% endfor %}
-    <div class="">
-        <img class="bg" src="https://www.imperiumsnow.com/upload/content_team_082817_47898_snowboard_rocker_lg.jpg"
-             alt="">
-        <div class="centered">Phrase d'accroche</div>
-        <a href="#tricks">
-            <i class="fas fa-arrow-circle-down centeredright"></i>
-        </a>
+    <div class="container">
+        <div class="row justify-content-center">
+            <img class="bgtrick" src="{{ asset('uploads/image_for_design/3557.jpg ') }}"
+                 alt="image de font deux snowbordeurs">
+            <a href="#tricks">
+                <i class="fas fa-arrow-circle-down centeredright"></i>
+            </a>
+            <div class="text-center">Phrase d'accroche</div>
+        </div>
     </div>
+
+
     <div class="container">
         <h1 class="my-4" id="tricks">Liste des figures
         </h1>
         <div class="row">
             {% if figures is defined %}
-            {% for figure in figures %}
-                <div class="col-lg-4 col-sm-6 mb-4">
-                    <div class="card h-100">
-                        {#todo : recuperer l'image de la figure#}
-                        <a href="{{ path('trick', {slug: figure.slug}) }}"><img class="card-img-top"
-                                                                             src="http://placehold.it/700x400"
-                                                                             alt=""></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                <a href="{{ path('trick', {slug: figure.slug}) }}">{{ figure.name }}</a>
-                            </h4>
-                            <p class="card-text">{{ figure.description }}</p>
-                            {% if app.user %}
-                                <div class="d-flex align-items-end flex-column">
-            <span class="d-inline-block">
-                <!-- Button trigger modal -->
-                    {{ include('block_for_include/modal_delete_trick.html.twig') }}
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal{{ figure.slug }}">
-  <i class="material-icons">delete_sweep</i>
-</button>
-
-
-            <button type="button" class="btn btn-outline-primary"><a
-                        href="{{ path('edit.trick', {slug: figure.slug}) }}"><i
-                            class="material-icons">create</i></a></button>
-        </span>
+                {% for figure in figures %}
+                    {% for picture in figure.pictureslinks %}
+                        {% if picture.firstimage == true %}
+                            {% set picturefirst = picture.linkpictures %}
+                            <div class="col-lg-4 col-sm-6 mb-4">
+                                <div class="card h-100">
+                                    <a href="{{ path('trick', {slug: figure.slug}) }}"><img class="card-img-top"
+                                                                                            src={{ asset('uploads/figureimage/' ~ picturefirst) }}
+                                                                                            alt=""></a>
+                                    <div class="card-body">
+                                        <h4 class="card-title">
+                                            <a href="{{ path('trick', {slug: figure.slug}) }}">{{ figure.name }}</a>
+                                        </h4>
+                                        <p class="card-text">{{ figure.description }}</p>
+                                        {% if app.user %}
+                                            <div class="d-flex align-items-end flex-column">
+                                    <span class="d-inline-block">
+                                            {{ include('block_for_include/modal_delete_trick.html.twig') }}
+                                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                    data-target="#exampleModal{{ figure.slug }}">
+                                              <i class="material-icons">delete_sweep</i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-primary"><a
+                                                        href="{{ path('edit.trick', {slug: figure.slug}) }}"><i
+                                                            class="material-icons">create</i></a>
+                                            </button>
+                                    </span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
                                 </div>
-                            {% endif %}
-                        </div>
-
-                    </div>
-                </div>
-            {% endfor %}
-                {% else %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            {% else %}
                 {# todo Ajouter un block "pas de figure"#}
             {% endif %}
         </div>
