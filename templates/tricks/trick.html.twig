@@ -3,113 +3,99 @@
 {% block title %}Hello TricksController!{% endblock %}
 
 {% block body %}
-    <img class="bgtrick" src="https://www.imperiumsnow.com/upload/content_team_082817_47898_snowboard_rocker_lg.jpg"
-         alt="">
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success">{{ message }}</div>
-    {% endfor %}
-    <div class="container trickblock">
-        {% if app.user %}
-            <div class="d-flex align-items-end flex-column">
-            <span class="d-inline-block">
-                <!-- Button trigger modal -->
-<button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#exampleModal">
-  <i class="material-icons">delete_sweep</i>
-</button>
-
-                <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Attention</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        Etes-vous sûr de vouloir supprimer cette figure ?
-      </div>
-      <div class="modal-footer">
-          <button onclick="location.href='{{ path('delete.trick', {slug: data.slug}) }} '" type="button"
-                  class="btn btn-primary">
-         <i class="material-icons">delete_sweep</i></button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
-      </div>
-    </div>
-  </div>
-</div>
-            <button type="button" class="btn btn-outline-primary"><a href="{{ path('edit.trick', {slug: data.slug}) }}"><i
-                            class="material-icons">create</i></a></button>
-        </span>
-            </div>
-
-        {% endif %}
-        <div class="col-md-12 titletrick">
-            <h1>{{ data.name }}</h1>
-        </div>
+    <div class="container">
         <div class="row">
-            <div class="col-md-12 ">
-                {% for images in image %}
-                    <img src="{{ asset('uploads/figureimage/') ~ images.linkpictures }}" class="rounded mt-4"
-                         style="max-height: 200px; max-width: 200px"
-                         alt="">
+            <div class="col-md-12"><img class="imagebackgroundtrick"
+                                        src="{{ asset('uploads/image_for_design/3557.jpg ') }}"
+                                        alt="image de font deux snowbordeurs">
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success">{{ message }}</div>
                 {% endfor %}
-                {% for video in video %}
-                    <div class="embed-responsive embed-responsive-16by9">
-                        <iframe class="embed-responsive-item" src="{{ video.linkvideo }}" allowfullscreen></iframe>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-        <hr>
-        <div class="row">
-            <div class="col-12"><h1 class="text-center">Description de la figure</h1>
-                <div class="col-md-12 mt-4 d-inline-block">
-                    <p>Catégorie : <span class="badge badge-secondary">{{ data.idfiguregroup.name }}</span>
-                        Créée le : <span class="badge badge-secondary">{{ data.datecreate|date('d-m-Y') }}</span>
-                        {% if data.dateupdate is not null %}
-                            Modifié le : <span class="badge badge-secondary"> {{ data.dateupdate|date('d-m-Y') }}</span>
-                        {% endif %}</p>
-                </div>
-                <div class="col-md-12 mt-3 mb-3 align-middle">
-                    <p>{{ data.description|capitalize }}</p>
-                </div>
-            </div>
-        </div>
-        <hr>
-        {% if app.user %}
-            {{ form_start(form) }}
-            {{ form_row(form.text) }}
-            <button class="btn btn-primary">Laisser un commentaire</button>
-            {{ form_end(form) }}
-            <hr>
-        {% endif %}
-        {% if comment.items %}
-            <h1 id="comment" class="text-center">Commentaires :</h1>
-            {% for comment in comment %}
-                <h3 class=""></h3>
-                <img src="{{ asset('uploads/profilepicture/' ~ comment.user.profilePicture) }}"
-                     class="mr-3 rounded-circle embed-responsive d-inline-flex userimg"
-                     alt="{{ 'image_utilisateur' }}">
-                <h3 class="d-inline-flex">{{ comment.user.name }} </h3> <label for=""> Le {{ comment.datecreate|date("d/m/Y")}}</label>&nbsp;<label for=""> a écrit :</label>
-                <section class="test2 commentinblock">{{ comment.text }}</section>
-                {% if user.name is defined %}
-                    {% if comment.user.name == user.name %}
-                        <button class="btn btn-outline-danger text-right btn_comm"><a
-                                    href="{{ path('delete.comment', {id: comment.id}) }}">Supprimer</a>
-                        </button>
-                        <button class="btn btn-outline-info text-right btn_comm"><a
-                                    href="{{ path('edit.comment', {id: comment.id}) }}">Modifier</a>
-                        </button>
+                <div class="trickblock">
+                    {% if app.user %}
+                        <div class="d-flex align-items-end flex-column">
+                        <span class="d-inline-block">
+                        <button type="button" class="btn btn-outline-danger" data-toggle="modal"
+                                data-target="#exampleModal"> <i class="material-icons">delete_sweep</i></button>
+                        {{ include('block_for_include/modal_delete_trick2.html.twig') }}
+                        <button type="button" class="btn btn-outline-secondary"><a
+                                    href="{{ path('edit.trick', {slug: data.slug}) }}"><i
+                                        class="material-icons">create</i></a></button>
+                        </span>
+                        </div>
                     {% endif %}
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-        <div class="pagination" style="margin-top: 5px">
-            {{ knp_pagination_render(comment) }}
+                    <div class="container">
+                        <div class="col-md-12 titletrick">
+                            <h1>{{ data.name }}</h1>
+                        </div>
+                        <div class="col-md-12 d-flex justify-content-center">
+                            <div class="row"></div>
+                            {% for images in image %}
+                                <img src="{{ asset('uploads/figureimage/') ~ images.linkpictures }}"
+                                     class="rounded mt-4 imgtrick"
+                                     alt="">
+                            {% endfor %}
+                            {% for video in video %}
+                                <div class="embed-responsive videotrick">
+                                    <iframe class="embed-responsive-item" src="{{ video.linkvideo }}"
+                                            allowfullscreen></iframe>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-12"><h1 class="text-center">Description de la figure</h1>
+                                <div class="col-md-12 mt-4 d-inline-block">
+                                    <p>Catégorie : <span
+                                                class="badge badge-secondary">{{ data.idfiguregroup.name }}</span>
+                                        Créée le : <span
+                                                class="badge badge-secondary">{{ data.datecreate|date('d-m-Y') }}</span>
+                                        {% if data.dateupdate is not null %}
+                                            Modifié le : <span
+                                                class="badge badge-secondary"> {{ data.dateupdate|date('d-m-Y') }}</span>
+                                        {% endif %}</p>
+                                </div>
+                                <div class="col-md-12 mt-3 mb-3 align-middle">
+                                    <p>{{ data.description|capitalize }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        {% if app.user %}
+                            {{ form_start(form) }}
+                            {{ form_row(form.text) }}
+                            <button class="btn btn-primary">Laisser un commentaire</button>
+                            {{ form_end(form) }}
+                            <hr>
+                        {% endif %}
+                        {% if comment.items %}
+                            <h1 id="comment" class="text-center">Commentaires :</h1>
+                            {% for comment in comment %}
+                                <h3 class=""></h3>
+                                <img src="{{ asset('uploads/profilepicture/' ~ comment.user.profilePicture) }}"
+                                     class="mr-3 rounded-circle embed-responsive d-inline-flex userimg"
+                                     alt="{{ 'image_utilisateur' }}">
+                                <h3 class="d-inline-flex">{{ comment.user.name }} </h3> <label for="">
+                                Le {{ comment.datecreate|date("d/m/Y") }}</label>&nbsp;<label for=""> a écrit :</label>
+                                <section class="test2 commentinblock">{{ comment.text }}</section>
+                                {% if user.name is defined %}
+                                    {% if comment.user.name == user.name %}
+                                        <button class="btn btn-outline-danger text-right btn_comm"><a
+                                                    href="{{ path('delete.comment', {id: comment.id}) }}">Supprimer</a>
+                                        </button>
+                                        <button class="btn btn-outline-info text-right btn_comm"><a
+                                                    href="{{ path('edit.comment', {id: comment.id}) }}">Modifier</a>
+                                        </button>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        <div class="pagination" style="margin-top: 5px">
+                            {{ knp_pagination_render(comment) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
 {% endblock %}
