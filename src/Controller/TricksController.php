@@ -7,6 +7,7 @@ use App\Entity\Figure;
 use App\Entity\Pictureslink;
 use App\Entity\Videolink;
 use App\Form\CommentType;
+use App\Form\FigureEditType;
 use App\Form\FigureType;
 use App\Repository\FigureRepository;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -225,7 +226,7 @@ class TricksController extends AbstractController
             throw new NotFoundHttpException('La figure n\'existe pas');
         }
 
-        $form = $this->formFactory->create(FigureType::class, $datatricks);
+        $form = $this->formFactory->create(FigureEditType::class, $datatricks);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $figure->setDateupdate(new \DateTime('now'));
@@ -234,11 +235,10 @@ class TricksController extends AbstractController
             $this->bag->add('success', 'Votre figure a été mise a jour');
             return new RedirectResponse($this->router->generate('trick', ['slug' => $datatricks->getSlug()]));
         }
-
         return new Response($this->templating->render('tricks/edittrick.html.twig', [
             'figure' => $figure,
             'form' => $form->createView(),
-            'h1' => 'Modification d\'une figure'
+            'h1' => 'Modification de la figure'
         ]));
     }
 }

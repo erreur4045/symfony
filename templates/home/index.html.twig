@@ -6,23 +6,25 @@
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">{{ message }}</div>
     {% endfor %}
-    <div class="container">
-        <div class="row justify-content-center">
-            <img class="bgtrick" src="{{ asset('uploads/image_for_design/3557.jpg ') }}"
-                 alt="image de font deux snowbordeurs">
-            <a href="#tricks">
-                <i class="fas fa-arrow-circle-down centeredright"></i>
-            </a>
-            <div class="text-center">Phrase d'accroche</div>
-        </div>
-    </div>
-
-
-    <div class="container">
-        <h1 class="my-4" id="tricks">Liste des figures
-        </h1>
+    <div class="container-fluid">
         <div class="row">
-            {% if figures is defined %}
+            <img class="img-fluid home_background" src="{{asset('uploads/image_for_design/3557.jpg ')}}"
+                 alt="image de font deux snowbordeurs">
+            <div class="centered_custum"><span>Phrase d'accroche</span></div>
+            <span>
+            <div class="bottom-right">
+                <a href="#tricks"><i class="fas fa-arrow-circle-down"></i></a>
+            </div>
+                </span>
+        </div>
+            {% if figures is empty %}
+                {{include('block_for_include/no_tricks_for_now.html.twig')}}
+                </div>
+            {% else %}
+                <div class="container">
+                <h1 class="my-4" id="tricks">Liste des figures
+                </h1>
+                <div class="row">
                 {% for figure in figures %}
                     {% for picture in figure.pictureslinks %}
                         {% if picture.firstimage == true %}
@@ -58,8 +60,6 @@
                         {% endif %}
                     {% endfor %}
                 {% endfor %}
-            {% else %}
-                {# todo Ajouter un block "pas de figure"#}
             {% endif %}
         </div>
     </div>

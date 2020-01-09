@@ -136,4 +136,9 @@ class Pictureslink
     {
         $this->picture = $picture;
     }
+
+    public function removeTag(Pictureslink $pictureslink)
+    {
+        $this->pictureslink->removeElement($pictureslink);
+    }
 }

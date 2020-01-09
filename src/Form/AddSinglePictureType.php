@@ -4,22 +4,20 @@ namespace App\Form;
 
 use App\Entity\Pictureslink;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 
-
-class PicturelinkType extends AbstractType
+class AddSinglePictureType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('picture', FileType::class, [
-                'label' => 'Votre image',
-
+            ->add('picture', FileType::class,[
+                'attr' => ['placeholder' => 'Cliquer pour choisir une nouvelle image'],
+                'label' => 'Choisisez votre nouvelle photo au formats .png .jpg .jpeg',
+                'mapped' => false,
                 'required' => false,
                 'constraints' => [
                     new File([
@@ -28,25 +26,20 @@ class PicturelinkType extends AbstractType
                             "image/png",
                             "image/jpeg",
                             "image/jpg",
-                            "image/gif",
                         ],
-                        'mimeTypesMessage' => 'Veuillez uploader un fichier conforme',
+                        'mimeTypesMessage' => 'Seul les formats .png .jpg .jpeg sont accepté' ,
                     ])
-                ]
+                ],
             ])
-            ->add('alt', TextType::class, ['label' => 'Desciption de l\'image'])
-            // todo : une seul imagefirst possible ?
-            ->add('first_image', CheckboxType::class, [
-                'attr' => ['class' => 'checkbox_check', 'data-id' => '__name__'],
-                'label' => 'Image à la Une ?',
-                'required' => false
-            ]);
+            ->add('alt')
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Pictureslink::class,
+            'translation_domain' => 'form_add_picture'
         ]);
     }
 }

@@ -12,8 +12,16 @@
                     <div class="alert alert-success">{{ message }}</div>
                 {% endfor %}
                 <div class="trickblock">
-                    {% if app.user %}
-                        <div class="d-flex align-items-end flex-column">
+                    <div class="container">
+                        <div class="col-md-12">
+                            {% for images in image %}
+                                {% if images.firstimage == true %}
+                                    <img src="{{ asset('uploads/figureimage/') ~ images.linkpictures }}"
+                                         class="rounded mt-4 img-fluid"
+                                         alt="">
+                                    <h1 class="centered">{{ data.name }}</h1>
+                                    {% if app.user %}
+                                        <div class="d-flex align-items-end flex-column top-right">
                         <span class="d-inline-block">
                         <button type="button" class="btn btn-outline-danger" data-toggle="modal"
                                 data-target="#exampleModal"> <i class="material-icons">delete_sweep</i></button>
@@ -22,12 +30,13 @@
                                     href="{{ path('edit.trick', {slug: data.slug}) }}"><i
                                         class="material-icons">create</i></a></button>
                         </span>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
                         </div>
-                    {% endif %}
+                    </div>
                     <div class="container">
-                        <div class="col-md-12 titletrick">
-                            <h1>{{ data.name }}</h1>
-                        </div>
                         <div class="col-md-12 d-flex justify-content-center">
                             <div class="row"></div>
                             {% for images in image %}
