@@ -21,7 +21,9 @@ $(document).ready(function() {
     $collectionHolder = $('ul.images_tricks');
     // add the "add a tag" anchor and li to the tags ul
     $collectionHolder.append($newLinkLi);
-
+/*    $collectionHolder.find('li').each(function() {
+        addTagFormDeleteLink($(this));
+    });*/
     // count the current form inputs we have (e.g. 2), use that as the new
     // index when inserting a new item (e.g. 2)
     $collectionHolder.data('index', $collectionHolder.find(':input').length);
@@ -55,6 +57,17 @@ function addTagForm($collectionHolder, $newLinkLi) {
     // Display the form in the page in an li, before the "Add a tag" link li
     var $newFormLi = $('<li></li>').append(newForm);
     $newLinkLi.before($newFormLi);
+
+}
+function addTagFormDeleteLink($tagFormLi) {
+    var $removeFormButton = $('<button type="button" class="btn btn-outline-danger">Delete this tag</button>');
+    $tagFormLi.append($removeFormButton);
+
+    const s = "#figure_pictureslinks_" + String.toString(index);
+    var imageFormToBeRemoved = $(s);
+    imageFormToBeRemoved.on('click',() => {
+        imageFormToBeRemoved.remove();
+    })
 }
 //todo : du sale !
 let $collectionHolder1;
@@ -90,7 +103,7 @@ function addTagForm1($collectionHolder1, $newLinkLi1) {
     // You need this only if you didn't set 'label' => false in your tags field in TaskType
     // Replace '__name__label__' in the prototype's HTML to
     // instead be a number based on how many items we have
-    // newForm = newForm.replace(/__name__label__/g, index);
+     //newForm = newForm.replace(/__name__label__/g, index);
 
     // Replace '__name__' in the prototype's HTML to
     // instead be a number based on how many items we have
@@ -103,13 +116,3 @@ function addTagForm1($collectionHolder1, $newLinkLi1) {
     var $newFormLi1 = $('<li></li>').append(newForm);
     $newLinkLi1.before($newFormLi1);
 }
-
-/*
-
-$('.custom-file-input').on('change', function(event) {
-    var inputFile = event.currentTarget;
-    $(inputFile).parent()
-        .find('.custom-file-label')
-        .html(inputFile.files[0].name);
-});
-*/

@@ -1,6 +1,9 @@
 .fullimage{
     height: 100vh;
 }
+.card_video {
+    max-width: 22.5rem;
+}
 
 .bg {
     background-image: url("https://www.imperiumsnow.com/upload/content_team_082817_47898_snowboard_rocker_lg.jpg");
@@ -29,15 +32,14 @@
     color: black;
 }
 
+.centered_custum{
+    position: relative;
+    bottom: 15em;
+    left: 50%;
+}
+
 .centeredright {
-    position: absolute;
-    top: 90%;
-    left: 80%;
-    transform: translate(-50%, -50%);
-    font-size: x-large;
-    font-style: normal;
-    font-weight: bold;
-    color: #00B8F5;
+
 }
 
 body {
@@ -112,6 +114,20 @@ body {
     max-width: 200px;
 }
 
+.card{
+    width: 18rem;
+}
+
+.bottom-right {
+    position: absolute;
+    bottom: 8px;
+    right: 16px;
+    font-size: x-large;
+    font-style: normal;
+    font-weight: bold;
+    color: #00B8F5;
+}
+
 @media(max-width:767px){
     nav{
         background-color: #f8f9fa;
@@ -126,3 +142,5 @@ body {
         font-size: 40px;
     }
 }
+
+
