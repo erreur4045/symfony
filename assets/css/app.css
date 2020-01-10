@@ -59,14 +59,14 @@ body {
     z-index: 0;
 }
 
-.trickblock{
-    border: solid 2px black;
-    border-radius: 1%;
-    z-index: 1;
+.trickblock {
+    border: solid;
+    border-radius: 30px;
+    position: absolute;
+    top: 5em;
     background-color: white;
-    height: 100%;
-    position: relative;
-
+    z-index: 1;
+    margin-bottom: 10em;
 }
 
 .userimg{

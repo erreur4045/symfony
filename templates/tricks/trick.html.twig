@@ -5,121 +5,130 @@
 {% block body %}
     <div class="container-fluid">
         <div class="row">
-
             <img class="imagebackgroundtrick"
-                                        src="{{ asset('uploads/image_for_design/3557.jpg ') }}"
-                                        alt="image de font deux snowbordeurs">
-                {% for message in app.flashes('success') %}
-                    <div class="alert alert-success">{{ message }}</div>
-                {% endfor %}
-            </div>
-                <div class="trickblock">
-                    <div class="container">
+                 src="{{ asset('uploads/image_for_design/3557.jpg ') }}"
+                 alt="image de font deux snowbordeurs">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+        </div>
+        <div class="container">
+            <div class="d-flex justify-content-center">
+                <div class="container trickblock">
+                    <div class="text-center">
                         <div class="row">
                             <div class="col-12 mb-1">
                                 {% for images in image %}
                                     {% if images.firstimage == true %}
-                                <div class="text-center img_first_trick">
-                                <img src="{{ asset('uploads/figureimage/') ~ images.linkpictures }}"
-                                     class="rounded mt-4 img-fluid"
-                                     alt="">
-                                    <div class="centered">{{ data.name }}</div>
-                                    {% if app.user %}
-                                        <div class="box_buttons_edit_delete">
-                                            <button type="button" class="btn btn-outline-danger" data-toggle="modal"
-                                                    data-target="#exampleModal"> <i class="material-icons">delete_sweep</i></button>
-                                            {{ include('block_for_include/modal_delete_trick2.html.twig') }}
-                                            <button type="button" class="btn btn-outline-secondary"><a
-                                                        href="{{ path('edit.trick', {slug: data.slug}) }}"><i
-                                                            class="material-icons">create</i></a></button>
+                                        <div class="text-center img_first_trick">
+                                            <img src="{{ asset('uploads/figureimage/') ~ images.linkpictures }}"
+                                                 class="rounded mt-4 img-fluid"
+                                                 alt="">
+                                            <div class="centered">{{ data.name }}</div>
+                                            {% if app.user %}
+                                                <div class="box_buttons_edit_delete">
+                                                    <button type="button" class="btn btn-outline-danger"
+                                                            data-toggle="modal"
+                                                            data-target="#exampleModal"><i class="material-icons">delete_sweep</i>
+                                                    </button>
+                                                    {{ include('block_for_include/modal_delete_trick2.html.twig') }}
+                                                    <button type="button" class="btn btn-outline-secondary"><a
+                                                                href="{{ path('edit.trick', {slug: data.slug}) }}"><i
+                                                                    class="material-icons">create</i></a></button>
+                                                </div>
+                                            {% endif %}
                                         </div>
-                                    {% endif %}
-                                </div>
                                     {% endif %}
                                 {% endfor %}
                             </div>
                         </div>
-                    </div>
-                    <div class="container media_list">
-                        <div class="container">
-                            <div class="row">
-                                <div class="MultiCarousel" data-items="1,3,5,6" data-slide="1" id="MultiCarousel"  data-interval="1000">
-                                    <div class="MultiCarousel-inner">
-                                        {% for images in image %}
-                                        <div class="item">
-                                            <div class="pad15" >
-                                            <img src="{{ asset('uploads/figureimage/') ~ images.linkpictures }}"
-                                                 class="rounded mt-4 imgtrick"
-                                                 alt="">
+                        <div class="container media_list">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="MultiCarousel" data-items="1,3,5,6" data-slide="1" id="MultiCarousel"
+                                         data-interval="1000">
+                                        <div class="MultiCarousel-inner">
+                                            {% for images in image %}
+                                                <div class="item">
+                                                    <div class="pad15">
+                                                        <img src="{{ asset('uploads/figureimage/') ~ images.linkpictures }}"
+                                                             class="rounded mt-4 imgtrick"
+                                                             alt="">
+                                                    </div>
                                                 </div>
+                                            {% endfor %}
+                                            {% for video in video %}
+                                                <div class="item">
+                                                    <div class="pad15">
+                                                        <iframe class="embed-responsive-item rounded mt-4 imgtrick"
+                                                                src="{{ video.linkvideo }}"
+                                                                allowfullscreen
+                                                                style="width: 10em; height: 10em"></iframe>
+                                                    </div>
                                                 </div>
-                                        {% endfor %}
-                                        {% for video in video %}
-                                        <div class="item">
-                                            <div class="pad15">
-                                                <iframe class="embed-responsive-item rounded mt-4 imgtrick" src="{{ video.linkvideo }}"
-                                                        allowfullscreen style="width: 10em; height: 10em"></iframe>
-                                            </div>
-                                            </div>
-                                        {% endfor %}
+                                            {% endfor %}
+                                        </div>
+                                        <button class="btn btn-primary leftLst"><</button>
+                                        <button class="btn btn-primary rightLst">></button>
                                     </div>
-                                    <button class="btn btn-primary leftLst"><</button>
-                                    <button class="btn btn-primary rightLst">></button>
                                 </div>
                             </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-12"><h1 class="text-center">Description de la figure</h1>
-                                <div class="col-md-12 mt-4 d-inline-block">
-                                    <p>Catégorie : <span
-                                                class="badge badge-secondary">{{ data.idfiguregroup.name }}</span>
-                                        Créée le : <span
-                                                class="badge badge-secondary">{{ data.datecreate|date('d-m-Y') }}</span>
-                                        {% if data.dateupdate is not null %}
-                                            Modifié le : <span
-                                                class="badge badge-secondary"> {{ data.dateupdate|date('d-m-Y') }}</span>
-                                        {% endif %}</p>
-                                </div>
-                                <div class="col-md-12 mt-3 mb-3 align-middle">
-                                    <p>{{ data.description|capitalize }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                        {% if app.user %}
-                            {{ form_start(form) }}
-                            {{ form_row(form.text) }}
-                            <button class="btn btn-primary">Laisser un commentaire</button>
-                            {{ form_end(form) }}
                             <hr>
-                        {% endif %}
-                        {% if comment.items %}
-                            <h1 id="comment" class="text-center">Commentaires :</h1>
-                            {% for comment in comment %}
-                                <h3 class=""></h3>
-                                <img src="{{ asset('uploads/profilepicture/' ~ comment.user.profilePicture) }}"
-                                     class="mr-3 rounded-circle embed-responsive d-inline-flex userimg"
-                                     alt="{{ 'image_utilisateur' }}">
-                                <h3 class="d-inline-flex">{{ comment.user.name }} </h3> <label for="">
-                                Le {{ comment.datecreate|date("d/m/Y") }}</label>&nbsp;<label for=""> a écrit :</label>
-                                <section class="test2 commentinblock">{{ comment.text }}</section>
-                                {% if user.name is defined %}
-                                    {% if comment.user.name == user.name %}
-                                        <button class="btn btn-outline-danger text-right btn_comm"><a
-                                                    href="{{ path('delete.comment', {id: comment.id}) }}">Supprimer</a>
-                                        </button>
-                                        <button class="btn btn-outline-info text-right btn_comm"><a
-                                                    href="{{ path('edit.comment', {id: comment.id}) }}">Modifier</a>
-                                        </button>
+                            <div class="row">
+                                <div class="col-12"><h1 class="text-center">Description de la figure</h1>
+                                    <div class="col-md-12 mt-4 d-inline-block">
+                                        <p>Catégorie : <span
+                                                    class="badge badge-secondary">{{ data.idfiguregroup.name }}</span>
+                                            Créée le : <span
+                                                    class="badge badge-secondary">{{ data.datecreate|date('d-m-Y') }}</span>
+                                            {% if data.dateupdate is not null %}
+                                                Modifié le : <span
+                                                    class="badge badge-secondary"> {{ data.dateupdate|date('d-m-Y') }}</span>
+                                            {% endif %}</p>
+                                    </div>
+                                    <div class="col-md-12 mt-3 mb-3 align-middle">
+                                        <p>{{ data.description|capitalize }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            {% if app.user %}
+                                {{ form_start(form) }}
+                                {{ form_row(form.text) }}
+                                <button class="btn btn-primary">Laisser un commentaire</button>
+                                {{ form_end(form) }}
+                                <hr>
+                            {% endif %}
+                            {% if comment.items %}
+                                <h1 id="comment" class="text-center">Commentaires :</h1>
+                                {% for comment in comment %}
+                                    <h3 class=""></h3>
+                                    <img src="{{ asset('uploads/profilepicture/' ~ comment.user.profilePicture) }}"
+                                         class="mr-3 rounded-circle embed-responsive d-inline-flex userimg"
+                                         alt="{{ 'image_utilisateur' }}">
+                                    <h3 class="d-inline-flex">{{ comment.user.name }} </h3> <label for="">
+                                    Le {{ comment.datecreate|date("d/m/Y") }}</label>&nbsp;<label for=""> a écrit
+                                    :</label>
+                                    <section class="test2 commentinblock">{{ comment.text }}</section>
+                                    {% if user.name is defined %}
+                                        {% if comment.user.name == user.name %}
+                                            <button class="btn btn-outline-danger text-right btn_comm"><a
+                                                        href="{{ path('delete.comment', {id: comment.id}) }}">Supprimer</a>
+                                            </button>
+                                            <button class="btn btn-outline-info text-right btn_comm"><a
+                                                        href="{{ path('edit.comment', {id: comment.id}) }}">Modifier</a>
+                                            </button>
+                                        {% endif %}
                                     {% endif %}
-                                {% endif %}
-                            {% endfor %}
-                        {% endif %}
-                        <div class="pagination" style="margin-top: 5px">
-                            {{ knp_pagination_render(comment) }}
+                                {% endfor %}
+                            {% endif %}
+                            <div class="pagination" style="margin-top: 5px">
+                                {{ knp_pagination_render(comment) }}
+                            </div>
                         </div>
                     </div>
-
+                </div>
             </div>
+        </div>
+    </div>
 {% endblock %}
