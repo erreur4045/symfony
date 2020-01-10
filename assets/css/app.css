@@ -128,19 +128,7 @@ body {
     color: #00B8F5;
 }
 
-@media(max-width:767px){
-    nav{
-        background-color: #f8f9fa;
-        height: 8vh;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        z-index: 1030;
-        position: fixed !important;
-    }
-    nav i.nav-link, nav svg.nav-link {
-        font-size: 40px;
-    }
-}
+
+
 
 
