@@ -66,8 +66,6 @@ body {
     background-color: white;
     height: 100%;
     position: relative;
-    margin-left: 5em;
-    margin-right: 5em;
 
 }
 
@@ -110,8 +108,10 @@ body {
 }
 
 .imgtrick{
-    max-height: 200px;
-    max-width: 200px;
+    max-height: 180px;
+    max-width: 180px;
+    padding: auto;
+    margin: auto;
 }
 
 .card{
@@ -128,7 +128,25 @@ body {
     color: #00B8F5;
 }
 
+.img_first_trick{
+}
+.box_buttons_edit_delete{
+    position: absolute;
+    top: 2%;
+    right: 1%;
+}
+.media_list{
+    border-top: 2px solid;
+}
 
 
+.MultiCarousel { float: left; overflow: hidden; padding: 15px; width: 100%; position:relative; }
+.MultiCarousel .MultiCarousel-inner { transition: 1s ease all; float: left; }
+.MultiCarousel .MultiCarousel-inner .item { float: left;}
+/*.MultiCarousel .MultiCarousel-inner .item > div { text-align: center; padding:10px; margin:10px; background:#f1f1f1; color:#666;}*/
+.MultiCarousel .leftLst, .MultiCarousel .rightLst { position:absolute; border-radius:50%;top:calc(50% - 20px); }
+.MultiCarousel .leftLst { left:0; }
+.MultiCarousel .rightLst { right:0; }
 
+.MultiCarousel .leftLst.over, .MultiCarousel .rightLst.over { pointer-events: none; background:#ccc; }
 
