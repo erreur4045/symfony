@@ -133,9 +133,7 @@ class TricksController extends AbstractController
             $manager->persist($figure);
             $manager->flush();
             $this->bag->add('success', 'Votre figure a été ajouter');
-            // todo : redirection sur la figure
             return new RedirectResponse($this->router->generate('trick',['slug' => $figure->getSlug()]));
-            // error : Unable to generate a URL for the named route "trick/titredelafigure4" as such route does not exist.
             //return new RedirectResponse($this->router->generate('home'));
         }
         return new Response($this->templating->render('tricks/newtrick.html.twig', [

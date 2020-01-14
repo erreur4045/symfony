@@ -261,5 +261,4 @@ class Figure
 
         return $this;
     }
-
 }

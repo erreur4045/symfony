@@ -7,67 +7,68 @@
         <div class="alert alert-success">{{ message }}</div>
     {% endfor %}
     {% if is_granted('ROLE_USER') %}
-    <div class="container ">
-        <h1 class="text-center">Votre dashboard</h1>
-        <div class="row">
-            <div class="col-md-6 dashboard_block_card">
-                <div class="card">
-                    <div class="card-header text-center">
-                        Avatar
+<div class="container mt-5">
+    <h1 class="text-center">Votre dashboard</h1>
+    <div class="row">
+        <div class="col-6 ">
+            <div class="card">
+                <div class="card-header text-center">
+                    Avatar
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-center">Voici votre photo de profil</h5>
+                    <div class="container-fluid">
+                        <div class="text-center">
+                            <img src="{{ asset('uploads/profilepicture/' ~ image) }}"
+                                 class="img-thumbnail"
+                                 alt="{{ 'image_utilisateur' }}">
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Voici votre photo de profil</h5>
-                        <div class="container-fluid">
-                            <div class="text-center">
-                        <img src="{{ asset('uploads/profilepicture/' ~ image) }}"
-                             class="img-thumbnail"
-                             alt="{{ 'image_utilisateur' }}">
-                        </div></div>
-                        {{ form_start(form) }}
-                        {{ form_rest(form) }}
-                        <div class="d-flex justify-content-center">
-                            <button class="btn btn-outline-success">Envoyer</button>
-                        </div>
-                        {{ form_end(form) }}
-                        </div>
+                    {{ form_start(form) }}
+                    {{ form_rest(form) }}
+                    <div class="d-flex justify-content-center">
+                        <button class="btn btn-outline-success">Envoyer</button>
+                    </div>
+                    {{ form_end(form) }}
                 </div>
             </div>
-            <div class="col-md-6 dashboard_block_card">
-                <div class="card">
-                    <div class="card-header text-center">
-                        Liste des figures
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <thead>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    Liste des figures
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th class="text-center">Titre figure</th>
+                            <th class="text-center">Description</th>
+                            <th class="text-center">Suppression</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for figure in figure %}
                             <tr>
-                                <th class="text-center">Titre figure</th>
-                                <th class="text-center">Description</th>
-                                <th class="text-center">Suppression</th>
+                                <td>
+                                    <a href="{{ path('trick', {'slug': figure.slug}) }}">{{ figure.name |capitalize }}</a>
+                                </td>
+                                <td>{{ figure.description| capitalize }}</td>
+                                <td>                    {{ include('block_for_include/modal_delete_trick.html.twig') }}
+                                    <button type="button" class="btn btn-danger" data-toggle="modal"
+                                            data-target="#exampleModal{{ figure.slug }}">
+                                        <i class="material-icons">delete_sweep</i>
+                                    </button>
+                                </td>
                             </tr>
-                            </thead>
-                            <tbody>
-                            {% for figure in figure %}
-                                <tr>
-                                    <td>
-                                        <a href="{{ path('trick', {'slug': figure.slug}) }}">{{ figure.name |capitalize }}</a>
-                                    </td>
-                                    <td>{{ figure.description| capitalize }}</td>
-                                    <td>                    {{ include('block_for_include/modal_delete_trick.html.twig') }}
-                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{ figure.slug }}">
-                                            <i class="material-icons">delete_sweep</i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
     {% else %}
-    {{ include('block_for_include/access_denied.html.twig') }}
+        {{ include('block_for_include/access_denied.html.twig') }}
     {% endif %}
-{% endblock %}
+    {% endblock %}

@@ -1,46 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{title}}{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">{{ message }}</div>
     {% endfor %}
-    <div class="container-fluid">
+    <div class="container-fluid d-flex flex-column justify-content-center align-items-center img_home_background">
         <div class="row">
-            <img class="img-fluid home_background" src="{{asset('uploads/image_for_design/3557.jpg ')}}"
-                 alt="image de font deux snowbordeurs">
-            <div class="centered_custum"><span>Phrase d'accroche</span></div>
-            <span>
-            <div class="bottom-right">
-                <a href="#tricks"><i class="fas fa-arrow-circle-down"></i></a>
+            <div class="col-12">
+                <h1 class="text-center p-3 mb-2 bg-info text-white home_title">Phrase d'accroche</h1>
             </div>
-                </span>
+                <a href="#tricks" class="bottom-right">
+                    <i class="fas fa-arrow-circle-down"></i>
+                </a>
         </div>
-            {% if figures is empty %}
-                {{include('block_for_include/no_tricks_for_now.html.twig')}}
-                </div>
-            {% else %}
-                <div class="container">
-                <h1 class="my-4" id="tricks">Liste des figures
-                </h1>
-                <div class="row">
-                {% for figure in figures %}
-                    {% for picture in figure.pictureslinks %}
-                        {% if picture.firstimage == true %}
-                            {% set picturefirst = picture.linkpictures %}
-                            <div class="col-lg-4 col-sm-6 mb-4">
-                                <div class="card h-100">
-                                    <a href="{{ path('trick', {slug: figure.slug}) }}"><img class="card-img-top"
-                                                                                            src={{ asset('uploads/figureimage/' ~ picturefirst) }}
-                                                                                            alt=""></a>
-                                    <div class="card-body">
-                                        <h4 class="card-title">
-                                            <a href="{{ path('trick', {slug: figure.slug}) }}">{{ figure.name }}</a>
-                                        </h4>
-                                        <p class="card-text">{{ figure.description }}</p>
-                                        {% if app.user %}
-                                            <div class="d-flex align-items-end flex-column">
+    </div>
+    {% if figures is empty %}
+        {{ include('block_for_include/no_tricks_for_now.html.twig') }}
+    {% else %}
+        <div class="container">
+        <h1 class="my-4 text-center" id="tricks">Liste des figures
+        </h1>
+        <div class="row justify-content-center">
+
+        {% for figure in figures %}
+            {% for picture in figure.pictureslinks %}
+                {% if picture.firstimage == true %}
+                    {% set picturefirst = picture.linkpictures %}
+                    <div class="col-lg-4 col-sm-6 mb-4">
+                        <div class="card h-100">
+                            <a href="{{ path('trick', {slug: figure.slug}) }}"><img class="card-img-top"
+                                                                                    src={{ asset('uploads/figureimage/' ~ picturefirst) }}
+                                                                                    alt=""></a>
+                            <div class="card-body">
+                                <h4 class="card-title">
+                                    <a href="{{ path('trick', {slug: figure.slug}) }}">{{ figure.name }}</a>
+                                </h4>
+                                <p class="card-text">{{ figure.description }}</p>
+                                {% if app.user %}
+                                    <div class="d-flex align-items-end flex-column">
                                     <span class="d-inline-block">
                                             {{ include('block_for_include/modal_delete_trick.html.twig') }}
                                             <button type="button" class="btn btn-primary" data-toggle="modal"

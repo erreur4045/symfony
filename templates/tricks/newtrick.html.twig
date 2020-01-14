@@ -4,8 +4,8 @@
 
 {% block body %}
     {% if is_granted('ROLE_USER') %}
-    <h1 class="text-center">{{ h1 }}</h1>
     <div class="container">
+        <h1 class="text-center mt-5">{{ h1 }}</h1>
         <div class="row">
             <div class="col-md-12">
                 {% for message in app.flashes('success') %}
@@ -40,7 +40,7 @@
                 </div>
                 </div>
                 <div class="d-flex justify-content-center">
-                    <button class="btn btn-primary text-center">Ajouter</button>
+                    <button class="btn btn-primary text-center">Ajouter la figure</button>
                 </div>
                 {{ form_end(form) }}
 
@@ -52,5 +52,7 @@
     {% endif %}
 {% endblock %}
 {% block javascripts %}
-    {{ encore_entry_script_tags('addtricks') }}
+    {{ encore_entry_script_tags('addpictures') }}
+    {{ encore_entry_script_tags('addvideos') }}
+    {{ encore_entry_script_tags('checkbox') }}
 {% endblock %}

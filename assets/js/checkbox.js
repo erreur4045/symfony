@@ -1,4 +1,3 @@
-const $ = require('jquery');
 $(function () {
     $(document).delegate('.checkbox_check', 'change', function (e) {
         let isChecked = $(this).is(':checked');
@@ -9,8 +8,8 @@ $(function () {
             console.log(currentCheckbox);
             checkboxes.each(function (index, elt) {
                 if ($(elt).data('id') !== currentCheckbox) {
-                   $(elt).prop('checked', false);
-               }
+                    $(elt).prop('checked', false);
+                }
             });
         }
     })
