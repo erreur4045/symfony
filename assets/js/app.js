@@ -11,7 +11,21 @@ require('../css/app.css');
 // Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
 const $ = require('jquery');
 jQuery.noConflict();
-$('.delete').on('click', function () {
+require('bootstrap');
+
+//console.log($.fn.jquery)
+function openModal(slug,message)
+{
+    $('#exampleModal').modal('show');
+    $('#exampleModal .modal-body').text(message);
+    $('#exampleModal .btn_delete_modal').off('click').on('click', function() {
+        console.log(slug);
+        location.href = slug;
+    });
+}
+
+$('.delete_modal').on('click', function () {
     let slug = $(this).data('slug');
-    //$('exampleModaltitre-figure').modal('show');
+    let message = $(this).data('message');
+    openModal(slug,message);
 });

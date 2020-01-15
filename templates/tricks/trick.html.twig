@@ -9,6 +9,7 @@
                  src="{{ asset('uploads/image_for_design/3557.jpg ') }}"
                  alt="image de font deux snowbordeurs">
         </div>
+        {{ include('block_for_include/modal_delete.html.twig') }}
         <div class="container">
             <div class="d-flex justify-content-center">
                 <div class="container trickblock">
@@ -25,17 +26,15 @@
                                         <div class="text-center img_first_trick">
                                             <img src="{{ asset('uploads/figureimage/') ~ images.linkpictures }}"
                                                  class="rounded mt-4 img-fluid"
-                                                 alt="">
+                                                 alt="" style="max-height: 500px">
                                             <div class="centered">{{ data.name }}</div>
                                             {% if app.user %}
                                                 <div class="box_buttons_edit_delete">
-                                                    <button type="button" class="btn btn-danger"
-                                                            data-toggle="modal"
-                                                            data-target="#exampleModal"><i class="material-icons"
+                                                    <button type="button" class="btn btn-danger delete_modal"
+                                                            data-toggle="modal" data-slug="{{ path('delete.trick', {slug: data.slug}) }}" data-message="Êtes-vous sûr de vouloir supprimer cette figure ?"><i class="material-icons"
                                                                                            style="color: #222222">delete_sweep</i>
                                                     </button>
-                                                    {{ include('block_for_include/modal_delete_trick2.html.twig') }}
-                                                    <button type="button" class="btn btn-primary"><a
+                                                    <button type="button" class="btn btn-outline-primary"><a
                                                                 href="{{ path('edit.trick', {slug: data.slug}) }}"><i
                                                                     class="material-icons"
                                                                     style="color: #222222">create</i></a></button>
@@ -53,6 +52,7 @@
                                          data-interval="1000">
                                         <div class="MultiCarousel-inner">
                                             {% for images in image %}
+                                                {% if images.firstimage == false %}
                                                 <div class="item">
                                                     <div class="pad15">
                                                         <img src="{{ asset('uploads/figureimage/') ~ images.linkpictures }}"
@@ -60,6 +60,7 @@
                                                              alt="">
                                                     </div>
                                                 </div>
+                                                {% endif %}
                                             {% endfor %}
                                             {% for video in video %}
                                                 <div class="item">

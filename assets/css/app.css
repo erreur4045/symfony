@@ -92,6 +92,8 @@
     right: 1%;
 }
 .media_list{
+    margin-top: 1em;
+    padding-top: 1em;
     border-top: 2px solid;
 }
 .btn_comm{

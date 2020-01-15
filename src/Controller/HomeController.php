@@ -39,5 +39,4 @@ class HomeController extends AbstractController
             'title' => 'SnowTricks'
         ]));
     }
-
 }

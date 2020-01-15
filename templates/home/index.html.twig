@@ -17,13 +17,15 @@
         </div>
     </div>
     {% if figures is empty %}
-        {{ include('block_for_include/no_tricks_for_now.html.twig') }}
+        <div class="container">
+                {{ include('block_for_include/no_tricks_for_now.html.twig') }}
+        </div>
     {% else %}
         <div class="container">
         <h1 class="my-4 text-center" id="tricks">Liste des figures
         </h1>
         <div class="row justify-content-center">
-
+        {{ include('block_for_include/modal_delete.html.twig') }}
         {% for figure in figures %}
             {% for picture in figure.pictureslinks %}
                 {% if picture.firstimage == true %}
@@ -38,11 +40,9 @@
                                     <a href="{{ path('trick', {slug: figure.slug}) }}">{{ figure.name }}</a>
                                 </h4>
                                 {% if app.user %}
-                                    {#<div class="d-flex align-items-end flex-column">#}
                                     <span class="d-inline buttoms_home">
-                                            {{ include('block_for_include/modal_delete_trick.html.twig') }}
-                                            <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                    data-target="#exampleModal{{ figure.slug }}">
+                                            <button type="button" class="btn btn-primary delete_modal" data-slug="{{ path('delete.trick', {slug: figure.slug}) }}"
+                                                    data-message="Êtes-vous sûr de vouloir supprimer cette figure ?">
                                               <i class="material-icons">delete_sweep</i>
                                             </button>
                                             <button type="button" class="btn btn-outline-primary"><a
@@ -50,7 +50,6 @@
                                                             class="material-icons">create</i></a>
                                             </button>
                                     </span>
-                                            {#</div>#}
                                         {% endif %}
                                     </div>
                                 </div>

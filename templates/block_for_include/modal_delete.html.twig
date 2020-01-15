@@ -1,4 +1,4 @@
-<div class="modal fade" id="video{{video.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade"  id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -9,11 +9,11 @@
                 </button>
             </div>
             <div class="modal-body">
-                Etes-vous sûr de vouloir supprimer cette video ?
+                Etes-vous sûr de vouloir supprimer cette élément ?
             </div>
             <div class="modal-footer">
-                <button onclick="location.href='{{ path('delete.video', {id: video.id})  }} '" type="button"
-                        class="btn btn-primary">
+                <button type="button"
+                        class="btn btn-primary btn_delete_modal">
                     <i class="material-icons">delete_sweep</i></button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
             </div>
