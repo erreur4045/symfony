@@ -21,10 +21,10 @@
             {{ include('block_for_include/no_tricks_for_now.html.twig') }}
         </div>
     {% else %}
-        <div class="container">
+        <div class="container " >
         <h1 class="my-4 text-center" id="tricks">Liste des figures
         </h1>
-        <div class="row justify-content-center">
+        <div class="row justify-content-center " id="tricks_list">
         {{ include('block_for_include/modal_delete.html.twig') }}
         {% for figure in figures %}
             {% for picture in figure.pictureslinks %}
@@ -59,6 +59,9 @@
             {% endfor %}
         {% endfor %}
     {% endif %}
+    </div>
+    <div class="row justify-content-center">
+        <a data-url="/more_tricks" type="button" class="btn btn-outline-primary btn_load_tricks" id="btn_load_tricks" data-page="2" data-pagemax="{{ pagemax }}">Affichier plus de figure</a>
     </div>
     </div>
 {% endblock %}

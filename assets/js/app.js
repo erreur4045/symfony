@@ -29,3 +29,22 @@ $('.delete_modal').on('click', function () {
     let message = $(this).data('message');
     openModal(slug,message);
 });
+
+$('.btn_load_tricks').on('click', function () {
+   let page = $(this).data('page');
+   let pagemax = $(this).data('pagemax');
+   let loadMore = $('#btn_load_tricks');
+   let url = loadMore.data('url')+'/'+ page;
+   let tricks = $('#tricks_list');
+   $.ajax({
+       method: 'GET',
+       url: url,
+       success: function (response) {
+           tricks.append(response);
+           loadMore.data('page', page + 1 );
+           if (page >= pagemax){
+               $('.btn_load_tricks').remove();
+           }
+       }
+   });
+});
