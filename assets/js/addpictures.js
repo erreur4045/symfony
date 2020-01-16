@@ -1,8 +1,8 @@
 const $ = require('jquery');
 
-let $collectionPictures;
 // todo : ajouter dans le champs formulaire le nom de la photo.
 // setup an "add a tag" link
+let $collectionPictures;
 let $addPictureButton = $('<button type="button" class="btn btn-outline-success add_tag_link">Ajouter une image</button>');
 let $newLinkPictureLi = $('<li></li>').append($addPictureButton);
 

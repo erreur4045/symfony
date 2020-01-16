@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-
+//todo : sortir de l'abstract controller
 /**
  * Class TricksController
  * @package App\Controller
@@ -94,6 +94,7 @@ class TricksController extends AbstractController
     /**
      * @Route("/addtrick", name="addtrick")
      */
+    //todo au moins une image_first
     public function addTrick(ObjectManager $manager, Request $request)
     {
         $user = $this->tokenStorage->getToken()->getUser();

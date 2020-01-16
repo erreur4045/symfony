@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\User\UserInterface;
 use Twig\Environment;
 use Symfony\Component\HttpFoundation\Response;
-
+//todo : sortir de l'abstract controller
 class DashboardController extends AbstractController
 {
     /** @var FigureRepository */

@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Pictureslink;
-use App\Entity\ProfilePicture;
 use App\Entity\User;
 use App\Form\PasswordRecoveryMailType;
 use App\Form\RegistrationType;
@@ -23,7 +22,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Twig\Environment;
-
+//todo : sortir de l'abstract controller
 class SecurityController extends AbstractController
 {
     /**
@@ -45,18 +44,23 @@ class SecurityController extends AbstractController
     /** @var EntityManagerInterface */
     private $manager;
 
+    /** @var FormResolver $formResolver */
+    private $formResolver;
+
     public function __construct(
         Environment $environment,
         FormFactoryInterface $formFactory,
         UrlGeneratorInterface $generator,
         FlashBagInterface $bag,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        FormResolver $formResolver
     ) {
         $this->environement = $environment;
         $this->formFactory = $formFactory;
         $this->generator = $generator;
         $this->bag = $bag;
         $this->manager = $manager;
+        $this->formResolver = $formResolver;
 
     }
 
@@ -80,36 +84,11 @@ class SecurityController extends AbstractController
      */
     public function registration(ObjectManager $manager, Request $request, UserPasswordEncoderInterface $encoder)
     {
-        $form = $this->formFactory->create(RegistrationType::class);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var User $user */
-            $user = $form->getData();
-            $hash = $encoder->encodePassword($user, $user->getPassword());
-            $user->setPassword($hash);
-            $user->setDatesub(new \DateTime());
-            /** @var UploadedFile $uploadedFile */
-            $uploadedFile = $form['profilePicture']->getData();
-            if ($uploadedFile) {
-                $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()',
-                    $originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
-                try {
-                    $uploadedFile->move(
-                        $this->getParameter('picture_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-                $user->setProfilePicture($newFilename);
-            }
-            $manager->persist($user);
-            $manager->flush();
+        //$form = $this->formFactory->create(RegistrationType::class)->handleRequest($request);
+        $form = $this->formResolver->getForm($request);
 
-            $this->bag->add('success', 'Votre inscription est ok');
-            return new RedirectResponse($this->generator->generate('app_login'));
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->formResolver->treatment($form);
         }
         return new Response($this->environement->render('security/registration.html.twig', [
             'form' => $form->createView()
@@ -135,6 +114,7 @@ class SecurityController extends AbstractController
             $user->setToken($token);
             $this->manager->persist($user);
             $this->manager->flush();
+            //todo : montrer à Aurel si l'injection est ok
             $mailController->sendEmailWithToken($token);
             $this->bag->add('success', 'Un mail vous a été envoyé avec un lien pour modifier votre mot de passe');
             return new RedirectResponse($this->generateUrl('home'));
@@ -151,7 +131,6 @@ class SecurityController extends AbstractController
     {
         /** @var \App\Entity\User $user */
         $user = $this->manager->getRepository(User::class)->findOneBy(['token' => $request->attributes->get('slug')]);
-        dump($user);
         if(!empty($user)){
             $form = $this->createForm(ResetPasswordType::class);
             $form->handleRequest($request);

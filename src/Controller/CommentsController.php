@@ -46,6 +46,7 @@ class CommentsController
      */
     public function deleteCom(UserInterface $user = null, Comments $comment, ObjectManager $manager, Request $request)
     {
+        //todo : sur render phpstorm me demande de faire un try-catch, a faire ?
         if($user == null){
             return new Response($this->templating->render('block_for_include/no_connect.html.twig', [
             ]));

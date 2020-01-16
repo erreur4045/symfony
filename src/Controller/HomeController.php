@@ -14,7 +14,7 @@ use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
-
+//todo : sortir de l'abstract controller
 class HomeController extends AbstractController
 {
     /** @var EntityManagerInterface */
@@ -37,7 +37,6 @@ class HomeController extends AbstractController
         /** @var Figure $figures */
         $figures = $this->manager->getRepository(Figure::class)->findBy([],[],Figure::LIMIT_PER_PAGE,null);
         $nbPageMax = ceil(count($this->manager->getRepository(Figure::class)->findAll())/Figure::LIMIT_PER_PAGE);
-        dump($nbPageMax);
         return new Response($this->environment->render('home/index.html.twig', [
             'figures' => $figures,
             'title' => 'SnowTricks',
@@ -69,5 +68,6 @@ class HomeController extends AbstractController
         } catch (RuntimeError $e) {
         } catch (SyntaxError $e) {
         }
+        return 0;
     }
 }

@@ -10,6 +10,7 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Mailer\Bridge\Google\Smtp\GmailTransport;
 use Symfony\Component\Mailer\Mailer;
+//todo : sortir de l'abstract controller
 class MailController extends AbstractController
 {
     /** @var MailerInterface */
@@ -19,6 +20,7 @@ class MailController extends AbstractController
         $this->mailer = $mailer;
     }
 
+    //todo : changer l'email d'envoi
     public function sendEmailWithToken($token)
     {
         $email = (new TemplatedEmail())
@@ -33,7 +35,7 @@ class MailController extends AbstractController
             ->context(['token' => $token]);
 
         /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
-        $sentEmail = $this->mailer->send($email);
+         $this->mailer->send($email, null);
         // $messageId = $sentEmail->getMessageId();
 
         // ...
