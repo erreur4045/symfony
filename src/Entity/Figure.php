@@ -14,6 +14,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Figure
 {
+    public const LIMIT_PER_PAGE = 2;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
