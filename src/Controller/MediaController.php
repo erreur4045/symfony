@@ -28,7 +28,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Twig\Environment;
-
+//todo : sortir de l'abstract controller
 class MediaController extends AbstractController
 {
     /** @var TricksController * */
@@ -96,6 +96,7 @@ class MediaController extends AbstractController
     public function deletePicture($picture)
     {
         if ($this->tokenStorage->getToken()->getUser()) {
+            //todo : sortir du [0] grace ay findBy
             /** @var Pictureslink $image */
             $image = $this->manager->getRepository(Pictureslink::class)->findBy(['linkpictures' => $picture]);
             if ($image[0]->getFirstImage() == true) {
@@ -121,6 +122,7 @@ class MediaController extends AbstractController
             return new RedirectResponse($this->router->generate('trick',
                 ['slug' => $image[0]->getFigure()->getSlug()]));
         }
+        return 0;
     }
 
     /**
@@ -143,8 +145,8 @@ class MediaController extends AbstractController
     }
 
 
-    // todo : revoir les nom de route e.g. /media/{action}/{type}/{id} partout
-
+    // todo : revoir les nom de route e.g. /media/{action}/{typeMedia}/{id} partout
+    // todo : modal ou ajax sur l'update
     /**
      * @Route("/media/update/picture/{id}", name="update.picture")
      */
@@ -204,6 +206,7 @@ class MediaController extends AbstractController
                 'title' => 'Changer une image'
             ]));
         }
+        return 0;
     }
 
     /**
