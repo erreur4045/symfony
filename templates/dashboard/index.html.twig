@@ -3,11 +3,9 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success">{{ message }}</div>
-    {% endfor %}
     {% if is_granted('ROLE_USER') %}
         <div class="container mt-5">
+            {{ include('block_for_include/flash_bag.html.twig') }}
             <h1 class="text-center">Votre dashboard</h1>
         </div>
         <div class="container">

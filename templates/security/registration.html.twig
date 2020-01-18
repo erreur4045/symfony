@@ -3,6 +3,7 @@
 {% block body %}
     <div class="container mt-5">
         <h1 class="text-center">Inscription</h1>
+        {{ include('block_for_include/flash_bag.html.twig') }}
         <div class="row justify-content-center">
         <div class="col-6 justify-content-md-center border border-dark rounded">
                 {{ form_start(form) }}
@@ -20,5 +21,4 @@
             </div>
         </div>
     </div>
-
 {% endblock %}

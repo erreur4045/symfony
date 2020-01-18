@@ -4,6 +4,7 @@
 
 {% block body %}
     <div class="container">
+        {{ include('block_for_include/flash_bag.html.twig') }}
     <h1 class="text-center">Modifier votre commentaire</h1>
     {{ form_start(form) }}
     {{ form_row(form.text, {'value' : comment}) }}
