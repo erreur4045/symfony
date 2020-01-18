@@ -3,13 +3,9 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-    {% for flash_message in app.session.flashBag.get('success') %}
-        <div class="alert alert-success">
-            {{ flash_message }}
-        </div>
-    {% endfor %}
     <div class="container mt-5 text-center">
         <h1 class="h1">Login</h1>
+        {{ include('block_for_include/flash_bag.html.twig') }}
         <div class="row justify-content-center text-center mt-5">
             <div class="col-6 border border-dark rounded">
                 {% if error %}
@@ -34,7 +30,7 @@
                             <input type="checkbox" name="_remember_me"> Remember me
                         </label>
                     </div>
-                    <button class="btn btn-lg btn-primary mb-2 p-1" type="submit">
+                    <button class="btn btn-lg btn-primary mb-2 p-0" type="submit">
                         Sign in
                     </button>
                 </form>
