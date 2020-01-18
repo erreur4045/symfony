@@ -2,17 +2,16 @@
 
 namespace App\Controller;
 
-use App\Entity\Pictureslink;
 use App\Entity\User;
 use App\Form\PasswordRecoveryMailType;
 use App\Form\RegistrationType;
 use App\Form\ResetPasswordType;
+use App\Services\FormResolver;
+use App\Services\FormResolverRegistration;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Faker\Provider\DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +22,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Twig\Environment;
 //todo : sortir de l'abstract controller
-class SecurityController extends AbstractController
+class SecurityController
 {
     /**
      * Desciption :
@@ -53,14 +52,14 @@ class SecurityController extends AbstractController
         UrlGeneratorInterface $generator,
         FlashBagInterface $bag,
         EntityManagerInterface $manager,
-        FormResolver $formResolver
+        FormResolverRegistration $formResolverRegistration
     ) {
         $this->environement = $environment;
         $this->formFactory = $formFactory;
         $this->generator = $generator;
         $this->bag = $bag;
         $this->manager = $manager;
-        $this->formResolver = $formResolver;
+        $this->fromResolverRegistration = $formResolverRegistration;
 
     }
 
@@ -84,11 +83,12 @@ class SecurityController extends AbstractController
      */
     public function registration(ObjectManager $manager, Request $request, UserPasswordEncoderInterface $encoder)
     {
-        //$form = $this->formFactory->create(RegistrationType::class)->handleRequest($request);
-        $form = $this->formResolver->getForm($request);
+        $type = RegistrationType::class;
+        $form = $this->fromResolverRegistration->getForm($request, $type);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->formResolver->treatment($form);
+            $this->fromResolverRegistration->treatment($form);
+            return new RedirectResponse($this->generator->generate('app_login'));
         }
         return new Response($this->environement->render('security/registration.html.twig', [
             'form' => $form->createView()
