@@ -7,6 +7,7 @@ use App\Form\PasswordRecoveryMailType;
 use App\Form\RegistrationType;
 use App\Form\ResetPasswordType;
 use App\Services\FormResolver;
+use App\Services\FormResolverPasswordRecovery;
 use App\Services\FormResolverRegistration;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,7 +22,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Twig\Environment;
-//todo : sortir de l'abstract controller
+
 class SecurityController
 {
     /**
@@ -42,9 +43,16 @@ class SecurityController
 
     /** @var EntityManagerInterface */
     private $manager;
-
-    /** @var FormResolver $formResolver */
-    private $formResolver;
+    /**
+     * @var FormResolverRegistration
+     */
+    private $fromResolverRegistration;
+    /**
+     * @var FormResolverPasswordRecovery
+     */
+    private $formResolverPasswordRecovery;
+    /** @var  UrlGeneratorInterface */
+    private $router;
 
     public function __construct(
         Environment $environment,
@@ -52,7 +60,10 @@ class SecurityController
         UrlGeneratorInterface $generator,
         FlashBagInterface $bag,
         EntityManagerInterface $manager,
-        FormResolverRegistration $formResolverRegistration
+        FormResolverRegistration $formResolverRegistration,
+        FormResolverPasswordRecovery $formResolverPasswordRecovery,
+        UrlGeneratorInterface $router
+
     ) {
         $this->environement = $environment;
         $this->formFactory = $formFactory;
@@ -60,6 +71,8 @@ class SecurityController
         $this->bag = $bag;
         $this->manager = $manager;
         $this->fromResolverRegistration = $formResolverRegistration;
+        $this->formResolverPasswordRecovery = $formResolverPasswordRecovery;
+        $this->router = $router;
 
     }
 
@@ -100,24 +113,11 @@ class SecurityController
      */
     public function PasswordRecovery(Request $request, MailController $mailController)
     {
-        $form = $this->createForm(PasswordRecoveryMailType::class);
-        $form->handleRequest($request);
+        $type = PasswordRecoveryMailType::class;
+        $form = $this->formResolverPasswordRecovery->getForm($request, $type);
         if ($form->isSubmitted() && $form->isValid()){
-            $data = $form->getData();
-            /** @var \App\Entity\User $user */
-            $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['name' => $data['pseudo'], 'mail' => $data['email']]);
-            if (empty($user)){
-                $this->bag->add('success', 'Un mail vous a été envoyé avec un lien pour modifier votre mot de passe');
-                return new RedirectResponse($this->generateUrl('home'));
-            }
-            $token = md5(uniqid(rand()));
-            $user->setToken($token);
-            $this->manager->persist($user);
-            $this->manager->flush();
-            //todo : montrer à Aurel si l'injection est ok
-            $mailController->sendEmailWithToken($token);
-            $this->bag->add('success', 'Un mail vous a été envoyé avec un lien pour modifier votre mot de passe');
-            return new RedirectResponse($this->generateUrl('home'));
+            $this->formResolverPasswordRecovery->treatment($form);
+            return new RedirectResponse($this->router->generate('home'));
         }
         return new Response($this->environement->render('security/mailforpasswordrecovery.html.twig', [
             'form' => $form->createView()
