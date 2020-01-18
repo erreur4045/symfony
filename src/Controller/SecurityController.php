@@ -85,10 +85,11 @@ class SecurityController extends AbstractController
     public function registration(ObjectManager $manager, Request $request, UserPasswordEncoderInterface $encoder)
     {
         //$form = $this->formFactory->create(RegistrationType::class)->handleRequest($request);
-        $form = $this->formResolver->getForm($request);
+        $form = $this->formResolver->getForm($request, RegistrationType::class);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->formResolver->treatment($form);
+
         }
         return new Response($this->environement->render('security/registration.html.twig', [
             'form' => $form->createView()
