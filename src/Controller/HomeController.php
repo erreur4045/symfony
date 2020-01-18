@@ -45,24 +45,18 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/more_tricks/{id}", name="more.tricks")
+     * @Route("/more_tricks", name="more.tricks")
      */
-    public function loadTricks(Request $request, $id)
+    public function loadTricks(Request $request)
     {
-        $offset = $id * Figure::LIMIT_PER_PAGE - 2;
+        $pageId = $request->query->get('page');
+        $offset = $pageId * Figure::LIMIT_PER_PAGE - 2;
         $tricksToShow = $this->manager->getRepository(Figure::class)->findBy([],[],Figure::LIMIT_PER_PAGE, $offset);
         $nb_tricks = count($this->manager->getRepository(Figure::class)->findAll());
-        //todo : ternaire
-        if($id * Figure::LIMIT_PER_PAGE > $nb_tricks)
-        {
-            $rest = false;
-        }
-        else {
-            $rest = true;
-        }
+
         try {
             return new Response($this->environment->render('block_for_include/block_for_tricks_ajax.html.twig',
-                ['tricksToShow' => $tricksToShow, 'rest' => $rest]
+                ['tricksToShow' => $tricksToShow, 'rest' => $pageId * Figure::LIMIT_PER_PAGE < $nb_tricks]
             ));
         } catch (LoaderError $e) {
         } catch (RuntimeError $e) {

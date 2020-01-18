@@ -19,7 +19,6 @@ function openModal(slug,message)
     $('#exampleModal').modal('show');
     $('#exampleModal .modal-body').text(message);
     $('#exampleModal .btn_delete_modal').off('click').on('click', function() {
-        console.log(slug);
         location.href = slug;
     });
 }
@@ -34,7 +33,7 @@ $('.btn_load_tricks').on('click', function () {
    let page = $(this).data('page');
    let pagemax = $(this).data('pagemax');
    let loadMore = $('#btn_load_tricks');
-   let url = loadMore.data('url')+'/'+ page;
+   let url = loadMore.data('url')+'?page='+ page;
    let tricks = $('#tricks_list');
    $.ajax({
        method: 'GET',
