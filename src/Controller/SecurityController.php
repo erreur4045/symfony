@@ -6,12 +6,11 @@ use App\Entity\User;
 use App\Form\PasswordRecoveryMailType;
 use App\Form\RegistrationType;
 use App\Form\ResetPasswordType;
-use App\Services\FormResolver;
 use App\Services\FormResolverPasswordRecovery;
+use App\Services\FormResolverRecoveryPassword;
 use App\Services\FormResolverRegistration;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,11 +24,7 @@ use Twig\Environment;
 
 class SecurityController
 {
-    /**
-     * Desciption :
-     *
-     * @var Environment
-     */
+    /** @var Environment */
     private $environement;
 
     /** @var FormFactoryInterface */
@@ -43,16 +38,18 @@ class SecurityController
 
     /** @var EntityManagerInterface */
     private $manager;
-    /**
-     * @var FormResolverRegistration
-     */
+
+    /** @var FormResolverRegistration */
     private $fromResolverRegistration;
-    /**
-     * @var FormResolverPasswordRecovery
-     */
+
+    /** @var FormResolverPasswordRecovery */
     private $formResolverPasswordRecovery;
+
     /** @var  UrlGeneratorInterface */
     private $router;
+
+    /** @var FormResolverRecoveryPassword */
+    private $formResolverRecoveryPassword;
 
     public function __construct(
         Environment $environment,
@@ -62,6 +59,7 @@ class SecurityController
         EntityManagerInterface $manager,
         FormResolverRegistration $formResolverRegistration,
         FormResolverPasswordRecovery $formResolverPasswordRecovery,
+        FormResolverRecoveryPassword $formResolverRecoveryPassword,
         UrlGeneratorInterface $router
 
     ) {
@@ -72,13 +70,18 @@ class SecurityController
         $this->manager = $manager;
         $this->fromResolverRegistration = $formResolverRegistration;
         $this->formResolverPasswordRecovery = $formResolverPasswordRecovery;
+        $this->formResolverRecoveryPassword = $formResolverRecoveryPassword;
         $this->router = $router;
 
     }
 
     /**
      * @Route("/login", name="app_login")
+     * @param AuthenticationUtils $authenticationUtils
      * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -111,7 +114,7 @@ class SecurityController
     /**
      * @Route("/passwordrecovery", name="app_passwordrecovery")
      */
-    public function PasswordRecovery(Request $request, MailController $mailController)
+    public function PasswordRecovery(Request $request)
     {
         $type = PasswordRecoveryMailType::class;
         $form = $this->formResolverPasswordRecovery->getForm($request, $type);
@@ -131,22 +134,18 @@ class SecurityController
     {
         /** @var \App\Entity\User $user */
         $user = $this->manager->getRepository(User::class)->findOneBy(['token' => $request->attributes->get('slug')]);
+        $type = ResetPasswordType::class;
         if(!empty($user)){
-            $form = $this->createForm(ResetPasswordType::class);
-            $form->handleRequest($request);
+            $form = $this->formResolverRecoveryPassword->getForm($request, $type);
             if ($form->isSubmitted() && $form->isValid() && $user->getMail() == $form['email']->getData() ){
-                $hash = $encoder->encodePassword($user, $form['password']->getData());
-                $user->setToken(null)->setPassword($hash);
-                $this->manager->persist($user);
-                $this->manager->flush();
-                $this->bag->add('success', 'Votre mot de passe été modifié avec succès');
-                return new RedirectResponse($this->generateUrl('home'));
+                $this->formResolverRecoveryPassword->treatment($form, $user);
+                return new RedirectResponse($this->router->generate('home'));
             }
             return new Response($this->environement->render('security/resetpassword.html.twig', [
                 'form' => $form->createView()
             ]));
         }
         else
-            return new RedirectResponse($this->generateUrl('home'));
+            return new RedirectResponse($this->router->generate('home'));
     }
 }
