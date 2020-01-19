@@ -96,7 +96,7 @@ class MediaController extends AbstractController
     public function deletePicture($picture)
     {
         if ($this->tokenStorage->getToken()->getUser()) {
-            //todo : sortir du [0] grace ay findBy
+            //todo : sortir du [0] grace ay findByOne
             /** @var Pictureslink $image */
             $image = $this->manager->getRepository(Pictureslink::class)->findBy(['linkpictures' => $picture]);
             if ($image[0]->getFirstImage() == true) {

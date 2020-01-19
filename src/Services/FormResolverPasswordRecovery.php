@@ -4,7 +4,7 @@
 namespace App\Services;
 
 
-use App\Controller\MailController;
+use App\Services\MailSender;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -19,8 +19,8 @@ class FormResolverPasswordRecovery extends FormResolver
     private $manager;
     /** @var FlashBagInterface */
     private $bag;
-    /** @var MailController  */
-    private $mailController;
+    /** @var MailSender  */
+    private $mailSender;
     /** @var  UrlGeneratorInterface */
     private $router;
 
@@ -28,22 +28,22 @@ class FormResolverPasswordRecovery extends FormResolver
         FormFactoryInterface $formFactory,
         EntityManagerInterface $manager,
         FlashBagInterface $bag,
-        MailController $mailController,
-        UrlGeneratorInterface $router
+        UrlGeneratorInterface $router,
+        \App\Services\MailSender $mailSender
 
     )
     {
         parent::__construct($formFactory);
         $this->manager = $manager;
         $this->bag = $bag;
-        $this->mailController = $mailController;
+        $this->mailSender = $mailSender;
         $this->router = $router;
     }
 
     public function treatment(FormInterface $form)
     {
         $data = $form->getData();
-        /** @var \App\Entity\User $user */
+        /** @var User $user */
         $user = $this->manager->getRepository(User::class)->findOneBy(['name' => $data['pseudo'], 'mail' => $data['email']]);
         if (empty($user)){
             $this->bag->add('success', 'Un mail vous a été envoyé avec un lien pour modifier votre mot de passe');
@@ -54,7 +54,7 @@ class FormResolverPasswordRecovery extends FormResolver
         $user->setToken($token);
         $this->manager->persist($user);
         $this->manager->flush();
-        $this->mailController->sendEmailWithToken($token);
+        $this->mailSender->sendEmailWithToken($token, $data['email']);
         $this->bag->add('success', 'Un mail vous a été envoyé avec un lien pour modifier votre mot de passe');
     }
 }

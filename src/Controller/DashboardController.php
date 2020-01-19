@@ -79,7 +79,7 @@ class DashboardController extends AbstractController
      * @Route("/dashboard", name="app_dashboard")
      */
 
-    public function index(UserInterface $user = null, ObjectManager $manager, Request $request, ObjectManager $managerORM)
+    public function index(UserInterface $user = null, Request $request)
     {
         if ($user == null){
             return new Response($this->environment->render('block_for_include/no_connect.html.twig', [
@@ -87,18 +87,14 @@ class DashboardController extends AbstractController
         }
         /** @var Figure $figures */
         $figures = $this->figure->findBy(['user' => $user->getId()]);
-        /** @var User $user_data */
-        $user_data = $this->tokenStorage->getToken()->getUser();
+        /** @var User $userData */
+        $userData = $this->tokenStorage->getToken()->getUser();
 
         if ($user->getName() == $this->tokenStorage->getToken()->getUser()) {
-            /** @var User $userdata */
-            $userdata = $this->tokenStorage->getToken()->getUser();
             $type = ProfilePictureType::class;
             $form = $this->formResolverUploadPicture->getForm($request, $type);
-            /** @var UploadedFile $uploadedFile */
-            $uploadedFile = $form['profilePicture']->getData();
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->formResolverUploadPicture->treatment($form, $userdata);
+                $this->formResolverUploadPicture->treatment($form, $userData);
                 $this->bag->add('success', 'Votre avatar a été modifié');
                 return $this->redirect($this->generateUrl('app_dashboard'));
             }
@@ -108,7 +104,7 @@ class DashboardController extends AbstractController
                 'controller_name' => 'Mon Dashboard',
                 'title' => 'Mon Dashboard',
                 'figure' => $figures,
-                'image' => $user_data->getProfilePicture()
+                'image' => $userData->getProfilePicture()
             ]));
         }
         return new RedirectResponse($this->generateUrl('home'));
