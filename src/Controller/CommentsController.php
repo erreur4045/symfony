@@ -6,6 +6,7 @@ use App\Entity\Comments;
 use App\Entity\Figure;
 use App\Form\CommentType;
 use App\Form\EditComType;
+use App\Services\FormResolverComment;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,6 +25,10 @@ class CommentsController
 {
     /** @var EntityManagerInterface */
     private $manager;
+    /**
+     * @var FormResolverComment
+     */
+    private $formResolverComment;
 
     public function __construct(
         Environment $templating,
@@ -31,8 +36,10 @@ class CommentsController
         EntityManagerInterface $manager,
         FlashBagInterface $bag,
         UrlGeneratorInterface $router,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        FormResolverComment $formResolverComment
     ) {
+        $this->formResolverComment = $formResolverComment;
         $this->bag = $bag;
         $this->router = $router;
         $this->tokenStorage = $tokenStorage;
@@ -46,7 +53,6 @@ class CommentsController
      */
     public function deleteCom(UserInterface $user = null, Comments $comment, ObjectManager $manager, Request $request)
     {
-        //todo : sur render phpstorm me demande de faire un try-catch, a faire ?
         if($user == null){
             return new Response($this->templating->render('block_for_include/no_connect.html.twig', [
             ]));
@@ -74,22 +80,23 @@ class CommentsController
      * @param ObjectManager $manager
      * @return Response
      */
-    public function editCom(UserInterface $user = null,Comments $comment, ObjectManager $manager, Request $request)
+    public function editCom(UserInterface $user = null, ObjectManager $manager, Request $request)
     {
+        /** @var Comments $comment */
+        $comment = $this->manager->getRepository(Comments::class)->findOneBy(['id' => $request->attributes->get('id')]);
         if($user == null){
             return new Response($this->templating->render('block_for_include/no_connect.html.twig', [
             ]));
         }
         /** @var Figure $datatricks */
-        $datatricks = $this->manager->getRepository(Figure::class)->findOneBy(['id' => $request->attributes->get('comment')->getIdfigure()->getId()]);
+        $datatricks = $this->manager->getRepository(Figure::class)->findOneBy(['id' => $comment->getIdfigure()]);
+        $type = EditComType::class;
+
         if ($comment->getUser()->getMail() == $this->tokenStorage->getToken()->getUser()->getMail()) {
-            $form = $this->formFactory->create(EditComType::class);
-            $form->handleRequest($request);
+            $form = $this->formResolverComment->getForm($request, $type);
+
             if ($form->isSubmitted() && $form->isValid()) {
-                $comment->setText($form->getData()->getText())
-                    ->setDateupdate(new \DateTime('now'));
-                $this->manager->persist($comment);
-                $this->manager->flush();
+                $this->formResolverComment->treatment($form, $comment);
                 return new RedirectResponse($this->router->generate('trick', ['slug' => $datatricks->getSlug()]));
             }
             return new Response($this->templating->render('comments/index.html.twig', [

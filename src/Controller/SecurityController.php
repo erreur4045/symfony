@@ -97,7 +97,7 @@ class SecurityController
     /**
      * @Route("/inscription", name="registration")
      */
-    public function registration(ObjectManager $manager, Request $request, UserPasswordEncoderInterface $encoder)
+    public function registration(Request $request)
     {
         $type = RegistrationType::class;
         $form = $this->fromResolverRegistration->getForm($request, $type);

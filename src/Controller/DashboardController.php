@@ -7,8 +7,10 @@ use App\Entity\User;
 use App\Form\ProfilePictureType;
 use App\Repository\FigureRepository;
 use App\Repository\UserRepository;
+use App\Services\FormResolverUploadPicture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
+use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -41,6 +43,14 @@ class DashboardController extends AbstractController
 
     /** @var FlashBagInterface */
     private $bag;
+    /**
+     * @var FormResolverUploadPicture
+     */
+    private $formResolverUploadPicture;
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
 
     public function __construct
     (
@@ -51,7 +61,8 @@ class DashboardController extends AbstractController
         FormFactoryInterface $formFactory,
         EntityManagerInterface $manager,
         Filesystem $filesystem,
-        FlashBagInterface $bag
+        FlashBagInterface $bag,
+        FormResolverUploadPicture $formResolverUploadPicture
     ) {
         $this->figure = $figure;
         $this->user = $user;
@@ -61,13 +72,14 @@ class DashboardController extends AbstractController
         $this->manager = $manager;
         $this->filesystem = $filesystem;
         $this->bag = $bag;
+        $this->formResolverUploadPicture = $formResolverUploadPicture;
     }
 
     /**
      * @Route("/dashboard", name="app_dashboard")
      */
 
-    public function index(UserInterface $user = null, ObjectManager $manager, Request $request, ObjectManager $managerORM)
+    public function index(UserInterface $user = null, Request $request)
     {
         if ($user == null){
             return new Response($this->environment->render('block_for_include/no_connect.html.twig', [
@@ -75,40 +87,14 @@ class DashboardController extends AbstractController
         }
         /** @var Figure $figures */
         $figures = $this->figure->findBy(['user' => $user->getId()]);
-        /** @var User $user_data */
-        $user_data = $this->tokenStorage->getToken()->getUser();
+        /** @var User $userData */
+        $userData = $this->tokenStorage->getToken()->getUser();
 
         if ($user->getName() == $this->tokenStorage->getToken()->getUser()) {
-            /** @var User $userdata */
-            $userdata = $this->tokenStorage->getToken()->getUser();
-            $form = $this->formFactory->create(ProfilePictureType::class);
-            $form->handleRequest($request);
+            $type = ProfilePictureType::class;
+            $form = $this->formResolverUploadPicture->getForm($request, $type);
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->filesystem->remove([
-                    '',
-                    '',
-                    $this->getParameter('picture_directory') . $userdata->getProfilePicture()
-                ]);
-                /** @var UploadedFile $uploadedFile */
-                $uploadedFile = $form['profilePicture']->getData();
-                if ($uploadedFile) {
-                    $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-                    // this is needed to safely include the file name as part of the URL
-                    $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()',
-                        $originalFilename);
-                    $newFilename = $safeFilename . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
-                    try {
-                        $uploadedFile->move(
-                            $this->getParameter('picture_directory'),
-                            $newFilename
-                        );
-                    } catch (FileException $e) {
-                        // ... handle exception if something happens during file upload
-                    }
-                    $userdata->setProfilePicture($newFilename);
-                    $managerORM->persist($userdata);
-                    $managerORM->flush();
-                }
+                $this->formResolverUploadPicture->treatment($form, $userData);
                 $this->bag->add('success', 'Votre avatar a été modifié');
                 return $this->redirect($this->generateUrl('app_dashboard'));
             }
@@ -118,9 +104,9 @@ class DashboardController extends AbstractController
                 'controller_name' => 'Mon Dashboard',
                 'title' => 'Mon Dashboard',
                 'figure' => $figures,
-                'image' => $user_data->getProfilePicture()
+                'image' => $userData->getProfilePicture()
             ]));
         }
-        return new RedirectResponse($this->generateUrl('/'));
+        return new RedirectResponse($this->generateUrl('home'));
     }
 }
