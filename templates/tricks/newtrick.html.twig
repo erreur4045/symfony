@@ -8,9 +8,7 @@
         <h1 class="text-center mt-5">{{ h1 }}</h1>
         <div class="row">
             <div class="col-md-12">
-                {% for message in app.flashes('success') %}
-                    <div class="alert alert-success">{{ message }}</div>
-                {% endfor %}
+                {{ include('block_for_include/flash_bag.html.twig') }}
                 {{ form_start(form) }}
                 {{ form_row(form.name) }}
                 {{ form_row(form.description) }}

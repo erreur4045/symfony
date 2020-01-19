@@ -14,8 +14,7 @@ use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
-//todo : sortir de l'abstract controller
-class HomeController extends AbstractController
+class HomeController
 {
     /** @var EntityManagerInterface */
     private $manager;
