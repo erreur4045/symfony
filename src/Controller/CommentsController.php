@@ -51,6 +51,7 @@ class CommentsController
     /**
      * @Route("/deletecom/{id}", name="delete.comment")
      */
+
     public function deleteCom(UserInterface $user = null, Comments $comment, ObjectManager $manager, Request $request)
     {
         if($user == null){
@@ -76,27 +77,22 @@ class CommentsController
 
     /**
      * @Route("/editcom/{id}", name="edit.comment")
-     * @param UserInterface|null $user
-     * @param Request $request
-     * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
      */
+
     public function editCom(UserInterface $user = null, Request $request)
     {
-        /** @var Comments $comment */
-        $comment = $this->manager->getRepository(Comments::class)->findOneBy(['id' => $request->attributes->get('id')]);
         if($user == null){
             return new Response($this->templating->render('block_for_include/no_connect.html.twig', [
             ]));
         }
+        /** @var Comments $comment */
+        $comment = $this->manager->getRepository(Comments::class)->findOneBy(['id' => $request->attributes->get('id')]);
+
         /** @var Figure $datatricks */
         $datatricks = $this->manager->getRepository(Figure::class)->findOneBy(['id' => $comment->getIdfigure()]);
-        $type = EditComType::class;
 
         if ($comment->getUser()->getMail() == $this->tokenStorage->getToken()->getUser()->getMail()) {
-            $form = $this->formResolverComment->getForm($request, $type);
+            $form = $this->formResolverComment->getForm($request, EditComType::class);
 
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->formResolverComment->updateCom($form, $comment);

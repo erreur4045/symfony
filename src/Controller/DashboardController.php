@@ -66,8 +66,10 @@ class DashboardController
             return new Response($this->environment->render('block_for_include/no_connect.html.twig', [
             ]));
         }
+
         /** @var Figure $figures */
         $figures = $this->figure->findBy(['user' => $user->getId()]);
+
         /** @var User $userData */
         $userData = $this->tokenStorage->getToken()->getUser();
 
