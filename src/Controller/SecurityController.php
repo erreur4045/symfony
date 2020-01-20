@@ -9,7 +9,6 @@ use App\Form\ResetPasswordType;
 use App\Services\FormResolverPasswordRecovery;
 use App\Services\FormResolverRecoveryPassword;
 use App\Services\FormResolverRegistration;
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -28,14 +27,8 @@ class SecurityController
     /** @var Environment */
     private $environement;
 
-    /** @var FormFactoryInterface */
-    private $formFactory;
-
     /** @var UrlGeneratorInterface */
     private $generator;
-
-    /** @var FlashBagInterface */
-    private $bag;
 
     /** @var EntityManagerInterface */
     private $manager;

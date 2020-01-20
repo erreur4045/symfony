@@ -28,14 +28,12 @@ class DashboardController
     /** @var Environment */
     private $environment;
 
-    /**
-     * @var FormResolverUploadPicture
-     */
+    /** @var FormResolverUploadPicture */
     private $formResolverUploadPicture;
-    /**
-     * @var TokenStorageInterface
-     */
+
+    /** @var TokenStorageInterface */
     private $tokenStorage;
+
     /** @var RouterInterface */
     private $router;
 

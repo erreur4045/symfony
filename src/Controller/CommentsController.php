@@ -25,10 +25,24 @@ class CommentsController
 {
     /** @var EntityManagerInterface */
     private $manager;
-    /**
-     * @var FormResolverComment
-     */
+
+    /** @var FormResolverComment */
     private $formResolverComment;
+
+    /** @var FlashBagInterface */
+    private $bag;
+
+    /** @var Environment */
+    private $templating;
+
+    /** @var FormFactoryInterface */
+    private $formFactory;
+
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
+    /** @var UrlGeneratorInterface */
+    private $router;
 
     public function __construct(
         Environment $templating,
