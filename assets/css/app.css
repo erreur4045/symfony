@@ -80,7 +80,7 @@
     border-radius: 30px;
 }
 .buttoms_home{
-    min-width: 150px;
+    max-width: 50px;
 }
 .fixed-top{
     height: 50px;
