@@ -15,10 +15,13 @@ class FormResolverPasswordRecovery extends FormResolver
 {
     /** @var EntityManagerInterface */
     private $manager;
+
     /** @var FlashBagInterface */
     private $bag;
+
     /** @var MailSender  */
     private $mailSender;
+
     /** @var  UrlGeneratorInterface */
     private $router;
 
@@ -28,7 +31,6 @@ class FormResolverPasswordRecovery extends FormResolver
         FlashBagInterface $bag,
         UrlGeneratorInterface $router,
         MailSender $mailSender
-
     )
     {
         parent::__construct($formFactory);

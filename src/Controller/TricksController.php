@@ -10,23 +10,15 @@ use App\Entity\Videolink;
 use App\Form\CommentType;
 use App\Form\FigureEditType;
 use App\Form\FigureType;
-use App\Repository\FigureRepository;
 use App\Services\FormResolverComment;
 use App\Services\FormResolverTricks;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityNotFoundException;
-use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\Form\FormFactory;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -50,12 +42,6 @@ class TricksController
     /** @var Environment * */
     private $templating;
 
-    /** @var FigureType * */
-    private $figureType;
-
-    /** @var FormFactory * */
-    private $formFactory;
-
     /** @var  UrlGeneratorInterface */
     private $router;
 
@@ -67,27 +53,18 @@ class TricksController
 
     /** @var Filesystem */
     private $filesystem;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     private $tricksPicturesDirectory;
-    /**
-     * @var FormResolverTricks
-     */
+
+    /** * @var FormResolverTricks */
     private $formResolverTricks;
-    /**
-     * @var FormResolverComment
-     */
+
+    /** @var FormResolverComment */
     private $formResolverComment;
 
-    /**
-     * TricksController constructor.
-     */
     public function __construct(
-        FigureRepository $trick,
         Environment $templating,
-        FigureType $figureType,
-        FormFactoryInterface $formFactory,
         UrlGeneratorInterface $router,
         FlashBagInterface $bag,
         EntityManagerInterface $manager,
@@ -99,10 +76,7 @@ class TricksController
     ) {
         $this->formResolverComment = $formResolverComment;
         $this->formResolverTricks = $formResolverTricks;
-        $this->trick = $trick;
         $this->templating = $templating;
-        $this->figureType = $figureType;
-        $this->formFactory = $formFactory;
         $this->router = $router;
         $this->bag = $bag;
         $this->manager = $manager;
@@ -119,11 +93,15 @@ class TricksController
     {
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
+
+        /** @var Form $form */
         $form = $this->formResolverTricks->getForm($request, FigureType::class);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $this->formResolverTricks->addTrick($form, $user);
             return new RedirectResponse($this->router->generate('home'));
         }
+
         return new Response($this->templating->render('tricks/newtrick.html.twig', [
             'form' => $form->createView(),
             'h1' => 'Ajout d\'une figure'
@@ -132,11 +110,8 @@ class TricksController
 
     /**
      * @Route("/delete/{slug}", name="delete.trick")
-     * @param Figure $figure
-     * @param ObjectManager $manager
-     * @return Response
      */
-    public function deleteTrick(UserInterface $user = null, Figure $figure, ObjectManager $manager)
+    public function deleteTrick(UserInterface $user = null, Figure $figure)
     {
         if($user == null){
             return new Response($this->templating->render('block_for_include/no_connect.html.twig', [
@@ -152,12 +127,10 @@ class TricksController
                     $this->tricksPicturesDirectory . $images->getLinkpictures()
                 ]);
             }
-            $manager->remove($figure);
-            $manager->flush();
+            $this->manager->remove($figure);
+            $this->manager->flush();
             $this->bag->add('success', 'La figure a été supprimé');
             return new RedirectResponse($this->router->generate('home'));
-        } else {
-            $this->bag->add('warning', 'Vous ne pouvez pas supprimer cette figure');
         }
         return new RedirectResponse($this->router->generate('home'));
     }
@@ -169,19 +142,27 @@ class TricksController
     {
         /** @var Figure $figure */
         $figure = $this->manager->getRepository(Figure::class)->findOneBy(['slug' => $request->attributes->get('slug')]);
+        /** @var Pictureslink $image */
+        $image = $this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $figure->getId()]);
+        /** @var Videolink $video */
+        $video = $this->manager->getRepository(Videolink::class)->findBy(['figure' => $figure->getId()]);
+
         if (is_null($figure)) {
             throw new EntityNotFoundException('Cette figure n\'existe pas');
         }
+        /** @var Form $form */
         $form = $this->formResolverComment->getForm($request, CommentType::class);
+
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
+
         if ($form->isSubmitted() && $form->isValid() && $user != null) {
             $this->formResolverComment->addCom($form, $user, $figure);
             $this->bag->add('success', 'Votre commentaire a été ajouter');
             return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
         }
-        $image = $this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $figure->getId()]);
-        $video = $this->manager->getRepository(Videolink::class)->findBy(['figure' => $figure->getId()]);
+
+        /** @var $comments */
         $comments = $paginator->paginate(
             $this->manager
                 ->getRepository(Comments::class)
@@ -207,6 +188,7 @@ class TricksController
         if (is_null($datatricks)) {
             throw new NotFoundHttpException('La figure n\'existe pas');
         }
+        /** @var Form $form */
         $form = $this->formResolverTricks->getForm($request, FigureEditType::class, $datatricks);
         if ($form->isSubmitted() && $form->isValid()) {
            $this->formResolverTricks->updateTrick($figure);

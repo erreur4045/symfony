@@ -7,7 +7,7 @@ use App\Entity\User;
 use App\Form\ProfilePictureType;
 use App\Repository\FigureRepository;
 use App\Repository\UserRepository;
-use App\Services\FormResolverUploadPicture;
+use App\Services\FormResolverMedias;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,14 +28,12 @@ class DashboardController
     /** @var Environment */
     private $environment;
 
-    /**
-     * @var FormResolverUploadPicture
-     */
-    private $formResolverUploadPicture;
-    /**
-     * @var TokenStorageInterface
-     */
+    /** @var FormResolverMedias */
+    private $formResolverMedias;
+
+    /** @var TokenStorageInterface */
     private $tokenStorage;
+
     /** @var RouterInterface */
     private $router;
 
@@ -45,7 +43,7 @@ class DashboardController
         UserRepository $user,
         Environment $environment,
         TokenStorageInterface $tokenStorage,
-        FormResolverUploadPicture $formResolverUploadPicture,
+        FormResolverMedias $formResolverMedias,
         RouterInterface $router
     ) {
         $this->router = $router;
@@ -53,7 +51,7 @@ class DashboardController
         $this->user = $user;
         $this->environment = $environment;
         $this->tokenStorage = $tokenStorage;
-        $this->formResolverUploadPicture = $formResolverUploadPicture;
+        $this->formResolverMedias = $formResolverMedias;
     }
 
     /**
@@ -66,16 +64,18 @@ class DashboardController
             return new Response($this->environment->render('block_for_include/no_connect.html.twig', [
             ]));
         }
+
         /** @var Figure $figures */
         $figures = $this->figure->findBy(['user' => $user->getId()]);
+
         /** @var User $userData */
         $userData = $this->tokenStorage->getToken()->getUser();
 
         if ($user->getName() == $this->tokenStorage->getToken()->getUser()) {
             $type = ProfilePictureType::class;
-            $form = $this->formResolverUploadPicture->getForm($request, $type);
+            $form = $this->formResolverMedias->getForm($request, $type);
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->formResolverUploadPicture->treatment($form, $userData);
+                $this->formResolverMedias->updateProfilePicture($form, $userData);
                 return new RedirectResponse($this->router->generate('app_dashboard'));
             }
             return new Response($this->environment->render('dashboard/index.html.twig', [

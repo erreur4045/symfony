@@ -20,8 +20,10 @@ class FormResolverComment extends FormResolver
 {
     /** @var EntityManagerInterface */
     private $manager;
+
     /** @var FlashBagInterface */
     private $bag;
+
     /** @var  UrlGeneratorInterface */
     private $router;
 
@@ -30,7 +32,6 @@ class FormResolverComment extends FormResolver
         EntityManagerInterface $manager,
         FlashBagInterface $bag,
         UrlGeneratorInterface $router
-
     )
     {
         parent::__construct($formFactory);
