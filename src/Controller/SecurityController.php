@@ -83,7 +83,7 @@ class SecurityController
     }
 
     /**
-     * @Route("/inscription", name="registration")
+     * @Route("/registration", name="registration")
      */
     public function registration(Request $request)
     {
@@ -101,7 +101,7 @@ class SecurityController
     }
 
     /**
-     * @Route("/passwordrecovery", name="app_passwordrecovery")
+     * @Route("/forgot_password", name="app_passwordrecovery")
      */
     public function PasswordRecovery(Request $request)
     {
@@ -119,7 +119,7 @@ class SecurityController
     }
 
     /**
-     * @Route("/recoverypassword/{slug}", name="app_recoverypassword")
+     * @Route("/reset_password/{slug}", name="app_recoverypassword")
      */
     public function Changepassword(Request $request, UserPasswordEncoderInterface $encoder)
     {

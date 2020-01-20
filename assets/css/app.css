@@ -29,16 +29,6 @@
     z-index: 0;
 }
 
-.trickblock {
-    border: solid;
-    border-radius: 30px;
-    position: absolute;
-    top: 5em;
-    background-color: white;
-    z-index: 1;
-    margin-bottom: 10em;
-}
-
 .userimg{
     width: 65px;
     height: 65px;
@@ -67,7 +57,8 @@
     .navbar-expand-lg .navbar-nav .nav-link {
         padding-right: .5rem;
         padding-left: .5rem;
-    }}
+    }
+}
 .bottom-right {
     position: absolute;
     bottom: 2em;
@@ -126,17 +117,46 @@
     #nav_bar{
     display: none;
     }
+    .trickblock {
+        position: absolute;
+        background-color: white;
+        z-index: 1;
+        margin-bottom: 10em;
+        border: solid;
+    }
+    .carousel_mobile{
+        display: none;
+    }
+    .bg_img_trick{
+        display: none;
+    }
 }
 
 @media (min-width: 768px) {
     #nav_bar_footer{
     display: none;
     }
+    .trickblock {
+        border: solid;
+        border-radius: 30px;
+        position: absolute;
+        top: 5em;
+        background-color: white;
+        z-index: 1;
+        margin-bottom: 10em;
+    }
+    #btn_see_media{
+        display: none;
+    }
 }
+
+.footer {
+    border-top: 2px solid;
+}
+
 .MultiCarousel { float: left; overflow: hidden; padding: 15px; width: 100%; position:relative; }
 .MultiCarousel .MultiCarousel-inner { transition: 1s ease all; float: left; }
 .MultiCarousel .MultiCarousel-inner .item { float: left;}
-/*.MultiCarousel .MultiCarousel-inner .item > div { text-align: center; padding:10px; margin:10px; background:#f1f1f1; color:#666;}*/
 .MultiCarousel .leftLst, .MultiCarousel .rightLst { position:absolute; border-radius:50%;top:calc(50% - 20px); }
 .MultiCarousel .leftLst { left:0; }
 .MultiCarousel .rightLst { right:0; }

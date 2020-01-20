@@ -35,7 +35,6 @@ class PicturelinkType extends AbstractType
                 ]
             ])
             ->add('alt', TextType::class, ['label' => 'Desciption de l\'image'])
-            // todo : une seul imagefirst possible ?
             ->add('first_image', CheckboxType::class, [
                 'attr' => ['class' => 'checkbox_check', 'data-id' => '__name__'],
                 'label' => 'Image à la Une ?',

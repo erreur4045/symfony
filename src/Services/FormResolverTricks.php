@@ -5,6 +5,7 @@ namespace App\Services;
 
 
 use App\Entity\Figure;
+use App\Entity\Pictureslink;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -53,6 +54,20 @@ class FormResolverTricks extends FormResolver
         $figure = $form->getData();
         $figure->setUser($user);
         $figure->setDatecreate(new \DateTime('now'));
+
+        if (is_null($figure->getPictureslinks()->get('elements'))) {
+            $pictureDefault = new Pictureslink();
+            $randId = rand(0,2);
+            $randPicture = Pictureslink::PICTURELINKRAND[$randId];
+            $pictureDefault->setFigure($figure)
+                ->setUser($user)
+                ->setLinkpictures($randPicture)
+                ->setFirstImage(1);
+            $this->manager->persist($figure);
+            $this->manager->flush();
+            $this->manager->persist($pictureDefault);
+            $this->manager->flush();
+        }
         foreach ($figure->getPictureslinks() as $picture) {
             /** @var UploadedFile $nameImage */
             $nameImage = $picture->getPicture();
@@ -71,12 +86,11 @@ class FormResolverTricks extends FormResolver
             $picture->setLinkpictures($newFilename)
                 ->setUser($user);
         }
-        foreach ($figure->getVideolinks() as $video)
-        {
+        foreach ($figure->getVideolinks() as $video) {
             $videoEmbed = preg_match(
                 '/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:&list=(\S+))?$/',
                 $video->getLinkvideo(), $matches);
-            $linkToStock = 'https://www.youtube.com/embed/'.$matches[1];
+            $linkToStock = 'https://www.youtube.com/embed/' . $matches[1];
             $video->setLinkvideo($linkToStock);
         }
         $this->manager->persist($figure);

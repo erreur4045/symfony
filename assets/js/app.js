@@ -47,3 +47,8 @@ $('.btn_load_tricks').on('click', function () {
        }
    });
 });
+
+$('#btn_see_media').on('click',function () {
+    document.getElementById("carousel_mobile").style.display = "block";
+    document.getElementById("btn_see_media").style.display = "none";
+});
