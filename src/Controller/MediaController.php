@@ -11,6 +11,7 @@ use App\Form\AddSingleVideoType;
 use App\Form\FigureType;
 use App\Form\VideolinkType;
 use App\Repository\FigureRepository;
+use App\Services\FormResolverMedias;
 use Doctrine\ORM\EntityManagerInterface;
 use phpDocumentor\Reflection\Types\This;
 use Psr\Container\ContainerInterface;
@@ -28,6 +29,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Twig\Environment;
+
 class MediaController
 {
     /** @var TricksController * */
@@ -59,14 +61,13 @@ class MediaController
 
     /** @var Environment */
     private $environment;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     private $tricksPicturesDirectory;
 
-    /**
-     * TricksController constructor.
-     */
+    /** @var FormResolverMedias */
+    private $formResolverMedias;
+
     public function __construct(
         FigureRepository $trick,
         Environment $templating,
@@ -78,7 +79,8 @@ class MediaController
         TokenStorageInterface $tokenStorage,
         Filesystem $filesystem,
         Environment $environment,
-        string $tricksPicturesDirectory
+        string $tricksPicturesDirectory,
+        FormResolverMedias $formResolverMedias
     ) {
         $this->trick = $trick;
         $this->templating = $templating;
@@ -91,6 +93,7 @@ class MediaController
         $this->filesystem = $filesystem;
         $this->environment = $environment;
         $this->tricksPicturesDirectory = $tricksPicturesDirectory;
+        $this->formResolverMedias = $formResolverMedias;
     }
 
     /**
@@ -124,7 +127,7 @@ class MediaController
             return new RedirectResponse($this->router->generate('trick',
                 ['slug' => $image[0]->getFigure()->getSlug()]));
         }
-        return 0;
+        return new RedirectResponse($this->router->generate('home'));
     }
 
     /**
@@ -147,6 +150,7 @@ class MediaController
     }
 
     // todo : modal ou ajax sur l'update
+
     /**
      * @Route("/media/update/picture/{id}", name="update.picture")
      */
@@ -162,42 +166,10 @@ class MediaController
         $figure = $this->manager->getRepository(Figure::class)->findOneBy(['id' => $exPicture->getFigure()->getId()]);
         if ($this->tokenStorage->getToken()->getUser() != "anon.") {
             /** @var User $userdata */
-            $userdata = $this->tokenStorage->getToken()->getUser();
-            $form = $this->formFactory->create(AddSinglePictureType::class);
-            $form->handleRequest($request);
+            $user = $this->tokenStorage->getToken()->getUser();
+            $form = $this->formResolverMedias->getForm($request, AddSinglePictureType::class);
             if ($form->isSubmitted() && $form->isValid()) {
-                /** @var Pictureslink $newPicture */
-                $newPicture = $form->getData();
-                $newPicture->setUser($userdata)->setFigure($figure);
-                if ($exPicture->getFirstImage() == true) {
-                    $newPicture->setFirstImage(true);
-                }
-                /** @var UploadedFile $uploadedFile */
-                $uploadedFile = $form['picture']->getData();
-
-                if ($uploadedFile) {
-                    $this->filesystem->remove([
-                        '',
-                        '',
-                        $this->tricksPicturesDirectory . $exPicture
-                    ]);
-                    $this->manager->remove($exPicture);
-                    $this->manager->flush();
-                    $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-                    $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()',
-                        $originalFilename);
-                    $newFilename = $safeFilename . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
-                    try {
-                        $uploadedFile->move(
-                            $this->tricksPicturesDirectory,
-                            $newFilename
-                        );
-                    } catch (FileException $e) {
-                    }
-                    $newPicture->setLinkpictures($newFilename);
-                    $this->manager->persist($newPicture);
-                    $this->manager->flush();
-                }
+                $this->formResolverMedias->updatePictureTrick($form, $user, $figure, $exPicture);
                 $this->bag->add('success', 'La photo a été modifié');
                 return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
             }
@@ -206,7 +178,7 @@ class MediaController
                 'title' => 'Changer une image'
             ]));
         }
-        return 0;
+        return new RedirectResponse($this->router->generate('home'));
     }
 
     /**
@@ -216,31 +188,24 @@ class MediaController
     {
         /** @var Videolink $exPicture */
         $exVideo = $this->manager->getRepository(Videolink::class)->find($id);
+
         /** @var Figure $figure */
         $figure = $this->manager->getRepository(Figure::class)->findOneBy(['id' => $exVideo->getFigure()->getId()]);
+
         if ($this->tokenStorage->getToken()->getUser() == "anon.") {
             return new Response($this->environment->render('block_for_include/no_connect.html.twig', [
             ]));
         }
-        $form = $this->formFactory->create(VideolinkType::class)->handleRequest($request);
+
+        $form = $this->formResolverMedias->getForm($request, VideolinkType::class);
         if ($this->tokenStorage->getToken()->getUser() != "anon.") {
             if ($form->isSubmitted() && $form->isValid()) {
-                /** @var Videolink $newVideo */
-                $newVideo = $form->getData();
-                $newVideoLink = $form['linkvideo']->getData();
-                $videoEmbed = preg_match(
-                    '/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:&list=(\S+))?$/',
-                    $newVideoLink, $matches);
-                $linkToStock = 'https://www.youtube.com/embed/'.$matches[1];
-                $newVideo->setFigure($figure);
-                $newVideo->setLinkvideo($linkToStock);
-                $this->manager->remove($exVideo);
-                $this->manager->persist($newVideo);
-                $this->manager->flush();
+                $this->formResolverMedias->updateVideoLink($form, $figure, $exVideo);
+                $this->bag->add('success', 'La video a été modifié');
+                return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
             }
-            $this->bag->add('success', 'La video a été modifié');
-            return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
         }
+
         return new Response($this->environment->render('media/UpdateVideo.html.twig', [
             'form' => $form->createView(),
             'title' => 'Changer une image'
