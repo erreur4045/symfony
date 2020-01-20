@@ -18,9 +18,9 @@ abstract class FormResolver
         $this->formFactory = $formFactory;
     }
 
-    public function getForm(Request $request, string $classType): FormInterface
+    public function getForm(Request $request, string $classType, $data = null): FormInterface
     {
-        return $this->formFactory->create($classType)->handleRequest($request);
+        return $this->formFactory->create($classType, $data )->handleRequest($request);
     }
 
 }
