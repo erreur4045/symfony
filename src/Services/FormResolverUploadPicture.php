@@ -9,9 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class FormResolverUploadPicture extends FormResolver
@@ -22,10 +20,6 @@ class FormResolverUploadPicture extends FormResolver
     private $manager;
     /** @var FlashBagInterface */
     private $bag;
-    /** @var UrlGeneratorInterface */
-    private $generator;
-    /** @var string */
-    private $pictureLinkDirectory;
     /** @var UploaderPicture */
     private $uploaderPicture;
 
@@ -33,7 +27,6 @@ class FormResolverUploadPicture extends FormResolver
         UserPasswordEncoderInterface $encoder,
         EntityManagerInterface $manager,
         FlashBagInterface $bag,
-        string $pictureLinkDirectory,
         FormFactoryInterface $formFactory,
         UploaderPicture $uploaderPicture
     ) {
@@ -41,7 +34,6 @@ class FormResolverUploadPicture extends FormResolver
         $this->encoder = $encoder;
         $this->bag = $bag;
         $this->manager = $manager;
-        $this->pictureLinkDirectory = $pictureLinkDirectory;
         $this->uploaderPicture = $uploaderPicture;
     }
 
@@ -54,5 +46,6 @@ class FormResolverUploadPicture extends FormResolver
 
         $this->manager->persist($user);
         $this->manager->flush();
+        $this->bag->add('success', 'Votre avatar a été modifié');
     }
 }

@@ -5,11 +5,14 @@ namespace App\Controller;
 use App\Entity\Comments;
 use App\Entity\Figure;
 use App\Entity\Pictureslink;
+use App\Entity\User;
 use App\Entity\Videolink;
 use App\Form\CommentType;
 use App\Form\FigureEditType;
 use App\Form\FigureType;
 use App\Repository\FigureRepository;
+use App\Services\FormResolverComment;
+use App\Services\FormResolverTricks;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -32,12 +35,11 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-//todo : sortir de l'abstract controller
 /**
  * Class TricksController
  * @package App\Controller
  */
-class TricksController extends AbstractController
+class TricksController
 {
     /** @var TricksController * */
     private $trick;
@@ -65,6 +67,18 @@ class TricksController extends AbstractController
 
     /** @var Filesystem */
     private $filesystem;
+    /**
+     * @var string
+     */
+    private $tricksPicturesDirectory;
+    /**
+     * @var FormResolverTricks
+     */
+    private $formResolverTricks;
+    /**
+     * @var FormResolverComment
+     */
+    private $formResolverComment;
 
     /**
      * TricksController constructor.
@@ -78,8 +92,13 @@ class TricksController extends AbstractController
         FlashBagInterface $bag,
         EntityManagerInterface $manager,
         TokenStorageInterface $tokenStorage,
-        Filesystem $filesystem
+        Filesystem $filesystem,
+        string $tricksPicturesDirectory,
+        FormResolverTricks $formResolverTricks,
+        FormResolverComment $formResolverComment
     ) {
+        $this->formResolverComment = $formResolverComment;
+        $this->formResolverTricks = $formResolverTricks;
         $this->trick = $trick;
         $this->templating = $templating;
         $this->figureType = $figureType;
@@ -89,53 +108,21 @@ class TricksController extends AbstractController
         $this->manager = $manager;
         $this->tokenStorage = $tokenStorage;
         $this->filesystem = $filesystem;
+        $this->tricksPicturesDirectory = $tricksPicturesDirectory;
     }
 
     /**
      * @Route("/addtrick", name="addtrick")
      */
     //todo au moins une image_first
-    public function addTrick(ObjectManager $manager, Request $request)
+    public function addTrick(Request $request)
     {
+        /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
-        $form = $this->formFactory->create(FigureType::class);
-        $form->handleRequest($request);
+        $form = $this->formResolverTricks->getForm($request, FigureType::class);
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var Figure $figure */
-            $figure = $form->getData();
-            $figure->setUser($user);
-            $figure->setDatecreate(new \DateTime('now'));
-            foreach ($figure->getPictureslinks() as $picture) {
-                /** @var UploadedFile $nameImage */
-                $nameImage = $picture->getPicture();
-                $originalName = $nameImage->getClientOriginalName();
-                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()',
-                    $originalName);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $nameImage->guessExtension();
-                try {
-                    $nameImage->move(
-                        $this->getParameter('figure_image'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-                $picture->setLinkpictures($newFilename)
-                    ->setUser($user);
-            }
-            foreach ($figure->getVideolinks() as $video)
-            {
-                $videoEmbed = preg_match(
-                    '/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:&list=(\S+))?$/',
-                    $video->getLinkvideo(), $matches);
-                $linkToStock = 'https://www.youtube.com/embed/'.$matches[1];
-                $video->setLinkvideo($linkToStock);
-            }
-            $manager->persist($figure);
-            $manager->flush();
-            $this->bag->add('success', 'Votre figure a été ajouter');
-            return new RedirectResponse($this->router->generate('trick',['slug' => $figure->getSlug()]));
-            //return new RedirectResponse($this->router->generate('home'));
+            $this->formResolverTricks->addTrick($form, $user);
+            return new RedirectResponse($this->router->generate('home'));
         }
         return new Response($this->templating->render('tricks/newtrick.html.twig', [
             'form' => $form->createView(),
@@ -147,7 +134,7 @@ class TricksController extends AbstractController
      * @Route("/delete/{slug}", name="delete.trick")
      * @param Figure $figure
      * @param ObjectManager $manager
-     * @return RedirectResponse
+     * @return Response
      */
     public function deleteTrick(UserInterface $user = null, Figure $figure, ObjectManager $manager)
     {
@@ -155,7 +142,6 @@ class TricksController extends AbstractController
             return new Response($this->templating->render('block_for_include/no_connect.html.twig', [
             ]));
         }
-
         if ($this->tokenStorage->getToken()->getUser()) {
             /** @var Pictureslink $image */
             $image = $this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $figure->getId()]);
@@ -163,51 +149,48 @@ class TricksController extends AbstractController
                 $this->filesystem->remove([
                     '',
                     '',
-                    $this->getParameter('figure_image') . $images->getLinkpictures()
+                    $this->tricksPicturesDirectory . $images->getLinkpictures()
                 ]);
             }
             $manager->remove($figure);
             $manager->flush();
-            $this->bag->add('success', 'Votre figure a été supprimé');
+            $this->bag->add('success', 'La figure a été supprimé');
             return new RedirectResponse($this->router->generate('home'));
         } else {
             $this->bag->add('warning', 'Vous ne pouvez pas supprimer cette figure');
         }
-        $this->bag->add('warning', 'Vous être connecté.e.s');
         return new RedirectResponse($this->router->generate('home'));
     }
 
     /**
      * @Route("/trick/{slug}", name="trick")
      */
-    public function getTrick(Request $request, ObjectManager $manager, PaginatorInterface $paginator)
+    public function getTrick(Request $request, PaginatorInterface $paginator)
     {
-        $datatricks = $this->manager->getRepository(Figure::class)->findOneBy(['slug' => $request->attributes->get('slug')]);
-        if (is_null($datatricks)) {
+        /** @var Figure $figure */
+        $figure = $this->manager->getRepository(Figure::class)->findOneBy(['slug' => $request->attributes->get('slug')]);
+        if (is_null($figure)) {
             throw new EntityNotFoundException('Cette figure n\'existe pas');
         }
-        $form = $this->formFactory->create(CommentType::class);
-        $form->handleRequest($request);
+        $form = $this->formResolverComment->getForm($request, CommentType::class);
+        /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
         if ($form->isSubmitted() && $form->isValid() && $user != null) {
-            $comment = $form->getData();
-            $comment->setDatecreate(new \DateTime())->setIdfigure($datatricks)->setUser($user);
-            $manager->persist($comment);
-            $manager->flush();
+            $this->formResolverComment->addCom($form, $user, $figure);
             $this->bag->add('success', 'Votre commentaire a été ajouter');
-            return new RedirectResponse($this->router->generate('trick', ['slug' => $datatricks->getSlug()]));
+            return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
         }
-        $image = $this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $datatricks->getId()]);
-        $video = $this->manager->getRepository(Videolink::class)->findBy(['figure' => $datatricks->getId()]);
+        $image = $this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $figure->getId()]);
+        $video = $this->manager->getRepository(Videolink::class)->findBy(['figure' => $figure->getId()]);
         $comments = $paginator->paginate(
             $this->manager
                 ->getRepository(Comments::class)
-                ->findBy(['idfigure' => $datatricks->getId()]),
+                ->findBy(['idfigure' => $figure->getId()]),
             $request->query->getInt('page', 1), 10);
 
         return new Response($this->templating->render('tricks/trick.html.twig', [
             'form' => $form->createView(),
-            'data' => $datatricks,
+            'data' => $figure,
             'image' => $image,
             'video' => $video,
             'comment' => $comments,
@@ -218,20 +201,15 @@ class TricksController extends AbstractController
     /**
      * @Route("/edit/{slug}", name="edit.trick")
      */
-    public function editTrick(Figure $figure, ObjectManager $manager, Request $request)
+    public function editTrick(Figure $figure, Request $request)
     {
         $datatricks = $this->manager->getRepository(Figure::class)->findOneBy(['slug' => $request->attributes->get('slug')]);
         if (is_null($datatricks)) {
             throw new NotFoundHttpException('La figure n\'existe pas');
         }
-
-        $form = $this->formFactory->create(FigureEditType::class, $datatricks);
-        $form->handleRequest($request);
+        $form = $this->formResolverTricks->getForm($request, FigureEditType::class, $datatricks);
         if ($form->isSubmitted() && $form->isValid()) {
-            $figure->setDateupdate(new \DateTime('now'));
-            $manager->persist($figure);
-            $manager->flush();
-            $this->bag->add('success', 'Votre figure a été mise a jour');
+           $this->formResolverTricks->updateTrick($figure);
             return new RedirectResponse($this->router->generate('trick', ['slug' => $datatricks->getSlug()]));
         }
         return new Response($this->templating->render('tricks/edittrick.html.twig', [

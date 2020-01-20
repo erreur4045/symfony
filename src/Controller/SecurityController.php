@@ -53,9 +53,7 @@ class SecurityController
 
     public function __construct(
         Environment $environment,
-        FormFactoryInterface $formFactory,
         UrlGeneratorInterface $generator,
-        FlashBagInterface $bag,
         EntityManagerInterface $manager,
         FormResolverRegistration $formResolverRegistration,
         FormResolverPasswordRecovery $formResolverPasswordRecovery,
@@ -64,9 +62,7 @@ class SecurityController
 
     ) {
         $this->environement = $environment;
-        $this->formFactory = $formFactory;
         $this->generator = $generator;
-        $this->bag = $bag;
         $this->manager = $manager;
         $this->fromResolverRegistration = $formResolverRegistration;
         $this->formResolverPasswordRecovery = $formResolverPasswordRecovery;
@@ -132,7 +128,7 @@ class SecurityController
      */
     public function Changepassword(Request $request, UserPasswordEncoderInterface $encoder)
     {
-        /** @var \App\Entity\User $user */
+        /** @var User $user */
         $user = $this->manager->getRepository(User::class)->findOneBy(['token' => $request->attributes->get('slug')]);
         $type = ResetPasswordType::class;
         if(!empty($user)){

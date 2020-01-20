@@ -76,11 +76,14 @@ class CommentsController
 
     /**
      * @Route("/editcom/{id}", name="edit.comment")
-     * @param Comments $comment
-     * @param ObjectManager $manager
+     * @param UserInterface|null $user
+     * @param Request $request
      * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
-    public function editCom(UserInterface $user = null, ObjectManager $manager, Request $request)
+    public function editCom(UserInterface $user = null, Request $request)
     {
         /** @var Comments $comment */
         $comment = $this->manager->getRepository(Comments::class)->findOneBy(['id' => $request->attributes->get('id')]);
@@ -96,7 +99,7 @@ class CommentsController
             $form = $this->formResolverComment->getForm($request, $type);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->formResolverComment->treatment($form, $comment);
+                $this->formResolverComment->updateCom($form, $comment);
                 return new RedirectResponse($this->router->generate('trick', ['slug' => $datatricks->getSlug()]));
             }
             return new Response($this->templating->render('comments/index.html.twig', [

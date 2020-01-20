@@ -3,8 +3,6 @@
 
 namespace App\Services;
 
-
-use App\Services\MailSender;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -29,7 +27,7 @@ class FormResolverPasswordRecovery extends FormResolver
         EntityManagerInterface $manager,
         FlashBagInterface $bag,
         UrlGeneratorInterface $router,
-        \App\Services\MailSender $mailSender
+        MailSender $mailSender
 
     )
     {

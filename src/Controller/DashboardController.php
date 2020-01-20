@@ -8,23 +8,16 @@ use App\Form\ProfilePictureType;
 use App\Repository\FigureRepository;
 use App\Repository\UserRepository;
 use App\Services\FormResolverUploadPicture;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManagerInterface;
-use phpDocumentor\Reflection\Types\This;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Twig\Environment;
 use Symfony\Component\HttpFoundation\Response;
-//todo : sortir de l'abstract controller
-class DashboardController extends AbstractController
+
+class DashboardController
 {
     /** @var FigureRepository */
     private $figure;
@@ -35,14 +28,6 @@ class DashboardController extends AbstractController
     /** @var Environment */
     private $environment;
 
-    /** @var EntityManagerInterface */
-    private $manager;
-
-    /** @var Filesystem */
-    private $filesystem;
-
-    /** @var FlashBagInterface */
-    private $bag;
     /**
      * @var FormResolverUploadPicture
      */
@@ -51,6 +36,8 @@ class DashboardController extends AbstractController
      * @var TokenStorageInterface
      */
     private $tokenStorage;
+    /** @var RouterInterface */
+    private $router;
 
     public function __construct
     (
@@ -58,20 +45,14 @@ class DashboardController extends AbstractController
         UserRepository $user,
         Environment $environment,
         TokenStorageInterface $tokenStorage,
-        FormFactoryInterface $formFactory,
-        EntityManagerInterface $manager,
-        Filesystem $filesystem,
-        FlashBagInterface $bag,
-        FormResolverUploadPicture $formResolverUploadPicture
+        FormResolverUploadPicture $formResolverUploadPicture,
+        RouterInterface $router
     ) {
+        $this->router = $router;
         $this->figure = $figure;
         $this->user = $user;
         $this->environment = $environment;
         $this->tokenStorage = $tokenStorage;
-        $this->formFactory = $formFactory;
-        $this->manager = $manager;
-        $this->filesystem = $filesystem;
-        $this->bag = $bag;
         $this->formResolverUploadPicture = $formResolverUploadPicture;
     }
 
@@ -95,8 +76,7 @@ class DashboardController extends AbstractController
             $form = $this->formResolverUploadPicture->getForm($request, $type);
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->formResolverUploadPicture->treatment($form, $userData);
-                $this->bag->add('success', 'Votre avatar a été modifié');
-                return $this->redirect($this->generateUrl('app_dashboard'));
+                return new RedirectResponse($this->router->generate('app_dashboard'));
             }
             return new Response($this->environment->render('dashboard/index.html.twig', [
                 'form' => $form->createView(),
@@ -107,6 +87,6 @@ class DashboardController extends AbstractController
                 'image' => $userData->getProfilePicture()
             ]));
         }
-        return new RedirectResponse($this->generateUrl('home'));
+        return new RedirectResponse($this->router->generate('home'));
     }
 }

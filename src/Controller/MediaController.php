@@ -28,8 +28,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Twig\Environment;
-//todo : sortir de l'abstract controller
-class MediaController extends AbstractController
+class MediaController
 {
     /** @var TricksController * */
     private $trick;
@@ -60,6 +59,10 @@ class MediaController extends AbstractController
 
     /** @var Environment */
     private $environment;
+    /**
+     * @var string
+     */
+    private $tricksPicturesDirectory;
 
     /**
      * TricksController constructor.
@@ -74,7 +77,8 @@ class MediaController extends AbstractController
         EntityManagerInterface $manager,
         TokenStorageInterface $tokenStorage,
         Filesystem $filesystem,
-        Environment $environment
+        Environment $environment,
+        string $tricksPicturesDirectory
     ) {
         $this->trick = $trick;
         $this->templating = $templating;
@@ -86,9 +90,8 @@ class MediaController extends AbstractController
         $this->tokenStorage = $tokenStorage;
         $this->filesystem = $filesystem;
         $this->environment = $environment;
+        $this->tricksPicturesDirectory = $tricksPicturesDirectory;
     }
-
-    // todo : revoir les nom de route e.g. /media/{action}/{type}/{id} partout
 
     /**
      * @Route("/media/delete/picture/{picture}", name="delete.image")
@@ -96,7 +99,6 @@ class MediaController extends AbstractController
     public function deletePicture($picture)
     {
         if ($this->tokenStorage->getToken()->getUser()) {
-            //todo : sortir du [0] grace ay findByOne
             /** @var Pictureslink $image */
             $image = $this->manager->getRepository(Pictureslink::class)->findBy(['linkpictures' => $picture]);
             if ($image[0]->getFirstImage() == true) {
@@ -116,7 +118,7 @@ class MediaController extends AbstractController
             $this->filesystem->remove([
                 '',
                 '',
-                $this->getParameter('figure_image') . $image[0]->getLinkpictures()
+                $this->tricksPicturesDirectory . $image[0]->getLinkpictures()
             ]);
             $this->bag->add('success', 'La figure a été mise a jour');
             return new RedirectResponse($this->router->generate('trick',
@@ -144,8 +146,6 @@ class MediaController extends AbstractController
         }
     }
 
-
-    // todo : revoir les nom de route e.g. /media/{action}/{typeMedia}/{id} partout
     // todo : modal ou ajax sur l'update
     /**
      * @Route("/media/update/picture/{id}", name="update.picture")
@@ -179,7 +179,7 @@ class MediaController extends AbstractController
                     $this->filesystem->remove([
                         '',
                         '',
-                        $this->getParameter('figure_image') . $exPicture
+                        $this->tricksPicturesDirectory . $exPicture
                     ]);
                     $this->manager->remove($exPicture);
                     $this->manager->flush();
@@ -189,7 +189,7 @@ class MediaController extends AbstractController
                     $newFilename = $safeFilename . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
                     try {
                         $uploadedFile->move(
-                            $this->getParameter('figure_image'),
+                            $this->tricksPicturesDirectory,
                             $newFilename
                         );
                     } catch (FileException $e) {
@@ -222,9 +222,8 @@ class MediaController extends AbstractController
             return new Response($this->environment->render('block_for_include/no_connect.html.twig', [
             ]));
         }
-        $form = $this->formFactory->create(VideolinkType::class);
+        $form = $this->formFactory->create(VideolinkType::class)->handleRequest($request);
         if ($this->tokenStorage->getToken()->getUser() != "anon.") {
-            $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 /** @var Videolink $newVideo */
                 $newVideo = $form->getData();
