@@ -14,13 +14,11 @@ class UploaderPicture
 {
     /** @var string */
     private $pictureLinkDirectory;
-    /**
-     * @var Filesystem
-     */
+
+    /** @var Filesystem */
     private $filesystem;
-    /**
-     * @var EntityManagerInterface
-     */
+
+    /** @var EntityManagerInterface */
     private $manager;
 
     public function __construct(

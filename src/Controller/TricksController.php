@@ -10,20 +10,15 @@ use App\Entity\Videolink;
 use App\Form\CommentType;
 use App\Form\FigureEditType;
 use App\Form\FigureType;
-use App\Repository\FigureRepository;
 use App\Services\FormResolverComment;
 use App\Services\FormResolverTricks;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityNotFoundException;
-use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\Form\FormFactory;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -101,7 +96,7 @@ class TricksController
 
         /** @var Form $form */
         $form = $this->formResolverTricks->getForm($request, FigureType::class);
-        dump($form);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $this->formResolverTricks->addTrick($form, $user);
             return new RedirectResponse($this->router->generate('home'));
@@ -155,7 +150,7 @@ class TricksController
         if (is_null($figure)) {
             throw new EntityNotFoundException('Cette figure n\'existe pas');
         }
-        /** @var FormFactoryInterface $form */
+        /** @var Form $form */
         $form = $this->formResolverComment->getForm($request, CommentType::class);
 
         /** @var User $user */

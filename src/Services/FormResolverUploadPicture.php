@@ -16,10 +16,13 @@ class FormResolverUploadPicture extends FormResolver
 {
     /** @var UserPasswordEncoderInterface */
     protected $encoder;
+
     /** @var EntityManagerInterface */
     private $manager;
+
     /** @var FlashBagInterface */
     private $bag;
+
     /** @var UploaderPicture */
     private $uploaderPicture;
 

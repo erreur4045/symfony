@@ -4,13 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Comments;
 use App\Entity\Figure;
-use App\Form\CommentType;
 use App\Form\EditComType;
 use App\Services\FormResolverComment;
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,9 +31,6 @@ class CommentsController
     /** @var Environment */
     private $templating;
 
-    /** @var FormFactoryInterface */
-    private $formFactory;
-
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
@@ -46,7 +39,6 @@ class CommentsController
 
     public function __construct(
         Environment $templating,
-        FormFactoryInterface $formFactory,
         EntityManagerInterface $manager,
         FlashBagInterface $bag,
         UrlGeneratorInterface $router,
@@ -58,7 +50,6 @@ class CommentsController
         $this->router = $router;
         $this->tokenStorage = $tokenStorage;
         $this->manager = $manager;
-        $this->formFactory = $formFactory;
         $this->templating = $templating;
     }
 
@@ -66,7 +57,7 @@ class CommentsController
      * @Route("/deletecom/{id}", name="delete.comment")
      */
 
-    public function deleteCom(UserInterface $user = null, Comments $comment, ObjectManager $manager, Request $request)
+    public function deleteCom(UserInterface $user = null, Comments $comment, Request $request)
     {
         if($user == null){
             return new Response($this->templating->render('block_for_include/no_connect.html.twig', [
@@ -79,8 +70,8 @@ class CommentsController
             ->findOneBy(['id' => $request->attributes->get('comment')->getIdfigure()->getId()]);
 
         if ($comment->getUser()->getMail() == $this->tokenStorage->getToken()->getUser()->getMail()) {
-            $manager->remove($comment);
-            $manager->flush();
+            $this->manager->remove($comment);
+            $this->manager->flush();
             $this->bag->add('success', 'Votre commentaire a été supprimé');
             return new RedirectResponse($this->router->generate('trick', ['slug' => $datatricks->getSlug()]));
         } else {

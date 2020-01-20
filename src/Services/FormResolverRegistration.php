@@ -9,23 +9,23 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class FormResolverRegistration extends FormResolver
 {
     /** @var UserPasswordEncoderInterface */
     protected $encoder;
+
     /** @var EntityManagerInterface */
     private $manager;
+
     /** @var FlashBagInterface */
     private $bag;
-    /** @var UrlGeneratorInterface */
-    private $generator;
+
     /** @var string */
     private $pictureLinkDirectory;
+
     /** @var UploaderPicture */
     private $uploaderPicture;
 

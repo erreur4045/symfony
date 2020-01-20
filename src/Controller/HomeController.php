@@ -17,7 +17,9 @@ class HomeController
     /** @var Environment **/
     private $environment;
 
-    public function __construct(EntityManagerInterface $manager, Environment $environment)
+    public function __construct(
+        EntityManagerInterface $manager,
+        Environment $environment)
     {
         $this->manager = $manager;
         $this->environment = $environment;

@@ -16,10 +16,13 @@ class FormResolverRecoveryPassword extends FormResolver
 {
     /** @var EntityManagerInterface */
     private $manager;
+
     /** @var FlashBagInterface */
     private $bag;
+
     /** @var  UrlGeneratorInterface */
     private $router;
+
     /** @var UserPasswordEncoderInterface */
     private $encoder;
 
