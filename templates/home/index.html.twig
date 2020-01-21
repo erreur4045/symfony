@@ -7,7 +7,7 @@
     <div class="container-fluid d-flex flex-column justify-content-center align-items-center img_home_background">
         <div class="row">
             <div class="col-12">
-                <h1 class="text-center p-3 mb-2 bg-info text-white home_title">Phrase d'accroche</h1>
+                <h1 class="text-center p-3 mb-2 ">Phrase d'accroche</h1>
             </div>
             <a href="#tricks" class="bottom-right">
                 <i class="fas fa-arrow-circle-down"></i>
@@ -30,10 +30,12 @@
                         <div class="card text-center m-auto p-0">
                             <a href="{{ path('trick', {slug: figure.slug}) }}"><img class="card-img-top"
                                                                                     src={{ asset('uploads/figureimage/' ~ picturefirst) }}
-                                                                                    alt="" style="height: 180px; width: 180px"></a>
+                                                                                    alt=""
+                                                                                    style="height: 180px; width: 180px"></a>
                             <div class="card-body d-flex justify-content-between align-items-center">
                                 <h4 class="card-title d-flex justify-content-between align-items-center">
-                                    <a href="{{ path('trick', {slug: figure.slug}) }}" class="m-2">{{ figure.name|truncate(15, true) }}</a>
+                                    <a href="{{ path('trick', {slug: figure.slug}) }}"
+                                       class="m-2">{{ figure.name|truncate(10) }}</a>
                                 </h4>
                                 {% if app.user %}
                                     <span class="d-flex justify-content-around p-0 buttoms_home">
@@ -56,9 +58,20 @@
         {% endfor %}
     {% endif %}
     </div>
+    <a href="#tricks" class="bottom-buttom">
+        <i class="fas fa-arrow-circle-up" aria-hidden="true"></i>
+    </a>
+    <div class="d-flex justify-content-center" id="loader">
+            <button class="btn btn-primary" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+            </button>
+    </div>
+    {% if rest == true %}
     <div class="row justify-content-center pt-4">
         <a data-url="{{ path('more.tricks') }}" type="button" class="btn btn-outline-primary btn_load_tricks"
            id="btn_load_tricks" data-page="2" data-pagemax="{{ pagemax }}">Affichier plus de figure</a>
     </div>
+    {% endif %}
     </div>
 {% endblock %}
