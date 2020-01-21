@@ -72,30 +72,17 @@
 </header>
 <body>
 {% block body %}{% endblock %}
-</body>
 {% block javascripts %}{% endblock %}
-{#todo : footer toujours en dessous du dernier element et non deriere #}
-<footer class="page-footer font-small teal pt-4">
-    <div class="container-fluid text-center text-md-left">
-        <div class="row">
-            <div class="col-md-6 mt-md-0 mt-3">
-                <h5 class="text-uppercase font-weight-bold">Strucure du site</h5>
-                <p><a href="/home">Accueil</a></p>
-                <p><a href="/addtrick">Trick</a></p>
-                {% if app.user %}
-                    <p><a href="/dashboard">Mon compte</a></p>
-                {% endif %}
-            </div>
-            <hr class="clearfix w-100 d-md-none pb-3">
-            <div class="col-md-6 mb-md-0 mb-3">
-                <h5 class="text-uppercase font-weight-bold">Site creer par Maxime THIERRY</h5>
-                <a href="https://www.maximethierry.xyz/">Mon Blog</a>
 
-            </div>
+<footer class="page-footer pt-4 " id="footer_perso">
+    <div class="container-fluid">
+        <div class="row footer">
+            <p class="text-left pl-5 pt-5">Copyright @</p>
         </div>
     </div>
     {% block custompage_script %}
         {{ encore_entry_script_tags('app') }}
     {% endblock %}
 </footer>
+</body>
 </html>

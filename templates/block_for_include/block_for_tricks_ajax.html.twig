@@ -3,23 +3,23 @@
         {% if picture.firstimage == true %}
             {% set picturefirst = picture.linkpictures %}
             <div class="btn_loadmore" data-boolean="{{ rest }}"></div>
-            <div class="col-lg-4 col-sm-6 mb-4">
-                <div class="card" style="width: 18rem;">
+            <div class="col-lg-3 col-sx-12 col-sm-6 mt-2">
+                <div class="card text-center m-auto p-0">
                     <a href="{{ path('trick', {slug: figure.slug}) }}"><img class="card-img-top"
                                                                             src={{ asset('uploads/figureimage/' ~ picturefirst) }}
-                                                                            alt="" style="height: 180px"></a>
-                    <div class="card-body d-flex">
-                        <h4 class="card-title mr-auto">
-                            <a href="{{ path('trick', {slug: figure.slug}) }}">{{ figure.name }}</a>
+                                                                            alt="" style="height: 180px; width: 180px"></a>
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <h4 class="card-title d-flex justify-content-between align-items-center">
+                            <a href="{{ path('trick', {slug: figure.slug}) }}" class="m-0">{{ figure.name|truncate(10) }}</a>
                         </h4>
                         {% if app.user %}
-                            <span class="d-inline buttoms_home">
-                                            <button type="button" class="btn btn-primary delete_modal"
+                            <span class="d-flex justify-content-around p-0 buttoms_home">
+                                            <button type="button" class="btn btn-primary delete_modal p-1 "
                                                     data-slug="{{ path('delete.trick', {slug: figure.slug}) }}"
                                                     data-message="Êtes-vous sûr de vouloir supprimer cette figure ?">
                                               <i class="material-icons">delete_sweep</i>
                                             </button>
-                                            <button type="button" class="btn btn-outline-primary"><a
+                                            <button type="button" class="btn btn-outline-primary p-1"><a
                                                         href="{{ path('edit.trick', {slug: figure.slug}) }}"><i
                                                             class="material-icons">create</i></a>
                                             </button>

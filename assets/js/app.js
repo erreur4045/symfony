@@ -30,6 +30,9 @@ $('.delete_modal').on('click', function () {
 });
 
 $('.btn_load_tricks').on('click', function () {
+    $('#loader').css('background', 'transparent');
+    $('#loader').css('visibility', 'visible');
+    $('#tricks_list').css('pointer-events', 'none');
    let page = $(this).data('page');
    let pagemax = $(this).data('pagemax');
    let loadMore = $('#btn_load_tricks');
@@ -41,9 +44,25 @@ $('.btn_load_tricks').on('click', function () {
        success: function (response) {
            tricks.append(response);
            loadMore.data('page', page + 1 );
+           document.getElementById("loader").style.visibility = "hidden";
+           $('#tricks_list').css('pointer-events', 'all');
            if (page >= pagemax){
                $('.btn_load_tricks').remove();
            }
        }
    });
+});
+
+$('#btn_see_media').on('click',function () {
+    document.getElementById("carousel_mobile").style.display = "block";
+    document.getElementById("btn_see_media").style.display = "none";
+});
+
+$(document).scroll(function() {
+    var y = $(this).scrollTop();
+    if (y > 300) {
+        $('.bottom-buttom').fadeIn();
+    } else {
+        $('.bottom-buttom').fadeOut();
+    }
 });

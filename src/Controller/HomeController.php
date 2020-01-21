@@ -36,10 +36,14 @@ class HomeController
         /** @var $nbPageMax */
         $nbPageMax = ceil($this->manager->getRepository(Figure::class)->count([]) / Figure::LIMIT_PER_PAGE);
 
+        /** @var int $nb_tricks */
+        $nb_tricks = $this->manager->getRepository(Figure::class)->count([]);
+
         return new Response($this->environment->render('home/index.html.twig', [
             'figures' => $figures,
             'title' => 'SnowTricks',
-            'pagemax' => $nbPageMax
+            'pagemax' => $nbPageMax,
+            'rest' => Figure::LIMIT_PER_PAGE < $nb_tricks
         ]));
     }
 
@@ -49,13 +53,21 @@ class HomeController
     public function loadTricks(Request $request)
     {
         $pageId = $request->query->get('page');
-        $offset = $pageId * Figure::LIMIT_PER_PAGE - 2;
+        $offset = $pageId * Figure::LIMIT_PER_PAGE - Figure::LIMIT_PER_PAGE ;
         $nb_tricks = $this->manager->getRepository(Figure::class)->count([]);
+        if ($nb_tricks > Figure::LIMIT_PER_PAGE){
+            $rest = false;
+        }
+        else{
+            $rest = $pageId * Figure::LIMIT_PER_PAGE < $nb_tricks;
+        }
 
         /** @var Figure $tricksToShow */
         $tricksToShow = $this->manager->getRepository(Figure::class)->findBy([], [], Figure::LIMIT_PER_PAGE, $offset);
 
-        return new Response($this->environment->render('block_for_include/block_for_tricks_ajax.html.twig',
-            ['tricksToShow' => $tricksToShow, 'rest' => $pageId * Figure::LIMIT_PER_PAGE < $nb_tricks]));
+        return new Response($this->environment->render('block_for_include/block_for_tricks_ajax.html.twig',[
+                'tricksToShow' => $tricksToShow,
+                'rest' => $rest
+            ]));
     }
 }
