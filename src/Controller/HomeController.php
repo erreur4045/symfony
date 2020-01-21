@@ -55,8 +55,6 @@ class HomeController
         $pageId = $request->query->get('page');
         $offset = $pageId * Figure::LIMIT_PER_PAGE - Figure::LIMIT_PER_PAGE ;
         $nb_tricks = $this->manager->getRepository(Figure::class)->count([]);
-        dump($nb_tricks);
-        dump($nb_tricks > Figure::LIMIT_PER_PAGE);
         if ($nb_tricks > Figure::LIMIT_PER_PAGE){
             $rest = false;
         }
