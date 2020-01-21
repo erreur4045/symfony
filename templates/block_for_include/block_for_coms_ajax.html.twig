@@ -1,0 +1,23 @@
+{% for comment in comsToShow %}
+    <div class="col-12 ">
+        <img src="{{ asset('uploads/profilepicture/' ~ comment.user.profilePicture) }}"
+             class="mr-3 rounded-circle embed-responsive userimg d-inline-block"
+             alt="{{ 'image_utilisateur' }}">
+
+        <p class="d-inline-block">{{ comment.user.name }} </p>
+        <p class="d-inline-block">Le {{ comment.datecreate|date("d/m/Y") }}</p>
+        <p class="d-inline-block">a écrit</p>
+        <span class="border border-dark rounded">
+        <p class="d-inline-block">{{ comment.text }}</p>
+        </span>
+        {% if user.name is defined %}
+            {% if comment.user.name == user.name %}
+                <button class=" btn btn-danger text-right  p-0 ml-1">
+                    <a href="{{ path('delete.comment', {id: comment.id}) }}">Supprimer</a>
+                </button>
+                <button class="btn btn-info text-right p-0"><a href="{{ path('edit.comment', {id: comment.id}) }}">Modifier</a>
+                </button>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endfor %}

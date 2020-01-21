@@ -36,14 +36,13 @@ class HomeController
         /** @var $nbPageMax */
         $nbPageMax = ceil($this->manager->getRepository(Figure::class)->count([]) / Figure::LIMIT_PER_PAGE);
 
-        /** @var int $nb_tricks */
-        $nb_tricks = $this->manager->getRepository(Figure::class)->count([]);
+        $rest = $nbPageMax > 1 ? true : false;
 
         return new Response($this->environment->render('home/index.html.twig', [
             'figures' => $figures,
             'title' => 'SnowTricks',
             'pagemax' => $nbPageMax,
-            'rest' => Figure::LIMIT_PER_PAGE < $nb_tricks
+            'rest' => $rest
         ]));
     }
 
@@ -55,12 +54,7 @@ class HomeController
         $pageId = $request->query->get('page');
         $offset = $pageId * Figure::LIMIT_PER_PAGE - Figure::LIMIT_PER_PAGE ;
         $nb_tricks = $this->manager->getRepository(Figure::class)->count([]);
-        if ($nb_tricks > Figure::LIMIT_PER_PAGE){
-            $rest = false;
-        }
-        else{
-            $rest = $pageId * Figure::LIMIT_PER_PAGE < $nb_tricks;
-        }
+        $rest = $pageId * Figure::LIMIT_PER_PAGE < $nb_tricks ? true : false;
 
         /** @var Figure $tricksToShow */
         $tricksToShow = $this->manager->getRepository(Figure::class)->findBy([], [], Figure::LIMIT_PER_PAGE, $offset);

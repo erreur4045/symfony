@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Comments
 {
+    public const LIMIT_PER_PAGE = 10;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

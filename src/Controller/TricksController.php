@@ -163,12 +163,14 @@ class TricksController
             return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
         }
 
-        /** @var $comments */
-        $comments = $paginator->paginate(
-            $this->manager
-                ->getRepository(Comments::class)
-                ->findBy(['idfigure' => $figure->getId()]),
-            $request->query->getInt('page', 1), 10);
+        /** @var Comments $comments */
+        $comments = $this->manager->getRepository(Comments::class)->findBy(['idfigure' => $figure->getId()], [], Comments::LIMIT_PER_PAGE, null);
+
+        $nbPageMaxCom = ceil(count($this->manager
+            ->getRepository(Comments::class)
+            ->findBy(['idfigure' => $figure->getId()]))/Comments::LIMIT_PER_PAGE);
+
+        $rest = $nbPageMaxCom > 1 ? true : false;
 
         return new Response($this->templating->render('tricks/trick.html.twig', [
             'form' => $form->createView(),
@@ -177,7 +179,9 @@ class TricksController
             'video' => $video,
             'comment' => $comments,
             'user' => $user,
-            'emptyMedia' => $hasOthermedia
+            'emptyMedia' => $hasOthermedia,
+            'rest' => $rest,
+            'pagemax' => $nbPageMaxCom
         ]));
     }
 
