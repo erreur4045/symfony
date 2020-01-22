@@ -22,25 +22,53 @@ use Twig\Environment;
 
 class SecurityController
 {
-    /** @var Environment */
+    /**
+     *
+     *
+     * @var Environment
+     */
     private $environement;
 
-    /** @var UrlGeneratorInterface */
+    /**
+     *
+     *
+     * @var UrlGeneratorInterface
+     */
     private $generator;
 
-    /** @var EntityManagerInterface */
+    /**
+     *
+     *
+     * @var EntityManagerInterface
+     */
     private $manager;
 
-    /** @var FormResolverRegistration */
+    /**
+     *
+     *
+     * @var FormResolverRegistration
+     */
     private $fromResolverRegistration;
 
-    /** @var FormResolverPasswordRecovery */
+    /**
+     *
+     *
+     * @var FormResolverPasswordRecovery
+     */
     private $formResolverPasswordRecovery;
 
-    /** @var  UrlGeneratorInterface */
+    /**
+     *
+     *
+     * @var UrlGeneratorInterface
+     */
     private $router;
 
-    /** @var FormResolverRecoveryPassword */
+    /**
+     *
+     *
+     * @var FormResolverRecoveryPassword
+     */
     private $formResolverRecoveryPassword;
 
     public function __construct(
@@ -51,7 +79,6 @@ class SecurityController
         FormResolverPasswordRecovery $formResolverPasswordRecovery,
         FormResolverRecoveryPassword $formResolverRecoveryPassword,
         UrlGeneratorInterface $router
-
     ) {
         $this->environement = $environment;
         $this->generator = $generator;
@@ -60,16 +87,15 @@ class SecurityController
         $this->formResolverPasswordRecovery = $formResolverPasswordRecovery;
         $this->formResolverRecoveryPassword = $formResolverRecoveryPassword;
         $this->router = $router;
-
     }
 
     /**
      * @Route("/login", name="app_login")
-     * @param AuthenticationUtils $authenticationUtils
-     * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @param           AuthenticationUtils $authenticationUtils
+     * @return          Response
+     * @throws          \Twig\Error\LoaderError
+     * @throws          \Twig\Error\RuntimeError
+     * @throws          \Twig\Error\SyntaxError
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -78,8 +104,12 @@ class SecurityController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return new Response($this->environement->render('security/login.html.twig',
-            ['last_username' => $lastUsername, 'error' => $error]));
+        return new Response(
+            $this->environement->render(
+                'security/login.html.twig',
+                ['last_username' => $lastUsername, 'error' => $error]
+            )
+        );
     }
 
     /**
@@ -95,49 +125,65 @@ class SecurityController
             return new RedirectResponse($this->generator->generate('app_login'));
         }
 
-        return new Response($this->environement->render('security/registration.html.twig', [
-            'form' => $form->createView()
-        ]));
+        return new Response(
+            $this->environement->render(
+                'security/registration.html.twig',
+                [
+                'form' => $form->createView()
+                ]
+            )
+        );
     }
 
     /**
      * @Route("/forgot_password", name="app_passwordrecovery")
      */
-    public function PasswordRecovery(Request $request)
+    public function passwordRecovery(Request $request)
     {
         /** @var Form $form */
         $form = $this->formResolverPasswordRecovery->getForm($request, PasswordRecoveryMailType::class);
 
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->formResolverPasswordRecovery->treatment($form);
             return new RedirectResponse($this->router->generate('home'));
         }
 
-        return new Response($this->environement->render('security/mailforpasswordrecovery.html.twig', [
-            'form' => $form->createView()
-        ]));
+        return new Response(
+            $this->environement->render(
+                'security/mailforpasswordrecovery.html.twig',
+                [
+                'form' => $form->createView()
+                ]
+            )
+        );
     }
 
     /**
      * @Route("/reset_password/{slug}", name="app_recoverypassword")
      */
-    public function Changepassword(Request $request, UserPasswordEncoderInterface $encoder)
+    public function changePassword(Request $request, UserPasswordEncoderInterface $encoder)
     {
         /** @var User $user */
-        $user = $this->manager->getRepository(User::class)->findOneBy(['token' => $request->attributes->get('slug')]);
+        $user = $this->manager->getRepository(User::class)
+            ->findOneBy(['token' => $request->attributes->get('slug')]);
 
-        if(!empty($user)){
+        if (!empty($user)) {
             /** @var Form $form */
             $form = $this->formResolverRecoveryPassword->getForm($request, ResetPasswordType::class);
-            if ($form->isSubmitted() && $form->isValid() && $user->getMail() == $form['email']->getData() ){
+            if ($form->isSubmitted() && $form->isValid() && $user->getMail() == $form['email']->getData()) {
                 $this->formResolverRecoveryPassword->treatment($form, $user);
                 return new RedirectResponse($this->router->generate('home'));
             }
-            return new Response($this->environement->render('security/resetpassword.html.twig', [
-                'form' => $form->createView()
-            ]));
-        }
-        else
+            return new Response(
+                $this->environement->render(
+                    'security/resetpassword.html.twig',
+                    [
+                    'form' => $form->createView()
+                    ]
+                )
+            );
+        } else {
             return new RedirectResponse($this->router->generate('home'));
+        }
     }
 }

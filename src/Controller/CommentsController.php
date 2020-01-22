@@ -20,22 +20,46 @@ use Twig\Environment;
 
 class CommentsController
 {
-    /** @var EntityManagerInterface */
+    /**
+     *
+     *
+     * @var EntityManagerInterface
+     */
     private $manager;
 
-    /** @var FormResolverComment */
+    /**
+     *
+     *
+     * @var FormResolverComment
+     */
     private $formResolverComment;
 
-    /** @var FlashBagInterface */
+    /**
+     *
+     *
+     * @var FlashBagInterface
+     */
     private $bag;
 
-    /** @var Environment */
+    /**
+     *
+     *
+     * @var Environment
+     */
     private $templating;
 
-    /** @var TokenStorageInterface */
+    /**
+     *
+     *
+     * @var TokenStorageInterface
+     */
     private $tokenStorage;
 
-    /** @var UrlGeneratorInterface */
+    /**
+     *
+     *
+     * @var UrlGeneratorInterface
+     */
     private $router;
 
     public function __construct(
@@ -60,9 +84,14 @@ class CommentsController
 
     public function deleteCom(UserInterface $user = null, Comments $comment, Request $request)
     {
-        if($user == null){
-            return new Response($this->templating->render('block_for_include/no_connect.html.twig', [
-            ]));
+        if ($user == null) {
+            return new Response(
+                $this->templating->render(
+                    'block_for_include/no_connect.html.twig',
+                    [
+                    ]
+                )
+            );
         }
 
         /** @var Figure $datatricks */
@@ -87,9 +116,14 @@ class CommentsController
 
     public function editCom(UserInterface $user = null, Request $request)
     {
-        if($user == null){
-            return new Response($this->templating->render('block_for_include/no_connect.html.twig', [
-            ]));
+        if ($user == null) {
+            return new Response(
+                $this->templating->render(
+                    'block_for_include/no_connect.html.twig',
+                    [
+                    ]
+                )
+            );
         }
         /** @var Comments $comment */
         $comment = $this->manager->getRepository(Comments::class)->findOneBy(['id' => $request->attributes->get('id')]);
@@ -102,12 +136,18 @@ class CommentsController
 
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->formResolverComment->updateCom($form, $comment);
-                return new RedirectResponse($this->router->generate('trick', ['slug' => $datatricks->getSlug()]));
+                return new RedirectResponse($this->router
+                    ->generate('trick', ['slug' => $datatricks->getSlug()]));
             }
-            return new Response($this->templating->render('comments/index.html.twig', [
-                'form' => $form->createView(),
-                'comment' => $comment->getText()
-            ]));
+            return new Response(
+                $this->templating->render(
+                    'comments/index.html.twig',
+                    [
+                    'form' => $form->createView(),
+                    'comment' => $comment->getText()
+                    ]
+                )
+            );
         } else {
             $this->bag->add('warning', 'Vous ne pouvez pas modifier ce commentaire');
         }
@@ -126,20 +166,25 @@ class CommentsController
         $figureId = $request->query->get('figureid');
         $offset = $pageId * Comments::LIMIT_PER_PAGE - Comments::LIMIT_PER_PAGE;
         $nb_coms = $this->manager->getRepository(Comments::class)->findBy(['idfigure' => $figureId]);
-        if ($nb_coms > Comments::LIMIT_PER_PAGE){
+        if ($nb_coms > Comments::LIMIT_PER_PAGE) {
             $rest = false;
-        }
-        else{
+        } else {
             $rest = $pageId * Comments::LIMIT_PER_PAGE < $nb_coms;
         }
 
         /** @var Comments $comsToShow */
-        $comsToShow = $this->manager->getRepository(Comments::class)->findBy(['idfigure' => $figureId], [], Comments::LIMIT_PER_PAGE, $offset);
+        $comsToShow = $this->manager->getRepository(Comments::class)
+            ->findBy(['idfigure' => $figureId], [], Comments::LIMIT_PER_PAGE, $offset);
 
-        return new Response($this->templating->render('block_for_include/block_for_coms_ajax.html.twig',[
-            'user' => $user,
-            'comsToShow' => $comsToShow,
-            'rest' => $rest
-        ]));
+        return new Response(
+            $this->templating->render(
+                'block_for_include/block_for_coms_ajax.html.twig',
+                [
+                'user' => $user,
+                'comsToShow' => $comsToShow,
+                'rest' => $rest
+                ]
+            )
+        );
     }
 }

@@ -11,16 +11,24 @@ use Twig\Environment;
 
 class HomeController
 {
-    /** @var EntityManagerInterface **/
+    /**
+     *
+     *
+     * @var EntityManagerInterface
+     **/
     private $manager;
 
-    /** @var Environment **/
+    /**
+     *
+     *
+     * @var Environment
+     **/
     private $environment;
 
     public function __construct(
         EntityManagerInterface $manager,
-        Environment $environment)
-    {
+        Environment $environment
+    ) {
         $this->manager = $manager;
         $this->environment = $environment;
     }
@@ -31,19 +39,26 @@ class HomeController
     public function index()
     {
         /** @var Figure $figures */
-        $figures = $this->manager->getRepository(Figure::class)->findBy([], [], Figure::LIMIT_PER_PAGE, null);
+        $figures = $this->manager->getRepository(Figure::class)
+            ->findBy([], [], Figure::LIMIT_PER_PAGE, null);
 
         /** @var $nbPageMax */
-        $nbPageMax = ceil($this->manager->getRepository(Figure::class)->count([]) / Figure::LIMIT_PER_PAGE);
+        $nbPageMax = ceil($this->manager->getRepository(Figure::class)
+                ->count([]) / Figure::LIMIT_PER_PAGE);
 
         $rest = $nbPageMax > 1 ? true : false;
 
-        return new Response($this->environment->render('home/index.html.twig', [
-            'figures' => $figures,
-            'title' => 'SnowTricks',
-            'pagemax' => $nbPageMax,
-            'rest' => $rest
-        ]));
+        return new Response(
+            $this->environment->render(
+                'home/index.html.twig',
+                [
+                'figures' => $figures,
+                'title' => 'SnowTricks',
+                'pagemax' => $nbPageMax,
+                'rest' => $rest
+                ]
+            )
+        );
     }
 
     /**
@@ -59,9 +74,14 @@ class HomeController
         /** @var Figure $tricksToShow */
         $tricksToShow = $this->manager->getRepository(Figure::class)->findBy([], [], Figure::LIMIT_PER_PAGE, $offset);
 
-        return new Response($this->environment->render('block_for_include/block_for_tricks_ajax.html.twig',[
+        return new Response(
+            $this->environment->render(
+                'block_for_include/block_for_tricks_ajax.html.twig',
+                [
                 'tricksToShow' => $tricksToShow,
                 'rest' => $rest
-            ]));
+                ]
+            )
+        );
     }
 }

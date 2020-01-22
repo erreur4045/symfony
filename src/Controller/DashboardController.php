@@ -19,26 +19,49 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DashboardController
 {
-    /** @var FigureRepository */
+    /**
+     *
+     *
+     * @var FigureRepository
+     */
     private $figure;
 
-    /** @var UserRepository */
+    /**
+     *
+     *
+     * @var UserRepository
+     */
     private $user;
 
-    /** @var Environment */
+    /**
+     *
+     *
+     * @var Environment
+     */
     private $environment;
 
-    /** @var FormResolverMedias */
+    /**
+     *
+     *
+     * @var FormResolverMedias
+     */
     private $formResolverMedias;
 
-    /** @var TokenStorageInterface */
+    /**
+     *
+     *
+     * @var TokenStorageInterface
+     */
     private $tokenStorage;
 
-    /** @var RouterInterface */
+    /**
+     *
+     *
+     * @var RouterInterface
+     */
     private $router;
 
-    public function __construct
-    (
+    public function __construct(
         FigureRepository $figure,
         UserRepository $user,
         Environment $environment,
@@ -60,9 +83,14 @@ class DashboardController
 
     public function index(UserInterface $user = null, Request $request)
     {
-        if ($user == null){
-            return new Response($this->environment->render('block_for_include/no_connect.html.twig', [
-            ]));
+        if ($user == null) {
+            return new Response(
+                $this->environment->render(
+                    'block_for_include/no_connect.html.twig',
+                    [
+                    ]
+                )
+            );
         }
 
         /** @var Figure $figures */
@@ -78,14 +106,19 @@ class DashboardController
                 $this->formResolverMedias->updateProfilePicture($form, $userData);
                 return new RedirectResponse($this->router->generate('app_dashboard'));
             }
-            return new Response($this->environment->render('dashboard/index.html.twig', [
-                'form' => $form->createView(),
-                'user' => $user,
-                'controller_name' => 'Mon Dashboard',
-                'title' => 'Mon Dashboard',
-                'figure' => $figures,
-                'image' => $userData->getProfilePicture()
-            ]));
+            return new Response(
+                $this->environment->render(
+                    'dashboard/index.html.twig',
+                    [
+                    'form' => $form->createView(),
+                    'user' => $user,
+                    'controller_name' => 'Mon Dashboard',
+                    'title' => 'Mon Dashboard',
+                    'figure' => $figures,
+                    'image' => $userData->getProfilePicture()
+                    ]
+                )
+            );
         }
         return new RedirectResponse($this->router->generate('home'));
     }
