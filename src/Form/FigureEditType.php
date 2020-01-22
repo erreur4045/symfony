@@ -15,15 +15,16 @@ class FigureEditType extends AbstractType
         $builder
             ->add('name')
             ->add('description', TextareaType::class)
-            ->add('idfiguregroup')
-        ;
+            ->add('idfiguregroup');
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(
+            [
             'data_class' => Figure::class,
             'translation_domain' => 'forms'
-        ]);
+            ]
+        );
     }
 }

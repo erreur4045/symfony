@@ -14,13 +14,17 @@ class AddSinglePictureType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('picture', FileType::class,[
+            ->add(
+                'picture',
+                FileType::class,
+                [
                 'attr' => ['placeholder' => 'Cliquer pour choisir une nouvelle image'],
                 'label' => 'Choisisez votre nouvelle photo au formats .png .jpg .jpeg',
                 'mapped' => false,
                 'required' => false,
                 'constraints' => [
-                    new File([
+                    new File(
+                        [
                         'maxSize' => '1024k',
                         'mimeTypes' => [
                             "image/png",
@@ -28,18 +32,21 @@ class AddSinglePictureType extends AbstractType
                             "image/jpg",
                         ],
                         'mimeTypesMessage' => 'Seul les formats .png .jpg .jpeg sont accepté' ,
-                    ])
+                        ]
+                    )
                 ],
-            ])
-            ->add('alt')
-        ;
+                ]
+            )
+            ->add('alt');
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(
+            [
             'data_class' => Pictureslink::class,
             'translation_domain' => 'form_add_picture'
-        ]);
+            ]
+        );
     }
 }

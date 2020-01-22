@@ -16,15 +16,16 @@ class VideolinkType extends AbstractType
     {
         $builder
             ->add('linkvideo')
-            ->add('figure', HiddenType::class)
-        ;
+            ->add('figure', HiddenType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(
+            [
             'data_class' => Videolink::class,
             'translation_domain' => 'form_add_video'
-        ]);
+            ]
+        );
     }
 }

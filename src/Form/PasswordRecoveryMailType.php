@@ -14,14 +14,15 @@ class PasswordRecoveryMailType extends AbstractType
     {
         $builder
             ->add('email', TextType::class, ['label' => false])
-            ->add('pseudo', TextType::class, ['label' => false])
-        ;
+            ->add('pseudo', TextType::class, ['label' => false]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(
+            [
             // Configure your form options here
-        ]);
+            ]
+        );
     }
 }

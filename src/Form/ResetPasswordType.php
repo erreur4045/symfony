@@ -13,14 +13,15 @@ class ResetPasswordType extends AbstractType
     {
         $builder
             ->add('email')
-            ->add('password', PasswordType::class)
-        ;
+            ->add('password', PasswordType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            // Configure your form options here
-        ]);
+        $resolver->setDefaults(
+            [
+                // Configure your form options here
+            ]
+        );
     }
 }
