@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services;
-
 
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -11,7 +9,11 @@ use Symfony\Component\Mailer\SentMessage;
 
 class MailSender
 {
-    /** @var MailerInterface */
+    /**
+     *
+     *
+     * @var MailerInterface
+     */
     private $mailer;
     public function __construct(MailerInterface $mailer)
     {
@@ -27,7 +29,11 @@ class MailSender
             ->htmlTemplate('emails/mailTempleteForPasswordRecovery.html.twig')
             ->context(['token' => $token]);
 
-        /** @var SentMessage $sentEmail */
+        /**
+*
+         *
+ * @var SentMessage $sentEmail
+*/
         try {
             $this->mailer->send($email);
         } catch (TransportExceptionInterface $e) {

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services;
-
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,13 +10,25 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UploaderPicture
 {
-    /** @var string */
+    /**
+     *
+     *
+     * @var string
+     */
     private $pictureLinkDirectory;
 
-    /** @var Filesystem */
+    /**
+     *
+     *
+     * @var Filesystem
+     */
     private $filesystem;
 
-    /** @var EntityManagerInterface */
+    /**
+     *
+     *
+     * @var EntityManagerInterface
+     */
     private $manager;
 
     public function __construct(
@@ -35,8 +45,10 @@ class UploaderPicture
     {
         if ($uploadedFile) {
             $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()',
-                $originalFilename);
+            $safeFilename = transliterator_transliterate(
+                'Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()',
+                $originalFilename
+            );
             $newFilename = $safeFilename . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
             try {
                 $uploadedFile->move(
@@ -52,16 +64,20 @@ class UploaderPicture
 
     public function updateProfilePicture(UploadedFile $uploadedFile, User $user)
     {
-        $this->filesystem->remove([
+        $this->filesystem->remove(
+            [
             '',
             '',
             $this->pictureLinkDirectory . $user->getProfilePicture()
-        ]);
+            ]
+        );
         if ($uploadedFile) {
             $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
             // this is needed to safely include the file name as part of the URL
-            $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()',
-                $originalFilename);
+            $safeFilename = transliterator_transliterate(
+                'Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()',
+                $originalFilename
+            );
             $newFilename = $safeFilename . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
             try {
                 $uploadedFile->move(

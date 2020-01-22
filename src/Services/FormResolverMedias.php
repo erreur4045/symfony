@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services;
-
 
 use App\Entity\Figure;
 use App\Entity\Pictureslink;
@@ -18,21 +16,38 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class FormResolverMedias extends FormResolver
 {
-    /** @var UserPasswordEncoderInterface */
+    /**
+     *
+     *
+     * @var UserPasswordEncoderInterface
+     */
     protected $encoder;
 
-    /** @var EntityManagerInterface */
+    /**
+     *
+     *
+     * @var EntityManagerInterface
+     */
     private $manager;
 
-    /** @var FlashBagInterface */
+    /**
+     *
+     *
+     * @var FlashBagInterface
+     */
     private $bag;
 
-    /** @var UploaderPicture */
+    /**
+     *
+     * @var UploaderPicture
+     */
     private $uploaderPicture;
+
     /**
      * @var Filesystem
      */
     private $filesystem;
+
     /**
      * @var string
      */
@@ -80,16 +95,20 @@ class FormResolverMedias extends FormResolver
         $uploadedFile = $form['picture']->getData();
 
         if ($uploadedFile) {
-            $this->filesystem->remove([
+            $this->filesystem->remove(
+                [
                 '',
                 '',
                 $this->tricksPicturesDirectory . $exPicture
-            ]);
+                ]
+            );
             $this->manager->remove($exPicture);
             $this->manager->flush();
             $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()',
-                $originalFilename);
+            $safeFilename = transliterator_transliterate(
+                'Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()',
+                $originalFilename
+            );
             $newFilename = $safeFilename . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
             try {
                 $uploadedFile->move(
@@ -101,7 +120,7 @@ class FormResolverMedias extends FormResolver
             $newPicture->setLinkpictures($newFilename);
             $this->manager->persist($newPicture);
             $this->manager->flush();
-    }
+        }
     }
 
     public function updateVideoLink(FormInterface $form, Figure $figure, $exVideo)
@@ -111,13 +130,14 @@ class FormResolverMedias extends FormResolver
         $newVideoLink = $form['linkvideo']->getData();
         $videoEmbed = preg_match(
             '/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:&list=(\S+))?$/',
-            $newVideoLink, $matches);
-        $linkToStock = 'https://www.youtube.com/embed/'.$matches[1];
+            $newVideoLink,
+            $matches
+        );
+        $linkToStock = 'https://www.youtube.com/embed/' . $matches[1];
         $newVideo->setFigure($figure);
         $newVideo->setLinkvideo($linkToStock);
         $this->manager->remove($exVideo);
         $this->manager->persist($newVideo);
         $this->manager->flush();
     }
-
 }
