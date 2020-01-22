@@ -87,8 +87,8 @@ class User implements UserInterface
     public function __toString()
     {
         return $this->name;
-
     }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -161,8 +161,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function eraseCredentials(){}
-    public function getSalt(){}
+    public function eraseCredentials()
+    {
+    }
+    public function getSalt()
+    {
+    }
 
     public function getRoles(): array
     {
@@ -172,7 +176,9 @@ class User implements UserInterface
         return array_unique($roles);
     }
 
-    public function getUsername(){}
+    public function getUsername()
+    {
+    }
 
     /**
      * @return Collection|Figure[]
@@ -259,5 +265,4 @@ class User implements UserInterface
 
         return $this;
     }
-
 }
