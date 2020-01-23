@@ -17,7 +17,6 @@ class RegistrationType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('surname')
             ->add('password', PasswordType::class)
             ->add('mail')
             ->add(
@@ -25,7 +24,7 @@ class RegistrationType extends AbstractType
                 FileType::class,
                 [
                 'label' => 'Choisisez votre nouvelle photo de profile au formats .png .jpg .jpeg',
-                'required' => true,
+                'required' => false,
                 'constraints' => [
                     new File(
                         [

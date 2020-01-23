@@ -80,7 +80,7 @@ class FormResolverTricks extends FormResolver
         if (is_null($figure->getPictureslinks()->get('elements'))) {
             $pictureDefault = new Pictureslink();
             $randId = rand(0, 2);
-            $randPicture = Pictureslink::PICTURELINKRAND[$randId];
+            $randPicture = Pictureslink::PICTURELINKTRICKRAND[$randId];
             $pictureDefault->setFigure($figure)
                 ->setUser($user)
                 ->setLinkpictures($randPicture)
