@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entity\Pictureslink;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;

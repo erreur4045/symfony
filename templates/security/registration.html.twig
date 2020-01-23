@@ -5,15 +5,13 @@
         <h1 class="text-center">Inscription</h1>
         {{ include('block_for_include/flash_bag.html.twig') }}
         <div class="row justify-content-center">
-        <div class="col-6 justify-content-md-center border border-dark rounded">
+            <div class="col-6 justify-content-md-center border border-dark rounded">
                 {{ form_start(form) }}
                 {{ form_row(form.name,     {'label' : 'Nom', 'attr': {'placeholder' : 'Votre nom'}}) }}
-                {{ form_row(form.surname,   {'label' : 'Prenom', 'attr': {'placeholder' : 'Votre prenom'}}) }}
-                {{ form_row(form.password,  {'label' : 'Mot de passe', 'attr': {'placeholder' : 'Votre mot de passe'}}) }}
-                {{ form_row(form.password,  {'label' : 'Mot de passe', 'attr': {'placeholder' : 'Votre mot de passe'}}) }}
                 {{ form_row(form.mail,      {'label' : 'Mail', 'attr': {'placeholder' : 'Votre mail'}}) }}
+                {{ form_row(form.password,  {'label' : 'Mot de passe', 'attr': {'placeholder' : 'Votre mot de passe'}}) }}
                 {{ form_row(form.profilePicture) }}
-            <div class="text-center py-4">
+                <div class="text-center py-4">
                     <button class="btn btn-primary btn-md">Envoyer <i class="fas fa-paper-plane"></i>
                     </button>
                 </div>

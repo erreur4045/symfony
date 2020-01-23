@@ -37,7 +37,7 @@
                 <div class="col-xl-6 col-md-8 mt-2">
                     <div class="card">
                         <div class="card-header text-center">
-                            Liste des figures
+                            Liste de vos figures
                         </div>
                         <div class="card-body">
                             <table class="table table-striped">
@@ -57,7 +57,7 @@
                                         <td>{{ figure.description| capitalize }}</td>
                                         <td>
                                             <button type="button" class="btn btn-danger delete_modal"
-                                                    data-slug="{{ path('edit.trick', {slug: figure.slug}) }}"
+                                                    data-slug="{{ path('delete.trick', {slug: figure.slug}) }}"
                                                     data-message="Êtes-vous sûr de vouloir supprimer cette figure ?">
                                                 <i class="material-icons">delete_sweep</i>
                                             </button>

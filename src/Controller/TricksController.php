@@ -190,11 +190,12 @@ class TricksController
     /**
      * @Route("/tricks/details/{slug}", name="trick")
      */
-    public function getTrick(Request $request, PaginatorInterface $paginator)
+    public function getTrick(Request $request)
     {
         /** @var Figure $figure */
         $figure = $this->manager->getRepository(Figure::class)
             ->findOneBy(['slug' => $request->attributes->get('slug')]);
+
         /** @var Pictureslink $image */
         $image = $this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $figure->getId()]);
         /** @var Videolink $video */
