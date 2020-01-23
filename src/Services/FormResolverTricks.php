@@ -69,33 +69,51 @@ class FormResolverTricks extends FormResolver
     public function addTrick(FormInterface $form, User $user)
     {
         /**
-*
-         *
- * @var Figure $figure
-*/
+        *
+        *
+        * @var Figure $figure
+        */
         $figure = $form->getData();
         $figure->setUser($user);
         $figure->setDatecreate(new \DateTime('now'));
 
-        if (is_null($figure->getPictureslinks()->get('elements'))) {
+        if ($figure->getPictureslinks()->count() == 0 ) {
             $pictureDefault = new Pictureslink();
             $randId = rand(0, 2);
             $randPicture = Pictureslink::PICTURELINKTRICKRAND[$randId];
             $pictureDefault->setFigure($figure)
-                ->setUser($user)
                 ->setLinkpictures($randPicture)
-                ->setFirstImage(1);
+                ->setFirstImage(1)
+                ->setAlt('snow');
             $this->manager->persist($figure);
             $this->manager->flush();
             $this->manager->persist($pictureDefault);
             $this->manager->flush();
         }
+        /**
+         *Return all differents images and check if at least one image
+         * is "image_first" otherwise the fist image is changed image_first = true
+         *
+         * @var Array $elements
+         */
+        $elements = $figure->getPictureslinks()->getValues();
+        $bool = 0;
+        foreach ($elements as $first) {
+            if ($first->getFirstImage() == false) {
+                $bool = 0;
+            } else {
+                $bool = 1;
+            }
+        }
+        if ($bool == 0) {
+            $elements[0]->setFirstImage(1);
+        }
         foreach ($figure->getPictureslinks() as $picture) {
             /**
-*
              *
- * @var UploadedFile $nameImage
-*/
+             *
+             * @var UploadedFile $nameImage
+             */
             $nameImage = $picture->getPicture();
             $originalName = $nameImage->getClientOriginalName();
             $safeFilename = transliterator_transliterate(
@@ -111,8 +129,7 @@ class FormResolverTricks extends FormResolver
             } catch (FileException $e) {
                 // ... handle exception if something happens during file upload
             }
-            $picture->setLinkpictures($newFilename)
-                ->setUser($user);
+            $picture->setLinkpictures($newFilename);
         }
         foreach ($figure->getVideolinks() as $video) {
             $videoEmbed = preg_match(
