@@ -137,7 +137,10 @@ body{
         background-color: white;
         z-index: 1;
         margin-bottom: 10em;
+        margin-top: 1em;
         border: solid;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
     }
     .carousel_mobile{
         display: none;
@@ -188,7 +191,7 @@ body{
     border-top: 2px solid;
 }
 
-.MultiCarousel { float: left; overflow: hidden; padding: 15px; width: 100%; position:relative; }
+.MultiCarousel { float: left; overflow: hidden; width: 100%; position:relative; }
 .MultiCarousel .MultiCarousel-inner { transition: 1s ease all; float: left; }
 .MultiCarousel .MultiCarousel-inner .item { float: left;}
 .MultiCarousel .leftLst, .MultiCarousel .rightLst { position:absolute; border-radius:50%;top:calc(50% - 20px); }

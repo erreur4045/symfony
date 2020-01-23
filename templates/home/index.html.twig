@@ -26,7 +26,7 @@
             {% for picture in figure.pictureslinks %}
                 {% if picture.firstimage == true %}
                     {% set picturefirst = picture.linkpictures %}
-                    <div class="col-sx-12 col-sm-6 col-md-6 col-lg-3 col-xl-3    mt-2">
+                    <div class="col-sx-12 col-sm-12 col-md-6 col-lg-6 col-xl-3 mt-2">
                         <div class="card text-center m-auto p-0">
                             <a href="{{ path('trick', {slug: figure.slug}) }}"><img class="card-img-top"
                                                                                     src={{ asset('uploads/figureimage/' ~ picturefirst) }}
