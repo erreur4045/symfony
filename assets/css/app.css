@@ -67,6 +67,10 @@
     color: cornflowerblue;
 }
 
+.icon_menu_mobil{
+    font-size: 45px;
+}
+
 .home_title{
     border-radius: 30px;
 }
@@ -86,6 +90,19 @@
     margin-top: 1em;
     padding-top: 1em;
     border-top: 2px solid;
+}
+
+#footer_perso{
+    position: fixed;
+    bottom: 0;
+    height: 3em;
+    background-color: white;
+    z-index: 1;
+    border-top: solid 2px;
+}
+
+body{
+    padding-bottom: 5em;
 }
 
 #nav_bar_footer{
@@ -127,6 +144,9 @@
     }
     .bg_img_trick{
         display: none;
+    }
+    .bottom-buttom{
+        display: none !important;
     }
 }
 
