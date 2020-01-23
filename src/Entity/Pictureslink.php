@@ -38,11 +38,6 @@ class Pictureslink
      */
     private $alt;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\user", inversedBy="pictureslinks", cascade={"persist"})
-     */
-    private $user;
-
     private $picture;
 
     public function __construct()
@@ -110,18 +105,6 @@ class Pictureslink
         return $this;
     }
 
-    public function getUser(): ?user
-    {
-        return $this->user;
-    }
-
-    public function setUser(?user $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
     /**
      * @return mixed
      */
@@ -137,5 +120,4 @@ class Pictureslink
     {
         $this->picture = $picture;
     }
-
 }

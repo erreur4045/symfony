@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services;
-
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,19 +12,39 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class FormResolverRegistration extends FormResolver
 {
-    /** @var UserPasswordEncoderInterface */
+    /**
+     *
+     *
+     * @var UserPasswordEncoderInterface
+     */
     protected $encoder;
 
-    /** @var EntityManagerInterface */
+    /**
+     *
+     *
+     * @var EntityManagerInterface
+     */
     private $manager;
 
-    /** @var FlashBagInterface */
+    /**
+     *
+     *
+     * @var FlashBagInterface
+     */
     private $bag;
 
-    /** @var string */
+    /**
+     *
+     *
+     * @var string
+     */
     private $pictureLinkDirectory;
 
-    /** @var UploaderPicture */
+    /**
+     *
+     *
+     * @var UploaderPicture
+     */
     private $uploaderPicture;
 
     public function __construct(
@@ -47,14 +65,22 @@ class FormResolverRegistration extends FormResolver
 
     public function treatment(FormInterface $form)
     {
-        /** @var User $user */
+        /**
+*
+         *
+ * @var User $user
+*/
         $user = $form->getData();
 
         $hash = $this->encoder->encodePassword($user, $user->getPassword());
         $user->setPassword($hash);
         $user->setDatesub(new \DateTime());
 
-        /** @var UploadedFile $uploadedFile */
+        /**
+*
+         *
+ * @var UploadedFile $uploadedFile
+*/
         $uploadedFile = $form['profilePicture']->getData();
         $this->uploaderPicture->uploadProfilePicture($uploadedFile, $user);
 

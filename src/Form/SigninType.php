@@ -19,14 +19,15 @@ class SigninType extends AbstractType
             ->add('datesub', HiddenType::class)
             ->add('password', PasswordType::class)
             ->add('grade', HiddenType::class)
-            ->add('mail')
-        ;
+            ->add('mail');
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => User::class,
-        ]);
+        $resolver->setDefaults(
+            [
+                'data_class' => User::class,
+            ]
+        );
     }
 }

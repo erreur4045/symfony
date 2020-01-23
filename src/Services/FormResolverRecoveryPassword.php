@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services;
-
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,16 +12,32 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class FormResolverRecoveryPassword extends FormResolver
 {
-    /** @var EntityManagerInterface */
+    /**
+     *
+     *
+     * @var EntityManagerInterface
+     */
     private $manager;
 
-    /** @var FlashBagInterface */
+    /**
+     *
+     *
+     * @var FlashBagInterface
+     */
     private $bag;
 
-    /** @var  UrlGeneratorInterface */
+    /**
+     *
+     *
+     * @var UrlGeneratorInterface
+     */
     private $router;
 
-    /** @var UserPasswordEncoderInterface */
+    /**
+     *
+     *
+     * @var UserPasswordEncoderInterface
+     */
     private $encoder;
 
     public function __construct(

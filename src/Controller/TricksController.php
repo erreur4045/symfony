@@ -27,40 +27,80 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
 /**
  * Class TricksController
+ *
  * @package App\Controller
  */
 class TricksController
 {
-    /** @var TricksController * */
+    /**
+     *
+     *
+     * @var TricksController *
+     */
     private $trick;
 
-    /** @var TokenStorageInterface * */
+    /**
+     *
+     *
+     * @var TokenStorageInterface *
+     */
     private $tokenStorage;
 
-    /** @var Environment * */
+    /**
+     *
+     *
+     * @var Environment *
+     */
     private $templating;
 
-    /** @var  UrlGeneratorInterface */
+    /**
+     *
+     *
+     * @var UrlGeneratorInterface
+     */
     private $router;
 
-    /** @var FlashBagInterface */
+    /**
+     *
+     *
+     * @var FlashBagInterface
+     */
     private $bag;
 
-    /** @var EntityManagerInterface */
+    /**
+     *
+     *
+     * @var EntityManagerInterface
+     */
     private $manager;
 
-    /** @var Filesystem */
+    /**
+     *
+     *
+     * @var Filesystem
+     */
     private $filesystem;
 
-    /** @var string */
+    /**
+     *
+     *
+     * @var string
+     */
     private $tricksPicturesDirectory;
 
-    /** * @var FormResolverTricks */
+    /**
+     * * @var FormResolverTricks
+     */
     private $formResolverTricks;
 
-    /** @var FormResolverComment */
+    /**
+     *
+     *
+     * @var FormResolverComment
+     */
     private $formResolverComment;
 
     public function __construct(
@@ -102,10 +142,15 @@ class TricksController
             return new RedirectResponse($this->router->generate('home'));
         }
 
-        return new Response($this->templating->render('tricks/newtrick.html.twig', [
-            'form' => $form->createView(),
-            'h1' => 'Ajout d\'une figure'
-        ]));
+        return new Response(
+            $this->templating->render(
+                'tricks/newtrick.html.twig',
+                [
+                'form' => $form->createView(),
+                'h1' => 'Ajout d\'une figure'
+                ]
+            )
+        );
     }
 
     /**
@@ -113,19 +158,26 @@ class TricksController
      */
     public function deleteTrick(UserInterface $user = null, Figure $figure)
     {
-        if($user == null){
-            return new Response($this->templating->render('block_for_include/no_connect.html.twig', [
-            ]));
+        if ($user == null) {
+            return new Response(
+                $this->templating->render(
+                    'block_for_include/no_connect.html.twig',
+                    [
+                    ]
+                )
+            );
         }
         if ($this->tokenStorage->getToken()->getUser()) {
             /** @var Pictureslink $image */
             $image = $this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $figure->getId()]);
             foreach ($image as $images) {
-                $this->filesystem->remove([
+                $this->filesystem->remove(
+                    [
                     '',
                     '',
                     $this->tricksPicturesDirectory . $images->getLinkpictures()
-                ]);
+                    ]
+                );
             }
             $this->manager->remove($figure);
             $this->manager->flush();
@@ -141,12 +193,16 @@ class TricksController
     public function getTrick(Request $request, PaginatorInterface $paginator)
     {
         /** @var Figure $figure */
-        $figure = $this->manager->getRepository(Figure::class)->findOneBy(['slug' => $request->attributes->get('slug')]);
+        $figure = $this->manager->getRepository(Figure::class)
+            ->findOneBy(['slug' => $request->attributes->get('slug')]);
         /** @var Pictureslink $image */
         $image = $this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $figure->getId()]);
         /** @var Videolink $video */
         $video = $this->manager->getRepository(Videolink::class)->findBy(['figure' => $figure->getId()]);
-        $hasOthermedia = empty($this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $figure->getId(), 'first_image' => 0])) && empty($video) ? true : false   ;
+        $hasOthermedia = empty(
+            $this->manager->getRepository(Pictureslink::class)
+                ->findBy(['figure' => $figure->getId(), 'first_image' => 0])
+        ) && empty($video) ? true : false   ;
 
         if (is_null($figure)) {
             throw new EntityNotFoundException('Cette figure n\'existe pas');
@@ -163,22 +219,36 @@ class TricksController
             return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
         }
 
-        /** @var $comments */
-        $comments = $paginator->paginate(
-            $this->manager
-                ->getRepository(Comments::class)
-                ->findBy(['idfigure' => $figure->getId()]),
-            $request->query->getInt('page', 1), 10);
+        /** @var Comments $comments */
+        $comments = $this->manager->getRepository(Comments::class)
+            ->findBy(['idfigure' => $figure->getId()], [], Comments::LIMIT_PER_PAGE, null);
 
-        return new Response($this->templating->render('tricks/trick.html.twig', [
-            'form' => $form->createView(),
-            'data' => $figure,
-            'image' => $image,
-            'video' => $video,
-            'comment' => $comments,
-            'user' => $user,
-            'emptyMedia' => $hasOthermedia
-        ]));
+        $nbPageMaxCom = ceil(
+            count(
+                $this->manager
+                    ->getRepository(Comments::class)
+                    ->findBy(['idfigure' => $figure->getId()])
+            ) / Comments::LIMIT_PER_PAGE
+        );
+
+        $rest = $nbPageMaxCom > 1 ? true : false;
+
+        return new Response(
+            $this->templating->render(
+                'tricks/trick.html.twig',
+                [
+                'form' => $form->createView(),
+                'data' => $figure,
+                'image' => $image,
+                'video' => $video,
+                'comment' => $comments,
+                'user' => $user,
+                'emptyMedia' => $hasOthermedia,
+                'rest' => $rest,
+                'pagemax' => $nbPageMaxCom
+                ]
+            )
+        );
     }
 
     /**
@@ -187,7 +257,8 @@ class TricksController
     public function editTrick(Request $request)
     {
         /** @var Figure $datatricks */
-        $figure = $this->manager->getRepository(Figure::class)->findOneBy(['slug' => $request->attributes->get('slug')]);
+        $figure = $this->manager->getRepository(Figure::class)
+            ->findOneBy(['slug' => $request->attributes->get('slug')]);
         if (is_null($figure)) {
             throw new NotFoundHttpException('La figure n\'existe pas');
         }
@@ -195,19 +266,27 @@ class TricksController
         /** @var Videolink $video */
         $video = $this->manager->getRepository(Videolink::class)->findBy(['figure' => $figure->getId()]);
 
-        $hasOthermedia = empty($this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $figure->getId(), 'first_image' => 0])) && empty($video) ? true : false   ;
+        $hasOthermedia = empty(
+            $this->manager->getRepository(Pictureslink::class)
+                ->findBy(['figure' => $figure->getId(), 'first_image' => 0])
+        ) && empty($video) ? true : false   ;
 
         /** @var Form $form */
         $form = $this->formResolverTricks->getForm($request, FigureEditType::class, $figure);
         if ($form->isSubmitted() && $form->isValid()) {
-           $this->formResolverTricks->updateTrick($figure);
+            $this->formResolverTricks->updateTrick($figure);
             return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
         }
-        return new Response($this->templating->render('tricks/edittrick.html.twig', [
-            'figure' => $figure,
-            'form' => $form->createView(),
-            'h1' => 'Modification de la figure',
-            'emptyMedia' => $hasOthermedia
-        ]));
+        return new Response(
+            $this->templating->render(
+                'tricks/edittrick.html.twig',
+                [
+                'figure' => $figure,
+                'form' => $form->createView(),
+                'h1' => 'Modification de la figure',
+                'emptyMedia' => $hasOthermedia
+                ]
+            )
+        );
     }
 }

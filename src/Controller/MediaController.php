@@ -26,40 +26,88 @@ use Twig\Environment;
 
 class MediaController
 {
-    /** @var TricksController * */
+    /**
+     *
+     *
+     * @var TricksController *
+     */
     private $trick;
 
-    /** @var TokenStorageInterface * */
+    /**
+     *
+     *
+     * @var TokenStorageInterface *
+     */
     private $tokenStorage;
 
-    /** @var Environment * */
+    /**
+     *
+     *
+     * @var Environment *
+     */
     private $templating;
 
-    /** @var FigureType * */
+    /**
+     *
+     *
+     * @var FigureType *
+     */
     private $figureType;
 
-    /** @var FormFactory * */
+    /**
+     *
+     *
+     * @var FormFactory *
+     */
     private $formFactory;
 
-    /** @var  UrlGeneratorInterface */
+    /**
+     *
+     *
+     * @var UrlGeneratorInterface
+     */
     private $router;
 
-    /** @var FlashBagInterface */
+    /**
+     *
+     *
+     * @var FlashBagInterface
+     */
     private $bag;
 
-    /** @var EntityManagerInterface */
+    /**
+     *
+     *
+     * @var EntityManagerInterface
+     */
     private $manager;
 
-    /** @var Filesystem */
+    /**
+     *
+     *
+     * @var Filesystem
+     */
     private $filesystem;
 
-    /** @var Environment */
+    /**
+     *
+     *
+     * @var Environment
+     */
     private $environment;
 
-    /** @var string */
+    /**
+     *
+     *
+     * @var string
+     */
     private $tricksPicturesDirectory;
 
-    /** @var FormResolverMedias */
+    /**
+     *
+     *
+     * @var FormResolverMedias
+     */
     private $formResolverMedias;
 
     public function __construct(
@@ -101,10 +149,12 @@ class MediaController
             if ($image[0]->getFirstImage() == true) {
                 $this->manager->remove($image[0]);
                 $this->manager->flush();
-                $NewFirstImages = $this->manager->getRepository(Pictureslink::class)->findBy([
+                $NewFirstImages = $this->manager->getRepository(Pictureslink::class)->findBy(
+                    [
                     'figure' => $image[0]->getFigure()->getId(),
                     'first_image' => false
-                ]);
+                    ]
+                );
                 $NewFirstImages[0]->setFirstImage(1);
                 $this->manager->persist($NewFirstImages[0]);
                 $this->manager->flush();
@@ -112,14 +162,20 @@ class MediaController
                 $this->manager->remove($image[0]);
                 $this->manager->flush();
             }
-            $this->filesystem->remove([
+            $this->filesystem->remove(
+                [
                 '',
                 '',
                 $this->tricksPicturesDirectory . $image[0]->getLinkpictures()
-            ]);
+                ]
+            );
             $this->bag->add('success', 'La figure a été mise a jour');
-            return new RedirectResponse($this->router->generate('trick',
-                ['slug' => $image[0]->getFigure()->getSlug()]));
+            return new RedirectResponse(
+                $this->router->generate(
+                    'trick',
+                    ['slug' => $image[0]->getFigure()->getSlug()]
+                )
+            );
         }
         return new RedirectResponse($this->router->generate('home'));
     }
@@ -134,12 +190,20 @@ class MediaController
             $this->manager->remove($video[0]);
             $this->manager->flush();
             $this->bag->add('success', 'La figure a été mise a jour');
-            return new RedirectResponse($this->router->generate('trick',
-                ['slug' => $video[0]->getFigure()->getSlug()]));
+            return new RedirectResponse(
+                $this->router->generate(
+                    'trick',
+                    ['slug' => $video[0]->getFigure()->getSlug()]
+                )
+            );
         } else {
-            return new Response($this->environment->render('block_for_include/no_connect.html.twig', [
-            ]));
-
+            return new Response(
+                $this->environment->render(
+                    'block_for_include/no_connect.html.twig',
+                    [
+                    ]
+                )
+            );
         }
     }
 
@@ -151,13 +215,19 @@ class MediaController
     public function updatePicture($id, Request $request)
     {
         if ($this->tokenStorage->getToken()->getUser() == "anon.") {
-            return new Response($this->environment->render('block_for_include/no_connect.html.twig', [
-            ]));
+            return new Response(
+                $this->environment->render(
+                    'block_for_include/no_connect.html.twig',
+                    [
+                    ]
+                )
+            );
         }
         /** @var Pictureslink $exPicture */
         $exPicture = $this->manager->getRepository(Pictureslink::class)->find($id);
         /** @var Figure $figure */
-        $figure = $this->manager->getRepository(Figure::class)->findOneBy(['id' => $exPicture->getFigure()->getId()]);
+        $figure = $this->manager->getRepository(Figure::class)
+            ->findOneBy(['id' => $exPicture->getFigure()->getId()]);
         if ($this->tokenStorage->getToken()->getUser() != "anon.") {
             /** @var User $userdata */
             $user = $this->tokenStorage->getToken()->getUser();
@@ -167,10 +237,15 @@ class MediaController
                 $this->bag->add('success', 'La photo a été modifié');
                 return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
             }
-            return new Response($this->environment->render('media/UpdatePicture.html.twig', [
-                'form' => $form->createView(),
-                'title' => 'Changer une image'
-            ]));
+            return new Response(
+                $this->environment->render(
+                    'media/UpdatePicture.html.twig',
+                    [
+                    'form' => $form->createView(),
+                    'title' => 'Changer une image'
+                    ]
+                )
+            );
         }
         return new RedirectResponse($this->router->generate('home'));
     }
@@ -187,8 +262,13 @@ class MediaController
         $figure = $this->manager->getRepository(Figure::class)->findOneBy(['id' => $exVideo->getFigure()->getId()]);
 
         if ($this->tokenStorage->getToken()->getUser() == "anon.") {
-            return new Response($this->environment->render('block_for_include/no_connect.html.twig', [
-            ]));
+            return new Response(
+                $this->environment->render(
+                    'block_for_include/no_connect.html.twig',
+                    [
+                    ]
+                )
+            );
         }
 
         $form = $this->formResolverMedias->getForm($request, VideolinkType::class);
@@ -200,9 +280,14 @@ class MediaController
             }
         }
 
-        return new Response($this->environment->render('media/UpdateVideo.html.twig', [
-            'form' => $form->createView(),
-            'title' => 'Changer une image'
-        ]));
+        return new Response(
+            $this->environment->render(
+                'media/UpdateVideo.html.twig',
+                [
+                'form' => $form->createView(),
+                'title' => 'Changer une image'
+                ]
+            )
+        );
     }
 }

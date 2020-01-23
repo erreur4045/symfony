@@ -74,12 +74,8 @@
 {% block body %}{% endblock %}
 {% block javascripts %}{% endblock %}
 
-<footer class="page-footer pt-4 " id="footer_perso">
-    <div class="container-fluid">
-        <div class="row footer">
-            <p class="text-left pl-5 pt-5">Copyright @</p>
-        </div>
-    </div>
+<footer class="container-fluid d-flex justify-content-center align-items-center" id="footer_perso" style="position: fixed; bottom: 0;">
+    <span>Copyright</span>
     {% block custompage_script %}
         {{ encore_entry_script_tags('app') }}
     {% endblock %}

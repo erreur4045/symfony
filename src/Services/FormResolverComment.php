@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services;
-
 
 use App\Controller\MailController;
 use App\Entity\Comments;
@@ -18,13 +16,25 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class FormResolverComment extends FormResolver
 {
-    /** @var EntityManagerInterface */
+    /**
+     *
+     *
+     * @var EntityManagerInterface
+     */
     private $manager;
 
-    /** @var FlashBagInterface */
+    /**
+     *
+     *
+     * @var FlashBagInterface
+     */
     private $bag;
 
-    /** @var  UrlGeneratorInterface */
+    /**
+     *
+     *
+     * @var UrlGeneratorInterface
+     */
     private $router;
 
     public function __construct(
@@ -32,8 +42,7 @@ class FormResolverComment extends FormResolver
         EntityManagerInterface $manager,
         FlashBagInterface $bag,
         UrlGeneratorInterface $router
-    )
-    {
+    ) {
         parent::__construct($formFactory);
         $this->manager = $manager;
         $this->bag = $bag;

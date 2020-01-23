@@ -14,16 +14,17 @@ class CommentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('text',TextareaType::class,['label' => 'Votre commentaire'])
-            ->add('idfigure',HiddenType::class)
-            ->add('user',HiddenType::class)
-        ;
+            ->add('text', TextareaType::class, ['label' => 'Ajouter un commentaire'])
+            ->add('idfigure', HiddenType::class)
+            ->add('user', HiddenType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(
+            [
             'data_class' => Comments::class,
-        ]);
+            ]
+        );
     }
 }

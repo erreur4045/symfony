@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Comments
 {
+    public const LIMIT_PER_PAGE = 10;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -32,11 +33,6 @@ class Comments
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateupdate;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Figure", mappedBy="idcomment")
-     */
-    private $figures;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Figure", inversedBy="comments")
@@ -96,37 +92,6 @@ class Comments
         return $this;
     }
 
-    /**
-     * @return Collection|Figure[]
-     */
-    public function getFigures(): Collection
-    {
-        return $this->figures;
-    }
-
-    public function addFigure(Figure $figure): self
-    {
-        if (!$this->figures->contains($figure)) {
-            $this->figures[] = $figure;
-            $figure->setIdcomment($this);
-        }
-
-        return $this;
-    }
-
-    public function removeFigure(Figure $figure): self
-    {
-        if ($this->figures->contains($figure)) {
-            $this->figures->removeElement($figure);
-            // set the owning side to null (unless already changed)
-            if ($figure->getIdcomment() === $this) {
-                $figure->setIdcomment(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getIdfigure(): ?Figure
     {
         return $this->idfigure;
@@ -150,5 +115,4 @@ class Comments
 
         return $this;
     }
-
 }

@@ -13,14 +13,15 @@ class AddSingleVideoType extends AbstractType
     {
         $builder
             ->add('linkvideo')
-            ->add('figure')
-        ;
+            ->add('figure');
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(
+            [
             'data_class' => Videolink::class,
-        ]);
+            ]
+        );
     }
 }

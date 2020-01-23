@@ -11,18 +11,21 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 
-
 class PicturelinkType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('picture', FileType::class, [
+            ->add(
+                'picture',
+                FileType::class,
+                [
                 'label' => 'Votre image',
 
                 'required' => false,
                 'constraints' => [
-                    new File([
+                    new File(
+                        [
                         'maxSize' => '1024k',
                         'mimeTypes' => [
                             "image/png",
@@ -31,21 +34,29 @@ class PicturelinkType extends AbstractType
                             "image/gif",
                         ],
                         'mimeTypesMessage' => 'Veuillez uploader un fichier conforme',
-                    ])
+                        ]
+                    )
                 ]
-            ])
+                ]
+            )
             ->add('alt', TextType::class, ['label' => 'Desciption de l\'image'])
-            ->add('first_image', CheckboxType::class, [
+            ->add(
+                'first_image',
+                CheckboxType::class,
+                [
                 'attr' => ['class' => 'checkbox_check', 'data-id' => '__name__'],
                 'label' => 'Image à la Une ?',
                 'required' => false
-            ]);
+                ]
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(
+            [
             'data_class' => Pictureslink::class,
-        ]);
+            ]
+        );
     }
 }

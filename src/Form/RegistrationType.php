@@ -20,11 +20,15 @@ class RegistrationType extends AbstractType
             ->add('surname')
             ->add('password', PasswordType::class)
             ->add('mail')
-            ->add('profilePicture', FileType::class,[
+            ->add(
+                'profilePicture',
+                FileType::class,
+                [
                 'label' => 'Choisisez votre nouvelle photo de profile au formats .png .jpg .jpeg',
                 'required' => true,
                 'constraints' => [
-                    new File([
+                    new File(
+                        [
                         'maxSize' => '1024k',
                         'mimeTypes' => [
                             "image/png",
@@ -32,17 +36,22 @@ class RegistrationType extends AbstractType
                             "image/jpg",
                         ],
                         'mimeTypesMessage' => 'Seul les formats .png .jpg .jpeg sont accepté' ,
-                    ])
+                        ]
+                    )
                 ],
-            ])
-        ;
+                ]
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(
+            [
             'data_class' => User::class,
-        ]);
+            ]
+        );
     }
-    public function getSalt(){}
+    public function getSalt()
+    {
+    }
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Services;
 
 use Symfony\Component\Form\FormFactoryInterface;
@@ -9,7 +8,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 abstract class FormResolver
 {
-    /** @var FormFactoryInterface $formFactory */
+    /**
+     *
+     *
+     * @var FormFactoryInterface $formFactory
+     */
     protected $formFactory;
 
     public function __construct(
@@ -20,7 +23,6 @@ abstract class FormResolver
 
     public function getForm(Request $request, string $classType, $data = null): FormInterface
     {
-        return $this->formFactory->create($classType, $data )->handleRequest($request);
+        return $this->formFactory->create($classType, $data)->handleRequest($request);
     }
-
 }
