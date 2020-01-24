@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 {% block body %}
-    <div class="container mt-5">
+    <div class="container mt-5 w-75">
         <h1 class="text-center">Inscription</h1>
         {{ include('block_for_include/flash_bag.html.twig') }}
         <div class="row justify-content-center">
-            <div class="col-6 justify-content-md-center border border-dark rounded">
+            <div class="col-sm-10 col-md-8 col-lg-6 justify-content-md-center border border-dark rounded">
                 {{ form_start(form) }}
                 {{ form_row(form.name,     {'label' : 'Nom', 'attr': {'placeholder' : 'Votre nom'}}) }}
                 {{ form_row(form.mail,      {'label' : 'Mail', 'attr': {'placeholder' : 'Votre mail'}}) }}

@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Pictureslink
 {
-    public const PICTURELINKTRICKRAND = ['1snow.jpg','2snow.jpg','3snow.jpg',];
+    public const PICTURELINKTRICKRAND = ['1snow','2snow','3snow',];
     public const PICTURELINKUSERRAND = 'User.png';
     /**
      * @ORM\Id()
