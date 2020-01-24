@@ -17,7 +17,7 @@
         <div class="d-flex justify-content-center">
             <div class="container trickblock">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12 ml-sm-0">
                         {% for pictureslinks in figure.pictureslinks %}
                             {% if pictureslinks.firstimage == true %}
                                 <div class="text-center img_first_trick">
@@ -55,8 +55,8 @@
                             <div class="MultiCarousel-inner">
                                 {% for pictureslinks in figure.pictureslinks %}
                                     {% if pictureslinks.firstimage == false %}
-                                        <div class="item">
-                                            <div class="pad15">
+                                        <div class="item text-center">
+                                            <div class="pad15 ">
                                                 <img src="{{ asset('uploads/figureimage/') ~ pictureslinks.linkpictures }}"
                                                      class="rounded mt-4 imgtrick"
                                                      alt="">
@@ -74,7 +74,7 @@
                                     {% endif %}
                                 {% endfor %}
                                 {% for video in figure.videolinks %}
-                                    <div class="item">
+                                    <div class="item text-center">
                                         <div class="pad15">
                                             <iframe class="embed-responsive-item rounded mt-4 imgtrick"
                                                     src="{{ video.linkvideo }}"
