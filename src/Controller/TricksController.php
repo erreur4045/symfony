@@ -128,7 +128,6 @@ class TricksController
     /**
      * @Route("/addtrick", name="addtrick")
      */
-    //todo au moins une image_first
     public function addTrick(Request $request)
     {
         /** @var User $user */
