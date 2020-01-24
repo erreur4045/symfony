@@ -10,11 +10,10 @@
                  alt="image de font deux snowbordeurs">
         </div>
         </div>
-        {{ include('block_for_include/modal_delete.html.twig') }}
         <div class="container">
+            {{ include('block_for_include/modal_delete.html.twig') }}
             <div class="d-flex justify-content-center">
             <div class="container trickblock">
-                <div class="d-flex justify-content-center">
                     <div class="row">
                         {% for message in app.flashes('success') %}
                             <div class="container-fluid pt-1">
@@ -48,9 +47,8 @@
                                 {% endif %}
                             {% endfor %}
                         </div>
-
                         {% if emptyMedia == false %}
-                            <div class="col-12 media_list ">
+                            <div class="container media_list ">
                                 <div class="d-flex justify-content-center align-items-center">
                                 <button class="btn btn-outline-primary" id="btn_see_media">See medias</button>
                                 </div>
