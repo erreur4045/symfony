@@ -44,7 +44,7 @@
                                                     data-message="Êtes-vous sûr de vouloir supprimer cette figure ?">
                                               <i class="material-icons">delete_sweep</i>
                                             </button>
-                                            <button type="button" class="btn btn-outline-primary p-1"><a
+                                            <button type="button" class="btn btn-outline-primary ml-1 p-1"><a
                                                         href="{{ path('edit.trick', {slug: figure.slug}) }}"><i
                                                             class="material-icons">create</i></a>
                                             </button>
@@ -74,4 +74,7 @@
     </div>
     {% endif %}
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ encore_entry_script_tags('loadmoretricks') }}
 {% endblock %}
