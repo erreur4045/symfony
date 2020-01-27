@@ -194,7 +194,9 @@ class TricksController
         /** @var Figure $figure */
         $figure = $this->manager->getRepository(Figure::class)
             ->findOneBy(['slug' => $request->attributes->get('slug')]);
-
+        if (is_null($figure)) {
+            throw new EntityNotFoundException('Cette figure n\'existe pas');
+        }
         /** @var Pictureslink $image */
         $image = $this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $figure->getId()]);
         /** @var Videolink $video */
@@ -202,11 +204,8 @@ class TricksController
         $hasOthermedia = empty(
             $this->manager->getRepository(Pictureslink::class)
                 ->findBy(['figure' => $figure->getId(), 'first_image' => 0])
-        ) && empty($video) ? true : false   ;
+        ) && empty($video) ? true : false;
 
-        if (is_null($figure)) {
-            throw new EntityNotFoundException('Cette figure n\'existe pas');
-        }
         /** @var Form $form */
         $form = $this->formResolverComment->getForm($request, CommentType::class);
 
