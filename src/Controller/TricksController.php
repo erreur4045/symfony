@@ -270,6 +270,12 @@ class TricksController
                 ->findBy(['figure' => $figure->getId(), 'first_image' => 0])
         ) && empty($video) ? true : false   ;
 
+        $hasOtherPicture = empty(
+            $this->manager->getRepository(Pictureslink::class)
+                ->findBy(
+                    ['figure' => $figure->getId(), 'first_image' => 0]
+                )
+        ) ? true : false ;
         /** @var Form $form */
         $form = $this->formResolverTricks->getForm($request, FigureEditType::class, $figure);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -283,7 +289,8 @@ class TricksController
                 'figure' => $figure,
                 'form' => $form->createView(),
                 'h1' => 'Modification de la figure',
-                'emptyMedia' => $hasOthermedia
+                'emptyMedia' => $hasOthermedia,
+                    'otherPicture' => $hasOtherPicture
                 ]
             )
         );

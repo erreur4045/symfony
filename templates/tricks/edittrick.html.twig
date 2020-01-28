@@ -27,11 +27,13 @@
                                     <div class="centered">{{ figure.name }}</div>
                                     {% if app.user %}
                                         <div class="box_buttons_edit_delete">
+                                            {% if otherPicture == false %}
                                             <button type="button" class="btn btn-primary delete_modal" data-toggle="modal"
                                                      data-slug="{{ path('delete.image', {picture: pictureslinks.linkpictures})  }}"
                                                         data-message="Êtes-vous sûr de vouloir supprimer l'image à la une ?">
                                                 <i class="material-icons" style="color: #222222">delete_sweep</i>
                                             </button>
+                                            {% endif %}
 
                                             <button type="button" class="btn btn-primary"><a
                                                         href="{{ path('update.picture', {id: pictureslinks.id}) }}"><i

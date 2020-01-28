@@ -107,10 +107,10 @@
                             </div>
                         {% endif %}
                         {% if comment %}
-                            <div class="col-12" id="coms_list">
+                            <div class="col-12" >
                                 <h1 id="comment" class="text-center">Commentaires :</h1>
                                 {% for comment in comment %}
-                                    <div class="col-12">
+                                    <div class="col-12" id="coms_list">
                                         <img src="{{ asset('uploads/profilepicture/' ~ comment.user.profilePicture) }}"
                                              class="mr-3 rounded-circle embed-responsive userimg d-inline-block p-1"
                                              alt="{{ 'image_utilisateur' }}">
@@ -122,10 +122,12 @@
                                         <span >{{ comment.text }}</span>
                                         </span>
                                         {% if user.name is defined and comment.user.name == user.name %}
-                                                <button class=" btn btn-danger text-right  p-0 ml-1">
+                                                <button class=" btn btn-danger text-right  p-0 ml-1 ">
                                                     <a href="{{ path('delete.comment', {id: comment.id}) }}">Supprimer</a>
                                                 </button>
-                                                <button class="btn btn-info text-right p-0"><a href="{{ path('edit.comment', {id: comment.id}) }}">Modifier</a>
+                                                <button class="btn btn-info text-right p-0 btn_edit_coms"
+                                                        data-id = "{{ comment.id }}" data-url="{{ path('edit.comment', {id: comment.id}) }}"
+                                                ><a>Modifier</a>
                                                 </button>
                                         {% endif %}
                                     </div>
@@ -156,4 +158,5 @@
 {% block javascripts %}
     {{ encore_entry_script_tags('carrousel') }}
     {{ encore_entry_script_tags('loadmorecoms') }}
+    {{ encore_entry_script_tags('editcoms') }}
 {% endblock %}
