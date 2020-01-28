@@ -23,13 +23,7 @@ clone or download the repository into your environment. https://github.com/erreu
 ```
 $ composer install
 ```
-enter your parameters database
-```
-database_port: null
-database_name: symfony2
-database_user: root
-database_password: null
-```
+enter your parameters database and mailler in .env file
 ```
 $ php bin/console doctrine:database:create
 ```
@@ -41,10 +35,6 @@ $ php bin/console doctrine:fixtures:load
 ```
 
 Run application in your favorite browser
-
-- Create user
-- LogIn
-- Create task
 
 # *Enjoy !!*
 
