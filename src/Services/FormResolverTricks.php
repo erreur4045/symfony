@@ -86,12 +86,25 @@ class FormResolverTricks extends FormResolver
             $randId = rand(0, 2);
             $randPicture = Pictureslink::PICTURELINKTRICKRAND[$randId];
             $newPicture = $randPicture . '-' . uniqid() . '.jpg';
-            $filesystem->copy($this->tricksPicturesDirectory . $randPicture,
-                $this->tricksPicturesDirectory . $newPicture);
+            $filesystem->copy(
+                $this->tricksPicturesDirectory . $randPicture,
+                $this->tricksPicturesDirectory . $newPicture
+            );
             $pictureDefault->setFigure($figure)
                 ->setLinkpictures($newPicture)
                 ->setFirstImage(1)
                 ->setAlt('snow');
+            if ($figure->getVideolinks()->count() > 0) {
+                foreach ($figure->getVideolinks() as $video) {
+                    $videoEmbed = preg_match(
+                        '/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:&list=(\S+))?$/',
+                        $video->getLinkvideo(),
+                        $matches
+                    );
+                    $linkToStock = 'https://www.youtube.com/embed/' . $matches[1];
+                    $video->setLinkvideo($linkToStock);
+                }
+            }
             $this->manager->persist($figure);
             $this->manager->flush();
             $this->manager->persist($pictureDefault);
@@ -149,6 +162,7 @@ class FormResolverTricks extends FormResolver
                 $linkToStock = 'https://www.youtube.com/embed/' . $matches[1];
                 $video->setLinkvideo($linkToStock);
             }
+
             $this->manager->persist($figure);
             $this->manager->flush();
             $this->bag->add('success', 'Votre figure a été ajouter');

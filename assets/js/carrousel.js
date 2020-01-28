@@ -53,11 +53,9 @@ $(document).ready(function () {
             else {
                 incno = itemsSplit[0];
                 itemWidth = sampwidth / incno;
-                console.log(itemWidth)
-                if(itemWidth < 0){
-                    itemWidth = bodyWidth
+                if(itemWidth <= 0){
+                    itemWidth = bodyWidth - 2
                 }
-                console.log(itemWidth)
             }
             $(this).css({ 'transform': 'translateX(0px)', 'width': itemWidth * itemNumbers });
             $(this).find(itemClass).each(function () {

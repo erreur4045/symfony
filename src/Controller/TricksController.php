@@ -194,7 +194,9 @@ class TricksController
         /** @var Figure $figure */
         $figure = $this->manager->getRepository(Figure::class)
             ->findOneBy(['slug' => $request->attributes->get('slug')]);
-
+        if (is_null($figure)) {
+            throw new EntityNotFoundException('Cette figure n\'existe pas');
+        }
         /** @var Pictureslink $image */
         $image = $this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $figure->getId()]);
         /** @var Videolink $video */
@@ -202,11 +204,8 @@ class TricksController
         $hasOthermedia = empty(
             $this->manager->getRepository(Pictureslink::class)
                 ->findBy(['figure' => $figure->getId(), 'first_image' => 0])
-        ) && empty($video) ? true : false   ;
+        ) && empty($video) ? true : false;
 
-        if (is_null($figure)) {
-            throw new EntityNotFoundException('Cette figure n\'existe pas');
-        }
         /** @var Form $form */
         $form = $this->formResolverComment->getForm($request, CommentType::class);
 
@@ -271,6 +270,12 @@ class TricksController
                 ->findBy(['figure' => $figure->getId(), 'first_image' => 0])
         ) && empty($video) ? true : false   ;
 
+        $hasOtherPicture = empty(
+            $this->manager->getRepository(Pictureslink::class)
+                ->findBy(
+                    ['figure' => $figure->getId(), 'first_image' => 0]
+                )
+        ) ? true : false ;
         /** @var Form $form */
         $form = $this->formResolverTricks->getForm($request, FigureEditType::class, $figure);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -284,7 +289,8 @@ class TricksController
                 'figure' => $figure,
                 'form' => $form->createView(),
                 'h1' => 'Modification de la figure',
-                'emptyMedia' => $hasOthermedia
+                'emptyMedia' => $hasOthermedia,
+                    'otherPicture' => $hasOtherPicture
                 ]
             )
         );
