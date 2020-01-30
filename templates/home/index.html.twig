@@ -7,7 +7,8 @@
     <div class="container-fluid d-flex flex-column justify-content-center align-items-center img_home_background">
         <div class="row">
             <div class="col-12">
-                <h1 class="text-center p-3 mb-2 ">Phrase d'accroche</h1>
+                <h1 class="text-center p-3 mb-2 ">SwomTrick</h1>
+                <h5 class="text-center p-3 mb-2 ">La communauté autour du snow</h5>
             </div>
             <a href="#tricks" class="bottom-right">
                 <i class="fas fa-arrow-circle-down"></i>
@@ -28,7 +29,7 @@
                     {% set picturefirst = picture.linkpictures %}
                     <div class="col-sx-12 col-sm-12 col-md-6 col-lg-6 col-xl-3 mt-2">
                         <div class="card text-center m-auto p-0">
-                            <a href="{{ path('trick', {slug: figure.slug}) }}"><img class="card-img-top"
+                            <a href="{{ path('trick', {slug: figure.slug}) }}"><img class="card-img-top pt-1"
                                                                                     src={{ asset('uploads/figureimage/' ~ picturefirst) }}
                                                                                     alt=""
                                                                                     style="height: 180px; width: 180px"></a>
