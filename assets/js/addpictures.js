@@ -1,7 +1,5 @@
 const $ = require('jquery');
 
-// todo : ajouter dans le champs formulaire le nom de la photo.
-// setup an "add a tag" link
 let $collectionPictures;
 let $addPictureButton = $('<button type="button" class="btn btn-outline-success add_tag_link">Ajouter une image</button>');
 let $newLinkPictureLi = $('<li></li>').append($addPictureButton);
@@ -59,3 +57,13 @@ function addPictureFormDeleteLink($tagFormLi) {
         $tagFormLi.remove();
     });
 }
+
+$(function () {
+    $(document).delegate('.custom-file-input', 'change', function () {
+        let inputFile = $(event.currentTarget);
+        let labelToShow = $(inputFile[0].activeElement.labels[1]);
+        $(inputFile)
+            .find(labelToShow)
+            .html(inputFile[0].activeElement.files[0].name);
+    });
+});
