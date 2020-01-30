@@ -87,7 +87,7 @@ class FormResolverMedias extends FormResolver
     {
         /** @var Pictureslink $newPicture */
         $newPicture = $form->getData();
-        $newPicture->setUser($user)->setFigure($figure);
+        $newPicture->setFigure($figure);
         if ($exPicture->getFirstImage() == true) {
             $newPicture->setFirstImage(true);
         }
