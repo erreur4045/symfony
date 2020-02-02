@@ -1,0 +1,67 @@
+{
+  "entrypoints": {
+    "app": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors~addpictures~addvideos~app~carrousel~checkbox~loadmorecoms~loadmoretricks.js",
+        "/build/vendors~app.js",
+        "/build/app.js"
+      ],
+      "css": [
+        "/build/app.css"
+      ]
+    },
+    "addpictures": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors~addpictures~addvideos~app~carrousel~checkbox~loadmorecoms~loadmoretricks.js",
+        "/build/vendors~addpictures~addvideos~carrousel.js",
+        "/build/addpictures.js"
+      ]
+    },
+    "addvideos": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors~addpictures~addvideos~app~carrousel~checkbox~loadmorecoms~loadmoretricks.js",
+        "/build/vendors~addpictures~addvideos~carrousel.js",
+        "/build/addvideos.js"
+      ]
+    },
+    "checkbox": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors~addpictures~addvideos~app~carrousel~checkbox~loadmorecoms~loadmoretricks.js",
+        "/build/checkbox.js"
+      ]
+    },
+    "carrousel": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors~addpictures~addvideos~app~carrousel~checkbox~loadmorecoms~loadmoretricks.js",
+        "/build/vendors~addpictures~addvideos~carrousel.js",
+        "/build/vendors~carrousel.js",
+        "/build/carrousel.js"
+      ]
+    },
+    "editcoms": {
+      "js": [
+        "/build/runtime.js",
+        "/build/editcoms.js"
+      ]
+    },
+    "loadmorecoms": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors~addpictures~addvideos~app~carrousel~checkbox~loadmorecoms~loadmoretricks.js",
+        "/build/loadmorecoms.js"
+      ]
+    },
+    "loadmoretricks": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors~addpictures~addvideos~app~carrousel~checkbox~loadmorecoms~loadmoretricks.js",
+        "/build/loadmoretricks.js"
+      ]
+    }
+  }
+}
