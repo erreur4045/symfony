@@ -27,7 +27,7 @@ Encore
     .addEntry('addvideos', './assets/js/addvideos.js')
     .addEntry('checkbox', './assets/js/checkbox.js')
     .addEntry('carrousel', './assets/js/carrousel.js')
-    .addEntry('loadmorecoms', './assets/js/loadmorecoms.js')
+    //.addEntry('loadmorecoms', './assets/js/loadmorecoms.js')
     .addEntry('loadmoretricks', './assets/js/loadmoretricks.js')
     //.addEntry('page2', './assets/js/page2.js')
 

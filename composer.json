@@ -41,6 +41,7 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.2",
+        "easycorp/easy-deploy-bundle": "^1.0",
         "escapestudios/symfony2-coding-standard": "3.x-dev",
         "squizlabs/php_codesniffer": "*",
         "symfony/debug-pack": "*",
