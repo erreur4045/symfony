@@ -70,9 +70,6 @@
 .buttoms_home{
     max-width: 50px;
 }
-.fixed-top{
-    height: 50px;
-}
 
 .box_buttons_edit_delete{
     position: absolute;
@@ -94,9 +91,6 @@
     border-top: solid 2px;
 }
 
-body{
-    padding-bottom: 5em;
-}
 
 #nav_bar_footer{
     position: fixed;
@@ -138,6 +132,12 @@ body{
     .margin_left_com{
         margin-left: 81px !important;
     }
+    body{
+        padding-bottom: 3.5em;
+    }
+    .justify-content-custom{
+        justify-content: center;
+    }
 }
 
 @media (min-width: 768px) {
@@ -170,7 +170,11 @@ body{
         display: none !important;
     }
     .margin_left_com{
-        margin-left: 0px;
+        margin-left: 0;
+    }
+    body{
+        padding-bottom: 5em;
+        margin-top: 3.5em;
     }
 }
 #loader{
