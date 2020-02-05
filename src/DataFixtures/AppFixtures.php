@@ -59,67 +59,56 @@ class AppFixtures extends Fixture
             3 => 'https://www.youtube.com/embed/8AWdZKMTG3U',
             4 => 'https://www.youtube.com/embed/SQyTWk7OxSI'
         ];
-        //todo index a enlever
         $figureDatas = [
-          0 => [
+          [
               'titre' => 'Mute',
-              'desciption' => 'saisie de la carre frontside de la 
-              planche entre les deux pieds avec la main avant.',
+              'desciption' => 'saisie de la carre frontside de la planche entre les deux pieds avec la main avant.',
               'categorie' => 'Les grabs'
                 ],
-            1 => [
+            [
                 'titre' => '360',
                 'desciption' => 'trois six pour un tour complet.',
                 'categorie' => 'Les rotations'
             ],
-            2 => [
+            [
                 'titre' => 'Japan air',
-                'desciption' => 'Saisie de l\'avant de la planche, 
-                avec la main avant, du côté de la carre frontside.',
+                'desciption' => 'Saisie de l\'avant de la planche, avec la main avant, du côté de la carre frontside.',
                 'categorie' => 'Les grabs'
             ],
-            3 => [
+            [
                 'titre' => '1080',
                 'desciption' => 'trois tours complets',
                 'categorie' => 'Les rotations'
             ],
-            4 => [
+            [
                 'titre' => 'Back flips',
                 'desciption' => 'Rotations en arrière',
                 'categorie' => 'Les rotations'
             ],
-            5 => [
+            [
                 'titre' => 'Rodeo',
-                'desciption' => 'Figure tête en bas où l’athlète pivote 
-                en diagonale au-dessus de son épaule pendant qu’il fait un salto',
+                'desciption' => 'Figure tête en bas où l’athlète pivote en diagonale au-dessus de son épaule pendant qu’il fait un salto',
                 'categorie' => 'Les rotations désaxées'
             ],
-            6 => [
+            [
                 'titre' => 'Rocket air',
-                'desciption' => 'Figure aérienne où le surfeur saisit 
-                la carre pointe du pied à l’avant du pied avant avec 
-                la main avant, la jambe est redressée et la planche 
-                pointe perpendiculairement au sol',
+                'desciption' => 'Figure aérienne où le surfeur saisit la carre pointe du pied à l’avant du pied avant avec la main avant, la jambe est redressée et la planche pointe perpendiculairement au sol',
                 'categorie' => 'Old school'
             ],
-            7 => [
+            [
                 'titre' => 'Seat belt',
                 'desciption' => 'Figure aérienne où le surfeur saisit 
-                le talon de la planche de surf avec sa main avant pendant 
-                que la jambe avant est tendue.',
+                le talon de la planche de surf avec sa main avant pendant que la jambe avant est tendue.',
                 'categorie' => 'Les grabs'
             ],
-            8 => [
+            [
                 'titre' => 'Truck driver',
-                'desciption' => 'saisie du carre avant et carre arrière 
-                avec chaque main (comme tenir un volant de voiture)',
+                'desciption' => 'saisie du carre avant et carre arrière avec chaque main (comme tenir un volant de voiture)',
                 'categorie' => 'Les grabs'
             ],
-            9 => [
+            [
                 'titre' => 'Stalefish',
-                'desciption' => ' Figure aérienne où l’athlète saisit 
-                la carre côté talons derrière la jambe arrière avec 
-                la main arrière pendant que la jambe arrière est redressée.',
+                'desciption' => ' Figure aérienne où l’athlète saisit la carre côté talons derrière la jambe arrière avec la main arrière pendant que la jambe arrière est redressée.',
                 'categorie' => 'Les grabs'
             ]
         ];
