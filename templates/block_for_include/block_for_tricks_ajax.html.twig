@@ -3,7 +3,7 @@
         {% if picture.firstimage == true %}
             {% set picturefirst = picture.linkpictures %}
             <div class="btn_loadmore" data-boolean="{{ rest }}"></div>
-            <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3 mt-2">
+            <div class="col-8 col-sm-6 col-md-6 col-lg-4 col-xl-3 mt-2">
                 <div class="card text-center m-auto p-0">
                     <a href="{{ path('trick', {slug: figure.slug}) }}"><img class="card-img-top pt-1"
                                                                             src={{ asset('uploads/figureimage/' ~ picturefirst) }}
