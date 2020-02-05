@@ -59,7 +59,7 @@ class AppFixtures extends Fixture
             3 => 'https://www.youtube.com/embed/8AWdZKMTG3U',
             4 => 'https://www.youtube.com/embed/SQyTWk7OxSI'
         ];
-
+        //todo index a enlever
         $figureDatas = [
           0 => [
               'titre' => 'Mute',
@@ -147,7 +147,7 @@ class AppFixtures extends Fixture
         for ($i = 0; $i < 4; $i++) {
             $user = new User();
             $user->setProfilePicture(Pictureslink::PICTURELINKUSERRAND)
-                ->setDatesub($faker->dateTimeInInterval('-30 days', '+5 dayes'))
+                ->setDatesub($faker->dateTimeInInterval('-30 days', '+5 days'))
                 ->setName($faker->firstName())
                 ->setMail($faker->safeEmail)
                 ->setPassword($this->encoder->encodePassword($user, "testpass"));
@@ -171,14 +171,13 @@ class AppFixtures extends Fixture
             $figure = new  Figure();
             $figure->setUser($user)
                 ->setName($figureData['titre'])
-                ->setDatecreate($faker->dateTimeInInterval('-30 days', '+5 dayes'))
+                ->setDatecreate($faker->dateTimeInInterval('-30 days', '+5 days'))
                 ->setIdfiguregroup(
                     $manager->getRepository(Figuregroup::class)
                         ->findOneBy(['name' => $figureData['categorie']])
                 )
                 ->setDescription($figureData['desciption']);
             $manager->persist($figure);
-            for ($l = 0; $l == 0; $l++) {
                 $filesystem = new Filesystem();
                 $pictureDefault = new Pictureslink();
                 $randId = rand(0, 2);
@@ -193,9 +192,7 @@ class AppFixtures extends Fixture
                     ->setFigure($figure)
                     ->setLinkpictures($newPicture);
                 $manager->persist($pictureDefault);
-            }
             for ($l = 0; $l <= 2; $l++) {
-                $filesystem = new Filesystem();
                 $picture = new Pictureslink();
                 $randId = rand(0, 2);
                 $randPicture = Pictureslink::PICTURELINKTRICKRAND[$randId];
@@ -221,7 +218,7 @@ class AppFixtures extends Fixture
             for ($n = 0; $n <= 5; $n++) {
                 $comment = new Comments();
                 $comment->setDatecreate(
-                    $faker->dateTimeInInterval('-30 days', '+5 dayes')
+                    $faker->dateTimeInInterval('-30 days', '+5 days')
                 )
                     ->setUser(
                         $manager->getRepository(User::class)

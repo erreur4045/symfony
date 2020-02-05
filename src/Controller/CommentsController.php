@@ -81,7 +81,6 @@ class CommentsController
     /**
      * @Route("/deletecom/{id}", name="delete.comment")
      */
-
     public function deleteCom(UserInterface $user = null, Comments $comment, Request $request)
     {
         if ($user == null) {
@@ -113,7 +112,6 @@ class CommentsController
     /**
      * @Route("/editcom/{id}", name="edit.comment")
      */
-
     public function editCom(UserInterface $user = null, Request $request)
     {
         if ($user == null) {
