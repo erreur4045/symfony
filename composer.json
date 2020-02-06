@@ -93,5 +93,11 @@
             "allow-contrib": false,
             "require": "4.3.*"
         }
+    },
+    "repositories": {
+        "greg0ire": {
+            "type": "vcs",
+            "url": "https://github.com/greg0ire/doctrine-orm"
+        }
     }
 }

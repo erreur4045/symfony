@@ -29,6 +29,7 @@ Encore
     .addEntry('carrousel', './assets/js/carrousel.js')
     .addEntry('loadmorecoms', './assets/js/loadmorecoms.js')
     .addEntry('loadmoretricks', './assets/js/loadmoretricks.js')
+    .addEntry('deletecheckbox', './assets/js/deletecheckbox.js')
     //.addEntry('page2', './assets/js/page2.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
