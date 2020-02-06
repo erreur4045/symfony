@@ -1,7 +1,3 @@
-.card_video {
-    max-width: 22.5rem;
-}
-
 .img_home_background{
     background-image: url("../../public/uploads/image_for_design/3557.jpg");
     background-size: cover;
@@ -71,20 +67,14 @@
     font-size: 45px;
 }
 
-.home_title{
-    border-radius: 30px;
-}
 .buttoms_home{
     max-width: 50px;
-}
-.fixed-top{
-    height: 50px;
 }
 
 .box_buttons_edit_delete{
     position: absolute;
-    top: 2%;
-    right: 1%;
+    top: 4%;
+    right: 4%;
 }
 .media_list{
     margin-top: 1em;
@@ -101,9 +91,6 @@
     border-top: solid 2px;
 }
 
-body{
-    padding-bottom: 5em;
-}
 
 #nav_bar_footer{
     position: fixed;
@@ -114,16 +101,6 @@ body{
     z-index: 9;
 }
 
-@media (min-width: 576px){
-    .col-sm-6 {
-        max-width: 51%;
-    }
-}
-
-.nav-link-custom{
-    height: 45px;
-    width: 45px;
-}
 .navbar-nav{
     flex-direction: row !important;
 }
@@ -151,6 +128,15 @@ body{
     }
     .bottom-buttom{
         display: none !important;
+    }
+    .margin_left_com{
+        margin-left: 81px !important;
+    }
+    body{
+        padding-bottom: 3.5em;
+    }
+    .justify-content-custom{
+        justify-content: center;
     }
 }
 
@@ -180,6 +166,16 @@ body{
         margin:.5em;
         display: none;
     }
+    .mobile-break{
+        display: none !important;
+    }
+    .margin_left_com{
+        margin-left: 0;
+    }
+    body{
+        padding-bottom: 5em;
+        margin-top: 3.5em;
+    }
 }
 #loader{
     visibility: hidden;
@@ -192,11 +188,38 @@ body{
     border-top: 2px solid;
 }
 
-.MultiCarousel { float: left; overflow: hidden; width: 100%; position:relative; }
-.MultiCarousel .MultiCarousel-inner { transition: 1s ease all; float: left; }
-.MultiCarousel .MultiCarousel-inner .item { float: left;}
-.MultiCarousel .leftLst, .MultiCarousel .rightLst { position:absolute; border-radius:50%;top:calc(50% - 20px); }
-.MultiCarousel .leftLst { left:1em; }
-.MultiCarousel .rightLst { right: 1em; }
-.MultiCarousel .leftLst.over, .MultiCarousel .rightLst.over { pointer-events: none; background:#ccc; }
+.MultiCarousel {
+    float: left;
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+}
+
+.MultiCarousel .MultiCarousel-inner {
+    transition: 1s ease all;
+    float: left;
+}
+
+.MultiCarousel .MultiCarousel-inner .item {
+    float: left;
+}
+
+.MultiCarousel .leftLst, .MultiCarousel .rightLst {
+    position: absolute;
+    border-radius: 50%;
+    top: calc(50% - 20px);
+}
+
+.MultiCarousel .leftLst {
+    left: 1em;
+}
+
+.MultiCarousel .rightLst {
+    right: 1em;
+}
+
+.MultiCarousel .leftLst.over, .MultiCarousel .rightLst.over {
+    pointer-events: none;
+    background: #ccc;
+}
 

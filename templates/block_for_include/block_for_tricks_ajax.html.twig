@@ -3,7 +3,7 @@
         {% if picture.firstimage == true %}
             {% set picturefirst = picture.linkpictures %}
             <div class="btn_loadmore" data-boolean="{{ rest }}"></div>
-            <div class="col-sx-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 mt-2">
+            <div class="col-8 col-sm-6 col-md-6 col-lg-4 col-xl-3 mt-2">
                 <div class="card text-center m-auto p-0">
                     <a href="{{ path('trick', {slug: figure.slug}) }}"><img class="card-img-top pt-1"
                                                                             src={{ asset('uploads/figureimage/' ~ picturefirst) }}
@@ -19,7 +19,7 @@
                                                     data-message="Êtes-vous sûr de vouloir supprimer cette figure ?">
                                               <i class="material-icons">delete_sweep</i>
                                             </button>
-                                            <button type="button" class="btn btn-outline-primary p-1"><a
+                                            <button type="button" class="btn btn-outline-primary ml-1 p-1"><a
                                                         href="{{ path('edit.trick', {slug: figure.slug}) }}"><i
                                                             class="material-icons">create</i></a>
                                             </button>
