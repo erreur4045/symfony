@@ -117,7 +117,7 @@ class FormResolverTricks extends FormResolver
              *
              * @var Array $elements
              */
-            $elements = $figure->getPictureslinks()->getValues();
+            $elements = $figure->getPictureslinks();
             $bool = 0;
             foreach ($elements as $first) {
                 if ($first->getFirstImage() == false) {
@@ -129,7 +129,6 @@ class FormResolverTricks extends FormResolver
             if ($bool == 0) {
                 $elements[0]->setFirstImage(1);
             }
-
             foreach ($figure->getPictureslinks() as $picture) {
                 /**
                  *
