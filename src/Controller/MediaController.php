@@ -7,6 +7,7 @@ use App\Entity\Pictureslink;
 use App\Entity\User;
 use App\Entity\Videolink;
 use App\Form\AddSinglePictureType;
+use App\Form\FigureAddMediaType;
 use App\Form\FigureType;
 use App\Form\VideolinkType;
 use App\Repository\FigureRepository;
@@ -284,6 +285,41 @@ class MediaController
                 [
                 'form' => $form->createView(),
                 'title' => 'Changer une image'
+                ]
+            )
+        );
+    }
+    /**
+     * @Route("/edit/medias/{slug}", name="update.medias")
+     */
+    public function editMedias($slug, Request $request)
+    {
+        /** @var Figure $figure */
+        $figure = $this->manager->getRepository(Figure::class)->findOneBy(['slug' => $slug]);
+
+        if ($this->tokenStorage->getToken()->getUser() == "anon.") {
+            return new Response(
+                $this->environment->render(
+                    'block_for_include/no_connect.html.twig',
+                    [
+                    ]
+                )
+            );
+        }
+        $form = $this->formResolverMedias->getForm($request, FigureAddMediaType::class);
+        if ($this->tokenStorage->getToken()->getUser() != "anon.") {
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->formResolverMedias->updateMedias($form, $figure);
+                $this->bag->add('success', 'Les medias ont été ajouter');
+                return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
+            }
+        }
+        return new Response(
+            $this->environment->render(
+                'media/UpdateMedias.html.twig',
+                [
+                    'form' => $form->createView(),
+                    'title' => 'Changer une image'
                 ]
             )
         );
