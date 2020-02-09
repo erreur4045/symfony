@@ -22,7 +22,7 @@ function openModal(slug,message)
     });
 }
 
-$('.delete_modal').on('click', function () {
+$(document).on('click', '.delete_modal', function () {
     let slug = $(this).data('slug');
     let message = $(this).data('message');
     openModal(slug,message);
