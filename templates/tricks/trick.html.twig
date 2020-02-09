@@ -12,6 +12,7 @@
         </div>
         <div class="container">
             {{ include('block_for_include/modal_delete.html.twig') }}
+            {#{{ include('block_for_include/modal_edit_com.html.twig') }}#}
             <div class="d-flex justify-content-center">
             <div class="container trickblock">
                     <div class="row pb-2">
@@ -132,6 +133,10 @@
                                                 <button class="btn btn-info text-right p-0 btn_edit_coms"
                                                         data-id = "{{ comment.id }}" data-url="{{ path('edit.comment', {id: comment.id}) }}"
                                                 ><a>Modifier</a>
+                                                </button>
+                                                <button class="btn btn-info text-right p-0 btn_edit_coms" data-toggle="modal"
+                                                        data-id = "{{ comment.id }}" data-url="{{ path('edit.comment', {id: comment.id}) }}">
+                                                    <a>Modifier via modal</a>
                                                 </button>
                                                 </span>
                                         {% endif %}

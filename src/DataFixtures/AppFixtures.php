@@ -204,7 +204,7 @@ class AppFixtures extends Fixture
                     );
                 $manager->persist($video);
             }
-            for ($n = 0; $n <= 5; $n++) {
+            for ($n = 0; $n <= 15; $n++) {
                 $comment = new Comments();
                 $comment->setDatecreate(
                     $faker->dateTimeInInterval('-30 days', '+5 days')
