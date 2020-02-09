@@ -208,8 +208,6 @@ class MediaController
         }
     }
 
-    // todo : modal ou ajax sur l'update
-
     /**
      * @Route("/media/update/picture/{id}", name="update.picture")
      */

@@ -133,6 +133,10 @@
                                                         data-id = "{{ comment.id }}" data-url="{{ path('edit.comment', {id: comment.id}) }}"
                                                 ><a>Modifier</a>
                                                 </button>
+                                                <button class="btn btn-info text-right p-0 btn_edit_coms" data-toggle="modal"
+                                                        data-id = "{{ comment.id }}" data-url="{{ path('edit.comment', {id: comment.id}) }}">
+                                                    <a>Modifier via modal</a>
+                                                </button>
                                                 </span>
                                         {% endif %}
                                     </div>
@@ -163,5 +167,4 @@
 {% block javascripts %}
     {{ encore_entry_script_tags('carrousel') }}
     {{ encore_entry_script_tags('loadmorecoms') }}
-    {#{{ encore_entry_script_tags('editcoms') }}#}
 {% endblock %}

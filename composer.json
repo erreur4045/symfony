@@ -37,10 +37,10 @@
         "symfony/webpack-encore-pack": "^1.0",
         "symfony/yaml": "4.3.*",
         "twig/extensions": "^1.5",
-        "ext-intl": "*",
-        "doctrine/doctrine-fixtures-bundle": "^3.2"
+        "ext-intl": "*"
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.0.2",
         "escapestudios/symfony2-coding-standard": "3.x-dev",
         "squizlabs/php_codesniffer": "*",
         "symfony/debug-pack": "*",

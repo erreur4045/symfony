@@ -44,20 +44,20 @@ class AppFixtures extends Fixture
         $faker = Faker\Factory::create('fr_FR');
 
         $figureGroupeNames = [
-            0 => 'Les grabs',
-            1 => 'Les rotations',
-            2 => 'Les flips',
-            3 => 'Les rotations désaxées',
-            4 => 'Les slides',
-            5 => 'Old school'
+            'Les grabs',
+            'Les rotations',
+            'Les flips',
+            'Les rotations désaxées',
+            'Les slides',
+            'Old school'
         ];
 
         $videosYoutube = [
-            0 => 'https://www.youtube.com/embed/Zc8Gu8FwZkQ',
-            1 => 'https://www.youtube.com/embed/0uGETVnkujA',
-            2 => 'https://www.youtube.com/embed/G9qlTInKbNE',
-            3 => 'https://www.youtube.com/embed/8AWdZKMTG3U',
-            4 => 'https://www.youtube.com/embed/SQyTWk7OxSI'
+            'https://www.youtube.com/embed/Zc8Gu8FwZkQ',
+            'https://www.youtube.com/embed/0uGETVnkujA',
+            'https://www.youtube.com/embed/G9qlTInKbNE',
+            'https://www.youtube.com/embed/8AWdZKMTG3U',
+            'https://www.youtube.com/embed/SQyTWk7OxSI'
         ];
         $figureDatas = [
           [
@@ -204,7 +204,7 @@ class AppFixtures extends Fixture
                     );
                 $manager->persist($video);
             }
-            for ($n = 0; $n <= 5; $n++) {
+            for ($n = 0; $n <= 15; $n++) {
                 $comment = new Comments();
                 $comment->setDatecreate(
                     $faker->dateTimeInInterval('-30 days', '+5 days')

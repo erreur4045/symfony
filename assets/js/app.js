@@ -13,7 +13,6 @@ const $ = require('jquery');
 jQuery.noConflict();
 require('bootstrap');
 
-//console.log($.fn.jquery)
 function openModal(slug,message)
 {
     $('#exampleModal').modal('show');
