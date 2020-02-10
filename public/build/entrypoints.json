@@ -43,12 +43,6 @@
         "/build/carrousel.js"
       ]
     },
-    "editcoms": {
-      "js": [
-        "/build/runtime.js",
-        "/build/editcoms.js"
-      ]
-    },
     "loadmorecoms": {
       "js": [
         "/build/runtime.js",
@@ -61,6 +55,12 @@
         "/build/runtime.js",
         "/build/vendors~addpictures~addvideos~app~carrousel~checkbox~loadmorecoms~loadmoretricks.js",
         "/build/loadmoretricks.js"
+      ]
+    },
+    "deletecheckbox": {
+      "js": [
+        "/build/runtime.js",
+        "/build/deletecheckbox.js"
       ]
     }
   }
