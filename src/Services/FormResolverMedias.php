@@ -123,7 +123,7 @@ class FormResolverMedias extends FormResolver
         }
     }
 
-    public function updateVideoLink(FormInterface $form, Figure $figure, $exVideo)
+    public function updateVideoLink(FormInterface $form, Figure $figure, $exVideo = null)
     {
         /** @var Videolink $newVideo */
         $newVideo = $form->getData();
@@ -139,5 +139,48 @@ class FormResolverMedias extends FormResolver
         $this->manager->remove($exVideo);
         $this->manager->persist($newVideo);
         $this->manager->flush();
+    }
+
+    public function updateMedias(FormInterface $form, Figure $figure)
+    {
+        /** @var UploadedFile $uploadedFile */
+        $uploadedFile = $form['pictureslinks']->getData();
+        foreach ($uploadedFile as $fileToUpload) {
+            if ($fileToUpload) {
+                $originalFilename = pathinfo($fileToUpload->getPicture()->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = transliterator_transliterate(
+                    'Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()',
+                    $originalFilename
+                );
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $fileToUpload->getPicture()->guessExtension();
+                try {
+                    $fileToUpload->getPicture()->move(
+                        $this->tricksPicturesDirectory,
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                }
+                /** @var Pictureslink $fileToUpload */
+                $fileToUpload->setFigure($figure);
+                $fileToUpload->setLinkpictures($newFilename);
+                $this->manager->persist($fileToUpload);
+            }
+            $this->manager->flush();
+        }
+        /** @var Videolink $newVideo */
+        $newVideoLink = $form['videolinks']->getData();
+        foreach ($newVideoLink as $linkToUpload) {
+            $videoEmbed = preg_match(
+                '/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:&list=(\S+))?$/',
+                $linkToUpload->getLinkvideo(),
+                $matches
+            );
+            $linkToStock = 'https://www.youtube.com/embed/' . $matches[1];
+            $linkToUpload->setFigure($figure);
+            $linkToUpload->setLinkvideo($linkToStock);
+            $this->manager->persist($linkToUpload);
+            $this->manager->flush();
+        }
+        $this->manager->persist($figure);
     }
 }

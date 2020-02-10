@@ -13,7 +13,6 @@ const $ = require('jquery');
 jQuery.noConflict();
 require('bootstrap');
 
-//console.log($.fn.jquery)
 function openModal(slug,message)
 {
     $('#exampleModal').modal('show');
@@ -23,7 +22,7 @@ function openModal(slug,message)
     });
 }
 
-$('.delete_modal').on('click', function () {
+$(document).on('click', '.delete_modal', function () {
     let slug = $(this).data('slug');
     let message = $(this).data('message');
     openModal(slug,message);

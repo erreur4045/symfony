@@ -14,7 +14,7 @@
             {{ include('block_for_include/modal_delete.html.twig') }}
             <div class="d-flex justify-content-center">
             <div class="container trickblock">
-                    <div class="row">
+                    <div class="row pb-2">
                         {% for message in app.flashes('success') %}
                             <div class="container-fluid pt-1">
                                 <div class="alert alert-success">{{ message }}</div>
@@ -118,17 +118,20 @@
                                         <span >{{ comment.user.name|capitalize }} :</span>
                                         <span >Le {{ comment.datecreate|date("d/m/Y") }}</span>
                                         <span >a écrit :</span>
-                                        <span class="border border-dark rounded">
-                                        <span >{{ comment.text }}</span>
+                                        <br class="mobile-break">
+                                        <span class="border border-dark rounded d-inline-block pl-1 pr-1 margin_left_com">
+                                        <span>{{ comment.text }}</span>
                                         </span>
                                         {% if user.name is defined and comment.user.name == user.name %}
-                                                <button class=" btn btn-danger text-right  p-0 ml-1 ">
-                                                    <a href="{{ path('delete.comment', {id: comment.id}) }}">Supprimer</a>
+                                            <br class="mobile-break">
+                                            <span class="d-inline-block margin_left_com">
+                                                <button class=" btn btn-danger text-right  p-0 pl-1 delete_modal" data-toggle="modal"
+                                                        data-slug="{{ path('delete.comment', {id: comment.id}) }}"
+                                                        data-message="Êtes-vous sûr de vouloir supprimer cette votre commentaire ?">Supprimer
                                                 </button>
-                                                <button class="btn btn-info text-right p-0 btn_edit_coms"
-                                                        data-id = "{{ comment.id }}" data-url="{{ path('edit.comment', {id: comment.id}) }}"
-                                                ><a>Modifier</a>
+                                                <button class="btn btn-info text-right p-0"><a href="{{ path('edit.comment', {id: comment.id}) }}" style="color: white">Modifier</a>
                                                 </button>
+                                                </span>
                                         {% endif %}
                                     </div>
                                 {% endfor %}
@@ -158,5 +161,4 @@
 {% block javascripts %}
     {{ encore_entry_script_tags('carrousel') }}
     {{ encore_entry_script_tags('loadmorecoms') }}
-    {{ encore_entry_script_tags('editcoms') }}
 {% endblock %}
