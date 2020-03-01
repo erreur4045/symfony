@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Controller;
+namespace App\Actions\Home;
 
+use App\Actions\OwnAbstractController;
 use App\Entity\Figure;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;

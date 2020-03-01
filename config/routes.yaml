@@ -7,5 +7,5 @@ app_logout:
 
 login:
     path: /login
-    controller: App\Controller\SecurityController::login
+    controller: App\Actions\Security\LoginController::login
     methods: GET|POST

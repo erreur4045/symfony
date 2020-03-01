@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Controller;
+namespace App\Actions\Dashboard;
 
+use App\Actions\OwnAbstractController;
 use App\Entity\Figure;
 use App\Entity\User;
 use App\Form\ProfilePictureType;
@@ -17,66 +18,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Twig\Environment;
 use Symfony\Component\HttpFoundation\Response;
 
-class DashboardController
+class DashboardController extends OwnAbstractController
 {
-    /**
-     *
-     *
-     * @var FigureRepository
-     */
-    private $figure;
-
-    /**
-     *
-     *
-     * @var UserRepository
-     */
-    private $user;
-
-    /**
-     *
-     *
-     * @var Environment
-     */
-    private $environment;
-
-    /**
-     *
-     *
-     * @var FormResolverMedias
-     */
-    private $formResolverMedias;
-
-    /**
-     *
-     *
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     *
-     *
-     * @var RouterInterface
-     */
-    private $router;
-
-    public function __construct(
-        FigureRepository $figure,
-        UserRepository $user,
-        Environment $environment,
-        TokenStorageInterface $tokenStorage,
-        FormResolverMedias $formResolverMedias,
-        RouterInterface $router
-    ) {
-        $this->router = $router;
-        $this->figure = $figure;
-        $this->user = $user;
-        $this->environment = $environment;
-        $this->tokenStorage = $tokenStorage;
-        $this->formResolverMedias = $formResolverMedias;
-    }
-
     /**
      * @Route("/dashboard", name="app_dashboard")
      */
@@ -94,7 +37,7 @@ class DashboardController
         }
 
         /** @var Figure $figures */
-        $figures = $this->figure->findBy(['user' => $user->getId()]);
+        $figures = $this->manager->getRepository(Figure::class)->findBy(['user' => $user->getId()]);
 
         /** @var User $userData */
         $userData = $this->tokenStorage->getToken()->getUser();

@@ -9,9 +9,10 @@
  * PHP Version : 7.3.5
  */
 
-namespace App\Controller;
+namespace App\Actions\Home;
 
 
+use App\Actions\OwnAbstractController;
 use App\Entity\Figure;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
