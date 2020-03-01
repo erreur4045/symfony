@@ -18,15 +18,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\User\UserInterface;
 use Twig\Environment;
 
-class CommentsController
+class CommentsController extends OwnAbstractController
 {
-    /**
-     *
-     *
-     * @var EntityManagerInterface
-     */
-    private $manager;
-
     /**
      *
      *
@@ -40,13 +33,6 @@ class CommentsController
      * @var FlashBagInterface
      */
     private $bag;
-
-    /**
-     *
-     *
-     * @var Environment
-     */
-    private $templating;
 
     /**
      *
@@ -85,7 +71,7 @@ class CommentsController
     {
         if ($user == null) {
             return new Response(
-                $this->templating->render(
+                $this->environment->render(
                     'block_for_include/no_connect.html.twig',
                     [
                     ]
@@ -116,7 +102,7 @@ class CommentsController
     {
         if ($user == null) {
             return new Response(
-                $this->templating->render(
+                $this->environment->render(
                     'block_for_include/no_connect.html.twig',
                     [
                     ]
@@ -138,7 +124,7 @@ class CommentsController
                     ->generate('trick', ['slug' => $datatricks->getSlug()]));
             }
             return new Response(
-                $this->templating->render(
+                $this->environment->render(
                     'comments/index.html.twig',
                     [
                     'form' => $form->createView(),
@@ -175,7 +161,7 @@ class CommentsController
             ->findBy(['idfigure' => $figureId], [], Comments::LIMIT_PER_PAGE, $offset);
 
         return new Response(
-            $this->templating->render(
+            $this->environment->render(
                 'block_for_include/block_for_coms_ajax.html.twig',
                 [
                 'user' => $user,

@@ -24,6 +24,13 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/js/app.js')
+    .addEntry('addpictures', './assets/js/addpictures.js')
+    .addEntry('addvideos', './assets/js/addvideos.js')
+    .addEntry('checkbox', './assets/js/checkbox.js')
+    .addEntry('carrousel', './assets/js/carrousel.js')
+    .addEntry('loadmorecoms', './assets/js/loadmorecoms.js')
+    .addEntry('loadmoretricks', './assets/js/loadmoretricks.js')
+    .addEntry('deletecheckbox', './assets/js/deletecheckbox.js')
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
 
