@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -10,7 +11,6 @@
  */
 
 namespace App\Actions\Home;
-
 
 use App\Actions\OwnAbstractController;
 use App\Entity\Figure;
@@ -30,19 +30,12 @@ class HomePageController extends OwnAbstractController
         /** @var $nbPageMax */
         $nbPageMax = ceil($this->manager->getRepository(Figure::class)
                 ->count([]) / Figure::LIMIT_PER_PAGE);
-
         $rest = $nbPageMax > 1 ? true : false;
-
-        return new Response(
-            $this->environment->render(
-                'home/index.html.twig',
-                [
+        return new Response($this->environment->render('home/index.html.twig', [
                     'figures' => $figures,
                     'title' => 'SnowTricks',
                     'pagemax' => $nbPageMax,
                     'rest' => $rest
-                ]
-            )
-        );
+                ]));
     }
 }

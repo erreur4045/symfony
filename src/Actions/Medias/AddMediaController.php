@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -10,7 +11,6 @@
  */
 
 namespace App\Actions\Medias;
-
 
 use App\Actions\OwnAbstractController;
 use App\Entity\Figure;
@@ -30,23 +30,18 @@ class AddMediaController extends OwnAbstractController
     public function editMedias(Request $request)
     {
         /** @var Figure $figure */
-        $figure = $this->manager->getRepository(Figure::class)->findOneBy(['slug' => $request->query->get('slug')]);
-
+        $figure = $this->manager->getRepository(Figure::class)->findOneBy(
+            ['slug' => $request->attributes->get('slug')]
+        );
         $form = $this->formResolverMedias->getForm($request, FigureAddMediaType::class);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $this->formResolverMedias->updateMedias($form, $figure);
-                $this->bag->add('success', 'Les medias ont été ajouter');
-                return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
-            }
-        return new Response(
-            $this->environment->render(
-                'media/UpdateMedias.html.twig',
-                [
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->formResolverMedias->updateMedias($form, $figure);
+            $this->bag->add('success', 'Les medias ont été ajouter');
+            return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
+        }
+        return new Response($this->environment->render('media/UpdateMedias.html.twig', [
                     'form' => $form->createView(),
                     'title' => 'Changer une image'
-                ]
-            )
-        );
+                ]));
     }
 }

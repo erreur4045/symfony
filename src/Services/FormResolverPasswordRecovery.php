@@ -12,32 +12,16 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class FormResolverPasswordRecovery extends FormResolver
 {
-    /**
-     *
-     *
-     * @var EntityManagerInterface
-     */
+   /** @var EntityManagerInterface  */
     private $manager;
 
-    /**
-     *
-     *
-     * @var FlashBagInterface
-     */
+    /** @var FlashBagInterface  */
     private $bag;
 
-    /**
-     *
-     *
-     * @var MailSender
-     */
+    /** @var MailSender  */
     private $mailSender;
 
-    /**
-     *
-     *
-     * @var UrlGeneratorInterface
-     */
+    /** @var UrlGeneratorInterface  */
     private $router;
 
     public function __construct(

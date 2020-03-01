@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -10,7 +11,6 @@
  */
 
 namespace App\Actions\Medias\Video;
-
 
 use App\Actions\OwnAbstractController;
 use App\Entity\Figure;
@@ -32,35 +32,19 @@ class UpdateVideoController extends OwnAbstractController
     {
         /** @var Videolink $exPicture */
         $exVideo = $this->manager->getRepository(Videolink::class)->find($request->query->getInt('id'));
-
         /** @var Figure $figure */
         $figure = $this->manager->getRepository(Figure::class)->findOneBy(['id' => $exVideo->getFigure()->getId()]);
 
-        if ($this->tokenStorage->getToken()->getUser() == "anon.") {
-            return new Response(
-                $this->environment->render(
-                    'block_for_include/no_connect.html.twig',
-                    [
-                    ]
-                )
-            );
+        $form = $this->formResolverMedias->getForm($request, VideolinkType::class);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->formResolverMedias->updateVideoLink($form, $figure, $exVideo);
+            $this->bag->add('success', 'La video a été modifié');
+            return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
         }
 
-        $form = $this->formResolverMedias->getForm($request, VideolinkType::class);
-            if ($form->isSubmitted() && $form->isValid()) {
-                $this->formResolverMedias->updateVideoLink($form, $figure, $exVideo);
-                $this->bag->add('success', 'La video a été modifié');
-                return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
-            }
-
-        return new Response(
-            $this->environment->render(
-                'media/UpdateVideo.html.twig',
-                [
+        return new Response($this->environment->render('media/UpdateVideo.html.twig', [
                     'form' => $form->createView(),
                     'title' => 'Changer une image'
-                ]
-            )
-        );
+                ]));
     }
 }

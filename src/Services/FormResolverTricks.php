@@ -16,39 +16,19 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class FormResolverTricks extends FormResolver
 {
-    /**
-     *
-     *
-     * @var UserPasswordEncoderInterface
-     */
+    /** @var UserPasswordEncoderInterface  */
     protected $encoder;
 
-    /**
-     *
-     *
-     * @var EntityManagerInterface
-     */
+    /** @var EntityManagerInterface  */
     private $manager;
 
-    /**
-     *
-     *
-     * @var FlashBagInterface
-     */
+    /** @var FlashBagInterface  */
     private $bag;
 
-    /**
-     *
-     *
-     * @var UploaderPicture
-     */
+    /** @var UploaderPicture  */
     private $uploaderPicture;
 
-    /**
-     *
-     *
-     * @var string
-     */
+    /** @var string  */
     private $tricksPicturesDirectory;
 
     public function __construct(
@@ -69,16 +49,11 @@ class FormResolverTricks extends FormResolver
 
     public function addTrick(FormInterface $form, User $user)
     {
-        /**
-         *
-         *
-         * @var Figure $figure
-         */
+        /** @var  $figure */
         $figure = $form->getData();
         $figure->setUser($user);
         $figure->setDatecreate(new \DateTime('now'));
-
-
+        $patternYT = '/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:&list=(\S+))?$/';
         if ($figure->getPictureslinks()->count() == 0) {
             /** @var Filesystem $filesystem */
             $filesystem = new Filesystem();
@@ -97,7 +72,7 @@ class FormResolverTricks extends FormResolver
             if ($figure->getVideolinks()->count() > 0) {
                 foreach ($figure->getVideolinks() as $video) {
                     $videoEmbed = preg_match(
-                        '/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:&list=(\S+))?$/',
+                        $patternYT,
                         $video->getLinkvideo(),
                         $matches
                     );
@@ -115,7 +90,7 @@ class FormResolverTricks extends FormResolver
              *Return all differents images and check if at least one image
              *is "image_first" otherwise the fist image is changed image_first = true
              *
-             * @var Array $elements
+             * @var array $elements
              */
             $elements = $figure->getPictureslinks()->getValues();
             $bool = 0;
@@ -155,7 +130,7 @@ class FormResolverTricks extends FormResolver
             }
             foreach ($figure->getVideolinks() as $video) {
                 $videoEmbed = preg_match(
-                    '/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:&list=(\S+))?$/',
+                    $patternYT,
                     $video->getLinkvideo(),
                     $matches
                 );

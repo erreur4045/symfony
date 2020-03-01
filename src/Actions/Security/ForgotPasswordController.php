@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -10,7 +11,6 @@
  */
 
 namespace App\Actions\Security;
-
 
 use App\Actions\OwnAbstractController;
 use App\Form\PasswordRecoveryMailType;
@@ -29,19 +29,13 @@ class ForgotPasswordController extends OwnAbstractController
     {
         /** @var Form $form */
         $form = $this->formResolverPasswordRecovery->getForm($request, PasswordRecoveryMailType::class);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $this->formResolverPasswordRecovery->treatment($form);
             return new RedirectResponse($this->router->generate('home'));
         }
 
-        return new Response(
-            $this->templating->render(
-                'security/mailforpasswordrecovery.html.twig',
-                [
+        return new Response($this->templating->render('security/mailforpasswordrecovery.html.twig', [
                     'form' => $form->createView()
-                ]
-            )
-        );
+                ]));
     }
 }

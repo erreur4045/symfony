@@ -13,39 +13,19 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class FormResolverRegistration extends FormResolver
 {
-    /**
-     *
-     *
-     * @var UserPasswordEncoderInterface
-     */
+    /** @var UserPasswordEncoderInterface  */
     protected $encoder;
 
-    /**
-     *
-     *
-     * @var EntityManagerInterface
-     */
+    /** @var EntityManagerInterface  */
     private $manager;
 
-    /**
-     *
-     *
-     * @var FlashBagInterface
-     */
+   /** @var FlashBagInterface  */
     private $bag;
 
-    /**
-     *
-     *
-     * @var string
-     */
+    /** @var string  */
     private $pictureLinkDirectory;
 
-    /**
-     *
-     *
-     * @var UploaderPicture
-     */
+    /** @var UploaderPicture  */
     private $uploaderPicture;
 
     public function __construct(

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -10,7 +11,6 @@
  */
 
 namespace App\Actions\Trick;
-
 
 use App\Actions\OwnAbstractController;
 use App\Entity\Figure;
@@ -42,35 +42,22 @@ class EditTrickController extends OwnAbstractController
 
         /** @var Videolink $video */
         $video = $this->manager->getRepository(Videolink::class)->findBy(['figure' => $figure->getId()]);
-
-        $hasOthermedia = empty(
-        $this->manager->getRepository(Pictureslink::class)
-            ->findBy(['figure' => $figure->getId(), 'first_image' => 0])
-        ) && empty($video) ? true : false;
-
-        $hasOtherPicture = empty(
-        $this->manager->getRepository(Pictureslink::class)
-            ->findBy(
-                ['figure' => $figure->getId(), 'first_image' => 0]
-            )
-        ) ? true : false;
+        $hasOthermedia = empty($this->manager->getRepository(Pictureslink::class)
+            ->findBy(['figure' => $figure->getId(), 'first_image' => 0])) && empty($video) ? true : false;
+        $hasOtherPicture = empty($this->manager->getRepository(Pictureslink::class)
+            ->findBy(['figure' => $figure->getId(), 'first_image' => 0])) ? true : false;
         /** @var Form $form */
         $form = $this->formResolverTricks->getForm($request, FigureEditType::class, $figure);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->formResolverTricks->updateTrick($figure);
             return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
         }
-        return new Response(
-            $this->templating->render(
-                'tricks/edittrick.html.twig',
-                [
+        return new Response($this->templating->render('tricks/edittrick.html.twig', [
                     'figure' => $figure,
                     'form' => $form->createView(),
                     'h1' => 'Modification de la figure',
                     'emptyMedia' => $hasOthermedia,
                     'otherPicture' => $hasOtherPicture
-                ]
-            )
-        );
+                ]));
     }
 }

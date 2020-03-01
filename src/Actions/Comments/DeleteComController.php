@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -31,7 +32,6 @@ class DeleteComController extends OwnAbstractController
         $datatricks = $this->manager
             ->getRepository(Figure::class)
             ->findOneBy(['id' => $request->attributes->get('comment')->getIdfigure()->getId()]);
-
         if ($comment->getUser()->getMail() == $this->tokenStorage->getToken()->getUser()->getMail()) {
             $this->manager->remove($comment);
             $this->manager->flush();

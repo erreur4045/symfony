@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -10,7 +11,6 @@
  */
 
 namespace App\Actions\Medias\Video;
-
 
 use App\Actions\OwnAbstractController;
 use App\Entity\Videolink;
@@ -28,25 +28,15 @@ class DeleteVideoController extends OwnAbstractController
      */
     public function deleteVideo(Request $request)
     {
-        if ($this->tokenStorage->getToken()->getUser()) {
-            $video = $this->manager->getRepository(Videolink::class)->findBy(['id' => $request->query->getInt('id')]);
-            $this->manager->remove($video[0]);
-            $this->manager->flush();
-            $this->bag->add('success', 'La figure a été mise a jour');
-            return new RedirectResponse(
-                $this->router->generate(
-                    'trick',
-                    ['slug' => $video[0]->getFigure()->getSlug()]
-                )
-            );
-        } else {
-            return new Response(
-                $this->environment->render(
-                    'block_for_include/no_connect.html.twig',
-                    [
-                    ]
-                )
-            );
-        }
+        $video = $this->manager->getRepository(Videolink::class)->findBy(['id' => $request->query->getInt('id')]);
+        $this->manager->remove($video[0]);
+        $this->manager->flush();
+        $this->bag->add('success', 'La figure a été mise a jour');
+        return new RedirectResponse(
+            $this->router->generate(
+                'trick',
+                ['slug' => $video[0]->getFigure()->getSlug()]
+            )
+        );
     }
 }

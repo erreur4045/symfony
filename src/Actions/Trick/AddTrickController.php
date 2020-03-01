@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -10,7 +11,6 @@
  */
 
 namespace App\Actions\Trick;
-
 
 use App\Actions\OwnAbstractController;
 use App\Entity\User;
@@ -30,23 +30,16 @@ class AddTrickController extends OwnAbstractController
     {
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
-
         /** @var Form $form */
         $form = $this->formResolverTricks->getForm($request, FigureType::class);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $this->formResolverTricks->addTrick($form, $user);
             return new RedirectResponse($this->router->generate('home'));
         }
 
-        return new Response(
-            $this->templating->render(
-                'tricks/newtrick.html.twig',
-                [
+        return new Response($this->templating->render('tricks/newtrick.html.twig', [
                     'form' => $form->createView(),
                     'h1' => 'Ajout d\'une figure'
-                ]
-            )
-        );
+                ]));
     }
 }

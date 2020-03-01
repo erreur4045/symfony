@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -10,7 +11,6 @@
  */
 
 namespace App\Actions\Trick;
-
 
 use App\Actions\OwnAbstractController;
 use App\Entity\Figure;
@@ -29,18 +29,16 @@ class DeleteTrickController extends OwnAbstractController
     {
             /** @var Pictureslink $image */
             $image = $this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $figure->getId()]);
-            foreach ($image as $images) {
-                $this->filesystem->remove(
-                    [
-                        '',
-                        '',
-                        $this->tricksPicturesDirectory . $images->getLinkpictures()
-                    ]
-                );
-            }
+        foreach ($image as $images) {
+            $this->filesystem->remove([
+                    '',
+                    '',
+                    $this->tricksPicturesDirectory . $images->getLinkpictures()
+                ]);
+        }
             $this->manager->remove($figure);
-            $this->manager->flush();
-            $this->bag->add('success', 'La figure a été supprimé');
-            return new RedirectResponse($this->router->generate('home'));
+        $this->manager->flush();
+        $this->bag->add('success', 'La figure a été supprimé');
+        return new RedirectResponse($this->router->generate('home'));
     }
 }
