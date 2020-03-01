@@ -14,6 +14,7 @@ namespace App\Actions\Medias\Picture;
 
 use App\Actions\OwnAbstractController;
 use App\Entity\Pictureslink;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -21,10 +22,10 @@ class DeletePictureController extends OwnAbstractController
 {
     /**
      * @Route("/media/delete/picture/{picture}", name="delete.image")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function deletePicture($picture)
     {
-        if ($this->tokenStorage->getToken()->getUser()) {
             /** @var Pictureslink $image */
             $image = $this->manager->getRepository(Pictureslink::class)->findBy(['linkpictures' => $picture]);
             if ($image[0]->getFirstImage() == true) {
@@ -57,7 +58,6 @@ class DeletePictureController extends OwnAbstractController
                     ['slug' => $image[0]->getFigure()->getSlug()]
                 )
             );
-        }
-        return new RedirectResponse($this->router->generate('home'));
+
     }
 }

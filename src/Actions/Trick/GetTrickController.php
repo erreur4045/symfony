@@ -25,11 +25,20 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class GetTrickController extends OwnAbstractController
 {
     /**
      * @Route("/tricks/details/{slug}", name="trick")
+     * @param Request $request
+     * @return RedirectResponse|Response
+     * @throws EntityNotFoundException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function getTrick(Request $request)
     {

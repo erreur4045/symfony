@@ -14,29 +14,19 @@ namespace App\Actions\Comments;
 use App\Actions\OwnAbstractController;
 use App\Entity\Comments;
 use App\Entity\Figure;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class DeleteComController extends OwnAbstractController
 {
     /**
      * @Route("/deletecom/{id}", name="delete.comment")
+     * @IsGranted("ROLE_USER")
      */
-    public function deleteCom(UserInterface $user = null, Comments $comment, Request $request)
+    public function deleteCom(Comments $comment, Request $request)
     {
-        if ($user == null) {
-            return new Response(
-                $this->environment->render(
-                    'block_for_include/no_connect.html.twig',
-                    [
-                    ]
-                )
-            );
-        }
-
         /** @var Figure $datatricks */
         $datatricks = $this->manager
             ->getRepository(Figure::class)

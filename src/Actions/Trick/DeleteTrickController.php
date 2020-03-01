@@ -15,28 +15,18 @@ namespace App\Actions\Trick;
 use App\Actions\OwnAbstractController;
 use App\Entity\Figure;
 use App\Entity\Pictureslink;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class DeleteTrickController extends OwnAbstractController
 {
     /**
      * @Route("/delete/{slug}", name="delete.trick")
+     * @IsGranted("ROLE_USER")
      */
-    public function deleteTrick(UserInterface $user = null, Figure $figure)
+    public function deleteTrick(Figure $figure)
     {
-        if ($user == null) {
-            return new Response(
-                $this->templating->render(
-                    'block_for_include/no_connect.html.twig',
-                    [
-                    ]
-                )
-            );
-        }
-        if ($this->tokenStorage->getToken()->getUser()) {
             /** @var Pictureslink $image */
             $image = $this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $figure->getId()]);
             foreach ($image as $images) {
@@ -52,7 +42,5 @@ class DeleteTrickController extends OwnAbstractController
             $this->manager->flush();
             $this->bag->add('success', 'La figure a été supprimé');
             return new RedirectResponse($this->router->generate('home'));
-        }
-        return new RedirectResponse($this->router->generate('home'));
     }
 }

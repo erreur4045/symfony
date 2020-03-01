@@ -17,6 +17,7 @@ use App\Entity\Figure;
 use App\Entity\Pictureslink;
 use App\Entity\Videolink;
 use App\Form\FigureEditType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +29,7 @@ class EditTrickController extends OwnAbstractController
 {
     /**
      * @Route("/edit/{slug}", name="edit.trick")
+     * @IsGranted("ROLE_USER")
      */
     public function editTrick(Request $request)
     {
@@ -44,14 +46,14 @@ class EditTrickController extends OwnAbstractController
         $hasOthermedia = empty(
         $this->manager->getRepository(Pictureslink::class)
             ->findBy(['figure' => $figure->getId(), 'first_image' => 0])
-        ) && empty($video) ? true : false   ;
+        ) && empty($video) ? true : false;
 
         $hasOtherPicture = empty(
         $this->manager->getRepository(Pictureslink::class)
             ->findBy(
                 ['figure' => $figure->getId(), 'first_image' => 0]
             )
-        ) ? true : false ;
+        ) ? true : false;
         /** @var Form $form */
         $form = $this->formResolverTricks->getForm($request, FigureEditType::class, $figure);
         if ($form->isSubmitted() && $form->isValid()) {

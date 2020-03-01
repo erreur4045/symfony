@@ -17,6 +17,7 @@ use App\Entity\Figure;
 use App\Entity\Pictureslink;
 use App\Entity\User;
 use App\Form\AddSinglePictureType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,24 +27,16 @@ class UpdatePictureController extends OwnAbstractController
 {
     /**
      * @Route("/media/update/picture/{id}", name="update.picture")
+     * @IsGranted("ROLE_USER")
      */
     public function updatePicture($id, Request $request)
     {
-        if ($this->tokenStorage->getToken()->getUser() == "anon.") {
-            return new Response(
-                $this->environment->render(
-                    'block_for_include/no_connect.html.twig',
-                    [
-                    ]
-                )
-            );
-        }
         /** @var Pictureslink $exPicture */
         $exPicture = $this->manager->getRepository(Pictureslink::class)->find($id);
         /** @var Figure $figure */
         $figure = $this->manager->getRepository(Figure::class)
             ->findOneBy(['id' => $exPicture->getFigure()->getId()]);
-        if ($this->tokenStorage->getToken()->getUser() != "anon.") {
+
             /** @var User $userdata */
             $user = $this->tokenStorage->getToken()->getUser();
             $form = $this->formResolverMedias->getForm($request, AddSinglePictureType::class);
@@ -61,7 +54,5 @@ class UpdatePictureController extends OwnAbstractController
                     ]
                 )
             );
-        }
-        return new RedirectResponse($this->router->generate('home'));
     }
 }

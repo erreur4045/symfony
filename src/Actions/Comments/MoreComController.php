@@ -4,7 +4,7 @@ namespace App\Actions\Comments;
 
 use App\Actions\OwnAbstractController;
 use App\Entity\Comments;
-use App\Entity\User;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,12 +13,10 @@ class MoreComController extends OwnAbstractController
 {
     /**
      * @Route("tricks/details/more_com", name="more.coms")
+     * @IsGranted("ROLE_USER")
      */
     public function loadTricks(Request $request)
     {
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
-
         $pageId = $request->query->get('page');
         $figureId = $request->query->get('figureid');
         $offset = $pageId * Comments::LIMIT_PER_PAGE - Comments::LIMIT_PER_PAGE;
@@ -37,7 +35,7 @@ class MoreComController extends OwnAbstractController
             $this->environment->render(
                 'block_for_include/block_for_coms_ajax.html.twig',
                 [
-                'user' => $user,
+                'user' => $this->tokenStorage->getToken()->getUser(),
                 'comsToShow' => $comsToShow,
                 'rest' => $rest
                 ]

@@ -14,7 +14,9 @@ namespace App\Actions\Medias\Video;
 
 use App\Actions\OwnAbstractController;
 use App\Entity\Videolink;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -22,11 +24,12 @@ class DeleteVideoController extends OwnAbstractController
 {
     /**
      * @Route("/media/delete/video/{id}", name="delete.video")
+     * @IsGranted("ROLE_USER")
      */
-    public function deleteVideo($id)
+    public function deleteVideo(Request $request)
     {
         if ($this->tokenStorage->getToken()->getUser()) {
-            $video = $this->manager->getRepository(Videolink::class)->findBy(['id' => $id]);
+            $video = $this->manager->getRepository(Videolink::class)->findBy(['id' => $request->query->getInt('id')]);
             $this->manager->remove($video[0]);
             $this->manager->flush();
             $this->bag->add('success', 'La figure a été mise a jour');

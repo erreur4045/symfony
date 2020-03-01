@@ -15,6 +15,7 @@ namespace App\Actions\Medias;
 use App\Actions\OwnAbstractController;
 use App\Entity\Figure;
 use App\Form\FigureAddMediaType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,29 +25,20 @@ class AddMediaController extends OwnAbstractController
 {
     /**
      * @Route("/edit/medias/{slug}", name="add.medias")
+     * @IsGranted("ROLE_USER")
      */
-    public function editMedias($slug, Request $request)
+    public function editMedias(Request $request)
     {
         /** @var Figure $figure */
-        $figure = $this->manager->getRepository(Figure::class)->findOneBy(['slug' => $slug]);
+        $figure = $this->manager->getRepository(Figure::class)->findOneBy(['slug' => $request->query->get('slug')]);
 
-        if ($this->tokenStorage->getToken()->getUser() == "anon.") {
-            return new Response(
-                $this->environment->render(
-                    'block_for_include/no_connect.html.twig',
-                    [
-                    ]
-                )
-            );
-        }
         $form = $this->formResolverMedias->getForm($request, FigureAddMediaType::class);
-        if ($this->tokenStorage->getToken()->getUser() != "anon.") {
+
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->formResolverMedias->updateMedias($form, $figure);
                 $this->bag->add('success', 'Les medias ont été ajouter');
                 return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
             }
-        }
         return new Response(
             $this->environment->render(
                 'media/UpdateMedias.html.twig',

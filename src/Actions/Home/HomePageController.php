@@ -17,7 +17,7 @@ use App\Entity\Figure;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class HomePageControllerOwn extends OwnAbstractController
+class HomePageController extends OwnAbstractController
 {
     /**
      * @Route("/", name="home")

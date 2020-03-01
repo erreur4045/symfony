@@ -16,28 +16,19 @@ use App\Actions\OwnAbstractController;
 use App\Entity\Comments;
 use App\Entity\Figure;
 use App\Form\EditComType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
-
 class EditComController extends OwnAbstractController
 {
     /**
      * @Route("/editcom/{id}", name="edit.comment")
+     * @IsGranted("ROLE_USER")
      */
-    public function editCom(UserInterface $user = null, Request $request)
+    public function editCom(Request $request)
     {
-        if ($user == null) {
-            return new Response(
-                $this->environment->render(
-                    'block_for_include/no_connect.html.twig',
-                    [
-                    ]
-                )
-            );
-        }
         /** @var Comments $comment */
         $comment = $this->manager->getRepository(Comments::class)->findOneBy(['id' => $request->attributes->get('id')]);
 

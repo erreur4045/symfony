@@ -109,6 +109,4 @@ class OwnAbstractController
         $this->formResolverPasswordRecovery = $formResolverPasswordRecovery;
         $this->formResolverTricks = $formResolverTricks;
     }
-
-
 }
