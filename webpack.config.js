@@ -13,6 +13,7 @@ Encore
     .setPublicPath('/build')
     // only needed for CDN's or sub-directory deploy
     //.setManifestKeyPrefix('build/')
+
     /*
      * ENTRY CONFIG
      *
@@ -23,13 +24,7 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/js/app.js')
-    .addEntry('addpictures', './assets/js/addpictures.js')
-    .addEntry('addvideos', './assets/js/addvideos.js')
-    .addEntry('checkbox', './assets/js/checkbox.js')
-    .addEntry('carrousel', './assets/js/carrousel.js')
-    .addEntry('loadmorecoms', './assets/js/loadmorecoms.js')
-    .addEntry('loadmoretricks', './assets/js/loadmoretricks.js')
-    .addEntry('deletecheckbox', './assets/js/deletecheckbox.js')
+    //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
@@ -53,9 +48,9 @@ Encore
     .enableVersioning(Encore.isProduction())
 
     // enables @babel/preset-env polyfills
-    .configureBabel(() => {}, {
-        useBuiltIns: 'usage',
-        corejs: 3
+    .configureBabelPresetEnv((config) => {
+        config.useBuiltIns = 'usage';
+        config.corejs = 3;
     })
 
     // enables Sass/SCSS support
@@ -69,7 +64,7 @@ Encore
     //.enableIntegrityHashes(Encore.isProduction())
 
     // uncomment if you're having problems with a jQuery plugin
-    .autoProvidejQuery()
+    //.autoProvidejQuery()
 
     // uncomment if you use API Platform Admin (composer req api-admin)
     //.enableReactPreset()
