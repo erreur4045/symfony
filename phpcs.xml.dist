@@ -7,6 +7,7 @@
     <arg name="cache" value=".phpcs-cache"/>
     <arg name="colors"/>
     <arg name="extensions" value="php"/>
+    <arg name="warning-severity" value="6"/>
 
     <rule ref="PSR1"/>
     <rule ref="PSR12"/>
