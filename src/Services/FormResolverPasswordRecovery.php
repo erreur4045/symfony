@@ -12,32 +12,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class FormResolverPasswordRecovery extends FormResolver
 {
-   /** @var EntityManagerInterface  */
-    private $manager;
-
-    /** @var FlashBagInterface  */
-    private $bag;
-
-    /** @var MailSender  */
-    private $mailSender;
-
-    /** @var UrlGeneratorInterface  */
-    private $router;
-
-    public function __construct(
-        FormFactoryInterface $formFactory,
-        EntityManagerInterface $manager,
-        FlashBagInterface $bag,
-        UrlGeneratorInterface $router,
-        MailSender $mailSender
-    ) {
-        parent::__construct($formFactory);
-        $this->manager = $manager;
-        $this->bag = $bag;
-        $this->mailSender = $mailSender;
-        $this->router = $router;
-    }
-
     public function treatment(FormInterface $form)
     {
         $data = $form->getData();

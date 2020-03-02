@@ -16,27 +16,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class FormResolverComment extends FormResolver
 {
-    /** @var EntityManagerInterface  */
-    private $manager;
-
-    /** @var FlashBagInterface  */
-    private $bag;
-
-    /** @var UrlGeneratorInterface  */
-    private $router;
-
-    public function __construct(
-        FormFactoryInterface $formFactory,
-        EntityManagerInterface $manager,
-        FlashBagInterface $bag,
-        UrlGeneratorInterface $router
-    ) {
-        parent::__construct($formFactory);
-        $this->manager = $manager;
-        $this->bag = $bag;
-        $this->router = $router;
-    }
-
     public function updateCom(FormInterface $form, Comments $comment)
     {
         $comment->setText($form->getData()->getText())
