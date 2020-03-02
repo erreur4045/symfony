@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -10,7 +11,6 @@
  */
 
 namespace App\Actions\Security;
-
 
 use App\Actions\OwnAbstractController;
 use App\Entity\User;
@@ -32,22 +32,16 @@ class ResetPasswordController extends OwnAbstractController
         /** @var User $user */
         $user = $this->manager->getRepository(User::class)
             ->findOneBy(['token' => $request->attributes->get('slug')]);
-
         if (!empty($user)) {
-            /** @var Form $form */
+        /** @var Form $form */
             $form = $this->formResolverRecoveryPassword->getForm($request, ResetPasswordType::class);
             if ($form->isSubmitted() && $form->isValid() && $user->getMail() == $form['email']->getData()) {
                 $this->formResolverRecoveryPassword->treatment($form, $user);
                 return new RedirectResponse($this->router->generate('home'));
             }
-            return new Response(
-                $this->environement->render(
-                    'security/resetpassword.html.twig',
-                    [
+            return new Response($this->templating->render('security/resetpassword.html.twig', [
                         'form' => $form->createView()
-                    ]
-                )
-            );
+                    ]));
         } else {
             return new RedirectResponse($this->router->generate('home'));
         }

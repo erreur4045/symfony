@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -10,7 +11,6 @@
  */
 
 namespace App\Actions\Trick;
-
 
 use App\Actions\OwnAbstractController;
 use App\Entity\Comments;
@@ -52,17 +52,12 @@ class GetTrickController extends OwnAbstractController
         $image = $this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $figure->getId()]);
         /** @var Videolink $video */
         $video = $this->manager->getRepository(Videolink::class)->findBy(['figure' => $figure->getId()]);
-        $hasOthermedia = empty(
-        $this->manager->getRepository(Pictureslink::class)
-            ->findBy(['figure' => $figure->getId(), 'first_image' => 0])
-        ) && empty($video) ? true : false;
-
+        $hasOthermedia = empty($this->manager->getRepository(Pictureslink::class)
+            ->findBy(['figure' => $figure->getId(), 'first_image' => 0])) && empty($video) ? true : false;
         /** @var Form $form */
         $form = $this->formResolverComment->getForm($request, CommentType::class);
-
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
-
         if ($form->isSubmitted() && $form->isValid() && $user != null) {
             $this->formResolverComment->addCom($form, $user, $figure);
             $this->bag->add('success', 'Votre commentaire a été ajouter');
@@ -72,21 +67,11 @@ class GetTrickController extends OwnAbstractController
         /** @var Comments $comments */
         $comments = $this->manager->getRepository(Comments::class)
             ->findBy(['idfigure' => $figure->getId()], [], Comments::LIMIT_PER_PAGE, null);
-
-        $nbPageMaxCom = ceil(
-            count(
-                $this->manager
+        $nbPageMaxCom = ceil(count($this->manager
                     ->getRepository(Comments::class)
-                    ->findBy(['idfigure' => $figure->getId()])
-            ) / Comments::LIMIT_PER_PAGE
-        );
-
+                    ->findBy(['idfigure' => $figure->getId()])) / Comments::LIMIT_PER_PAGE);
         $rest = $nbPageMaxCom > 1 ? true : false;
-
-        return new Response(
-            $this->templating->render(
-                'tricks/trick.html.twig',
-                [
+        return new Response($this->templating->render('tricks/trick.html.twig', [
                     'form' => $form->createView(),
                     'data' => $figure,
                     'image' => $image,
@@ -96,8 +81,6 @@ class GetTrickController extends OwnAbstractController
                     'emptyMedia' => $hasOthermedia,
                     'rest' => $rest,
                     'pagemax' => $nbPageMaxCom
-                ]
-            )
-        );
+                ]));
     }
 }

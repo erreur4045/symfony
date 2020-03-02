@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -10,7 +11,6 @@
  */
 
 namespace App\Actions\Security;
-
 
 use App\Actions\OwnAbstractController;
 use App\Form\RegistrationType;
@@ -29,19 +29,13 @@ class RegisterController extends OwnAbstractController
     {
         /** @var Form $form */
         $form = $this->fromResolverRegistration->getForm($request, RegistrationType::class);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $this->fromResolverRegistration->treatment($form);
             return new RedirectResponse($this->router->generate('app_login'));
         }
 
-        return new Response(
-            $this->templating->render(
-                'security/registration.html.twig',
-                [
+        return new Response($this->templating->render('security/registration.html.twig', [
                     'form' => $form->createView()
-                ]
-            )
-        );
+                ]));
     }
 }

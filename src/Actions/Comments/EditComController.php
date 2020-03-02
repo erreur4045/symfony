@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -11,7 +12,6 @@
 
 namespace App\Actions\Comments;
 
-
 use App\Actions\OwnAbstractController;
 use App\Entity\Comments;
 use App\Entity\Figure;
@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 class EditComController extends OwnAbstractController
 {
     /**
@@ -31,27 +32,19 @@ class EditComController extends OwnAbstractController
     {
         /** @var Comments $comment */
         $comment = $this->manager->getRepository(Comments::class)->findOneBy(['id' => $request->attributes->get('id')]);
-
         /** @var Figure $datatricks */
         $datatricks = $this->manager->getRepository(Figure::class)->findOneBy(['id' => $comment->getIdfigure()]);
-
         if ($comment->getUser()->getMail() == $this->tokenStorage->getToken()->getUser()->getMail()) {
             $form = $this->formResolverComment->getForm($request, EditComType::class);
-
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->formResolverComment->updateCom($form, $comment);
                 return new RedirectResponse($this->router
                     ->generate('trick', ['slug' => $datatricks->getSlug()]));
             }
-            return new Response(
-                $this->environment->render(
-                    'comments/index.html.twig',
-                    [
+            return new Response($this->environment->render('comments/index.html.twig', [
                         'form' => $form->createView(),
                         'comment' => $comment->getText()
-                    ]
-                )
-            );
+                    ]));
         } else {
             $this->bag->add('warning', 'Vous ne pouvez pas modifier ce commentaire');
         }

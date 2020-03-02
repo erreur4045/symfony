@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -10,7 +11,6 @@
  */
 
 namespace App\Actions\Medias\Picture;
-
 
 use App\Actions\OwnAbstractController;
 use App\Entity\Pictureslink;
@@ -28,36 +28,26 @@ class DeletePictureController extends OwnAbstractController
     {
             /** @var Pictureslink $image */
             $image = $this->manager->getRepository(Pictureslink::class)->findBy(['linkpictures' => $picture]);
-            if ($image[0]->getFirstImage() == true) {
-                $this->manager->remove($image[0]);
-                $this->manager->flush();
-                $NewFirstImages = $this->manager->getRepository(Pictureslink::class)->findBy(
-                    [
-                        'figure' => $image[0]->getFigure()->getId(),
-                        'first_image' => false
-                    ]
-                );
-                $NewFirstImages[0]->setFirstImage(1);
-                $this->manager->persist($NewFirstImages[0]);
-                $this->manager->flush();
-            } else {
-                $this->manager->remove($image[0]);
-                $this->manager->flush();
-            }
-            $this->filesystem->remove(
-                [
+        if ($image[0]->getFirstImage() == true) {
+            $this->manager->remove($image[0]);
+            $this->manager->flush();
+            $NewFirstImages = $this->manager->getRepository(Pictureslink::class)->findBy([
+                    'figure' => $image[0]->getFigure()->getId(),
+                    'first_image' => false
+                ]);
+            $NewFirstImages[0]->setFirstImage(1);
+            $this->manager->persist($NewFirstImages[0]);
+            $this->manager->flush();
+        } else {
+            $this->manager->remove($image[0]);
+            $this->manager->flush();
+        }
+            $this->filesystem->remove([
                     '',
                     '',
                     $this->tricksPicturesDirectory . $image[0]->getLinkpictures()
-                ]
-            );
-            $this->bag->add('success', 'La figure a été mise a jour');
-            return new RedirectResponse(
-                $this->router->generate(
-                    'trick',
-                    ['slug' => $image[0]->getFigure()->getSlug()]
-                )
-            );
-
+                ]);
+        $this->bag->add('success', 'La figure a été mise a jour');
+        return new RedirectResponse($this->router->generate('trick', ['slug' => $image[0]->getFigure()->getSlug()]));
     }
 }

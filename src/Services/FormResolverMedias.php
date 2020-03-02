@@ -16,61 +16,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class FormResolverMedias extends FormResolver
 {
-    /**
-     *
-     *
-     * @var UserPasswordEncoderInterface
-     */
-    protected $encoder;
-
-    /**
-     *
-     *
-     * @var EntityManagerInterface
-     */
-    private $manager;
-
-    /**
-     *
-     *
-     * @var FlashBagInterface
-     */
-    private $bag;
-
-    /**
-     *
-     * @var UploaderPicture
-     */
-    private $uploaderPicture;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var string
-     */
-    private $tricksPicturesDirectory;
-
-    public function __construct(
-        UserPasswordEncoderInterface $encoder,
-        EntityManagerInterface $manager,
-        FlashBagInterface $bag,
-        FormFactoryInterface $formFactory,
-        UploaderPicture $uploaderPicture,
-        Filesystem $filesystem,
-        string $tricksPicturesDirectory
-    ) {
-        parent::__construct($formFactory);
-        $this->filesystem = $filesystem;
-        $this->encoder = $encoder;
-        $this->bag = $bag;
-        $this->manager = $manager;
-        $this->uploaderPicture = $uploaderPicture;
-        $this->tricksPicturesDirectory = $tricksPicturesDirectory;
-    }
-
     public function updateProfilePicture(FormInterface $form, User $user)
     {
 

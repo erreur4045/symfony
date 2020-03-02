@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -15,6 +16,7 @@ use App\Form\FigureType;
 use App\Services\FormResolverComment;
 use App\Services\FormResolverMedias;
 use App\Services\FormResolverPasswordRecovery;
+use App\Services\FormResolverRecoveryPassword;
 use App\Services\FormResolverRegistration;
 use App\Services\FormResolverTricks;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,33 +32,35 @@ class OwnAbstractController
     /** @var Environment  */
     protected $templating;
     /** @var FigureType  */
-    protected $figureType;
+        protected $figureType;
     /** @var FormFactoryInterface  */
-    protected $formFactory;
+        protected $formFactory;
     /** @var UrlGeneratorInterface  */
-    protected $router;
+        protected $router;
     /** @var Filesystem  */
-    protected $filesystem;
+        protected $filesystem;
     /** @var Environment  */
-    protected $environment;
+        protected $environment;
     /** @var string  */
-    protected $tricksPicturesDirectory;
+        protected $tricksPicturesDirectory;
     /** @var FormResolverMedias  */
-    protected $formResolverMedias;
+        protected $formResolverMedias;
     /** @var EntityManagerInterface  */
-    protected $manager;
+        protected $manager;
     /** @var FlashBagInterface  */
-    protected $bag;
+        protected $bag;
     /** @var TokenStorageInterface  */
-    protected $tokenStorage;
+        protected $tokenStorage;
     /** @var FormResolverComment  */
-    protected $formResolverComment;
+        protected $formResolverComment;
     /** @var FormResolverRegistration */
-    protected $fromResolverRegistration;
+        protected $fromResolverRegistration;
     /** @var  FormResolverPasswordRecovery */
-    protected $formResolverPasswordRecovery;
+        protected $formResolverPasswordRecovery;
     /** @var FormResolverTricks */
-    protected $formResolverTricks;
+        protected $formResolverTricks;
+    /** @var FormResolverRecoveryPassword */
+        protected $formResolverRecoveryPassword;
 
     /**
      * OwnAbstractController constructor.
@@ -75,6 +79,7 @@ class OwnAbstractController
      * @param FormResolverRegistration $fromResolverRegistration
      * @param FormResolverPasswordRecovery $formResolverPasswordRecovery
      * @param FormResolverTricks $formResolverTricks
+     * @param FormResolverRecoveryPassword $formResolverRecoveryPassword
      */
     public function __construct(
         Environment $templating,
@@ -91,7 +96,8 @@ class OwnAbstractController
         FormResolverComment $formResolverComment,
         FormResolverRegistration $fromResolverRegistration,
         FormResolverPasswordRecovery $formResolverPasswordRecovery,
-        FormResolverTricks $formResolverTricks
+        FormResolverTricks $formResolverTricks,
+        FormResolverRecoveryPassword $formResolverRecoveryPassword
     ) {
         $this->templating = $templating;
         $this->figureType = $figureType;
@@ -108,5 +114,6 @@ class OwnAbstractController
         $this->fromResolverRegistration = $fromResolverRegistration;
         $this->formResolverPasswordRecovery = $formResolverPasswordRecovery;
         $this->formResolverTricks = $formResolverTricks;
+        $this->formResolverRecoveryPassword = $formResolverRecoveryPassword;
     }
 }

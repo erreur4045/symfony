@@ -22,7 +22,10 @@ class DashboardController extends OwnAbstractController
     public function index(Request $request)
     {
         /** @var Figure $figures */
-        $figures = $this->manager->getRepository(Figure::class)->findBy(['user' => $this->tokenStorage->getToken()->getUser()->getId()]);
+        $figures = $this->manager->getRepository(Figure::class)
+            ->findBy(
+                ['user' => $this->tokenStorage->getToken()->getUser()->getId()]
+            );
 
         /** @var User $userData */
         $userData = $this->tokenStorage->getToken()->getUser();

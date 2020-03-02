@@ -4,7 +4,6 @@ namespace App\Actions\Comments;
 
 use App\Actions\OwnAbstractController;
 use App\Entity\Comments;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,7 +12,6 @@ class MoreComController extends OwnAbstractController
 {
     /**
      * @Route("tricks/details/more_com", name="more.coms")
-     * @IsGranted("ROLE_USER")
      */
     public function loadTricks(Request $request)
     {

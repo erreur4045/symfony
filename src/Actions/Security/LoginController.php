@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -10,7 +11,6 @@
  */
 
 namespace App\Actions\Security;
-
 
 use App\Actions\OwnAbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,12 +36,10 @@ class LoginController extends OwnAbstractController
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
-
-        return new Response(
-            $this->templating->render(
-                'security/login.html.twig',
-                ['last_username' => $lastUsername, 'error' => $error]
-            )
-        );
+        return new Response($this->templating->render(
+            'security/login.html.twig',
+            ['last_username' => $lastUsername,
+                'error' => $error]
+        ));
     }
 }
