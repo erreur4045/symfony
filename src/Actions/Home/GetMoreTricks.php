@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
-class MoreTricksController extends OwnAbstractController
+class GetMoreTricks extends OwnAbstractController
 {
     /**
      * @Route("/more_tricks", name="more.tricks")

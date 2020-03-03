@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
-class DashboardController extends OwnAbstractController
+class GetDashboard extends OwnAbstractController
 {
     /**
      * @Route("/dashboard", name="app_dashboard")

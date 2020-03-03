@@ -6,7 +6,7 @@
  *
  * Date : 01 03 2020
  * Project : symfonytestversion
- * File : EditComController.php
+ * File : EditCom.php
  * PHP Version : 7.3.5
  */
 
@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class EditComController extends OwnAbstractController
+class EditCom extends OwnAbstractController
 {
     /**
      * @Route("/editcom/{id}", name="edit.comment")

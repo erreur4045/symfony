@@ -20,7 +20,7 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
-class LoginController extends OwnAbstractController
+class Login extends OwnAbstractController
 {
     /**
      * @Route("/login", name="app_login")

@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-class EditTrickController extends OwnAbstractController
+class EditTrick extends OwnAbstractController
 {
     /**
      * @Route("/edit/{slug}", name="edit.trick")

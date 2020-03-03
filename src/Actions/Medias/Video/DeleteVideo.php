@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DeleteVideoController extends OwnAbstractController
+class DeleteVideo extends OwnAbstractController
 {
     /**
      * @Route("/media/delete/video/{id}", name="delete.video")

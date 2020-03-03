@@ -6,35 +6,35 @@
  *
  * Date : 01 03 2020
  * Project : symfonytestversion
- * File : LogoutController.php
+ * File : ForgotPasswordController.php
  * PHP Version : 7.3.5
  */
 
 namespace App\Actions\Security;
 
 use App\Actions\OwnAbstractController;
-use App\Form\RegistrationType;
+use App\Form\PasswordRecoveryMailType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class RegisterController extends OwnAbstractController
+class ForgotPassword extends OwnAbstractController
 {
     /**
-     * @Route("/registration", name="registration")
+     * @Route("/forgot_password", name="app_passwordrecovery")
      */
-    public function registration(Request $request)
+    public function passwordRecovery(Request $request)
     {
         /** @var Form $form */
-        $form = $this->fromResolverRegistration->getForm($request, RegistrationType::class);
+        $form = $this->formResolverPasswordRecovery->getForm($request, PasswordRecoveryMailType::class);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->fromResolverRegistration->treatment($form);
-            return new RedirectResponse($this->router->generate('app_login'));
+            $this->formResolverPasswordRecovery->treatment($form);
+            return new RedirectResponse($this->router->generate('home'));
         }
 
-        return new Response($this->templating->render('security/registration.html.twig', [
+        return new Response($this->templating->render('security/mailforpasswordrecovery.html.twig', [
                     'form' => $form->createView()
                 ]));
     }

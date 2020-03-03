@@ -19,7 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DeleteTrickController extends OwnAbstractController
+class DeleteTrick extends OwnAbstractController
 {
     /**
      * @Route("/delete/{slug}", name="delete.trick")

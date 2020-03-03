@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class ResetPasswordController extends OwnAbstractController
+class ResetPassword extends OwnAbstractController
 {
     /**
      * @Route("/reset_password/{slug}", name="app_recoverypassword")

@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class AddTrickController extends OwnAbstractController
+class AddTrick extends OwnAbstractController
 {
     /**
      * @Route("/addtrick", name="addtrick")

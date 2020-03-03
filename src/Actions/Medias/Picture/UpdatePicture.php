@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class UpdatePictureController extends OwnAbstractController
+class UpdatePicture extends OwnAbstractController
 {
     /**
      * @Route("/media/update/picture/{id}", name="update.picture")

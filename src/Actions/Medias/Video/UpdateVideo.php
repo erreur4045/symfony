@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class UpdateVideoController extends OwnAbstractController
+class UpdateVideo extends OwnAbstractController
 {
     /**
      * @Route("/media/update/video/{id}", name="update.video")

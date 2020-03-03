@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class MoreComController extends OwnAbstractController
+class MoreCom extends OwnAbstractController
 {
     /**
      * @Route("tricks/details/more_com", name="more.coms")

@@ -18,7 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DeletePictureController extends OwnAbstractController
+class DeletePicture extends OwnAbstractController
 {
     /**
      * @Route("/media/delete/picture/{picture}", name="delete.image")

@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DeleteComController extends OwnAbstractController
+class DeleteCom extends OwnAbstractController
 {
     /**
      * @Route("/deletecom/{id}", name="delete.comment")

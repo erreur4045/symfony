@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class AddMediaController extends OwnAbstractController
+class AddMedias extends OwnAbstractController
 {
     /**
      * @Route("/edit/medias/{slug}", name="add.medias")

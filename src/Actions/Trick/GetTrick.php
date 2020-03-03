@@ -29,7 +29,7 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
-class GetTrickController extends OwnAbstractController
+class GetTrick extends OwnAbstractController
 {
     /**
      * @Route("/tricks/details/{slug}", name="trick")
