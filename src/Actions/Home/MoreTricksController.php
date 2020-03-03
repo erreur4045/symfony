@@ -15,7 +15,7 @@ class MoreTricksController extends OwnAbstractController
      */
     public function loadTricks(Request $request)
     {
-        $pageId = $request->attributes->get('page');
+        $pageId = $request->query->get('page');
         $offset = $pageId * Figure::LIMIT_PER_PAGE - Figure::LIMIT_PER_PAGE ;
         $nb_tricks = $this->manager->getRepository(Figure::class)->count([]);
         $rest = $pageId * Figure::LIMIT_PER_PAGE < $nb_tricks ? true : false;

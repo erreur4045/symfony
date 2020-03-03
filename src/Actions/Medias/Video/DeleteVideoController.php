@@ -17,7 +17,6 @@ use App\Entity\Videolink;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DeleteVideoController extends OwnAbstractController
@@ -28,7 +27,7 @@ class DeleteVideoController extends OwnAbstractController
      */
     public function deleteVideo(Request $request)
     {
-        $video = $this->manager->getRepository(Videolink::class)->findBy(['id' => $request->query->getInt('id')]);
+        $video = $this->manager->getRepository(Videolink::class)->findBy(['id' => $request->attributes->getInt('id')]);
         $this->manager->remove($video[0]);
         $this->manager->flush();
         $this->bag->add('success', 'La figure a été mise a jour');

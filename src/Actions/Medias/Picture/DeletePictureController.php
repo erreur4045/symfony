@@ -22,7 +22,7 @@ class DeletePictureController extends OwnAbstractController
 {
     /**
      * @Route("/media/delete/picture/{picture}", name="delete.image")
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("ROLE_USER")
      */
     public function deletePicture($picture)
     {
