@@ -17,6 +17,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class FormResolverTricks extends FormResolver
 {
+
     public function addTrick(FormInterface $form, User $user)
     {
         /** @var  $figure */
