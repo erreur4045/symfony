@@ -156,12 +156,4 @@ class FormResolverTricks extends FormResolver
             $picture->setLinkpictures($newFilename);
         }
     }
-
-    public function updateTrick(Figure $figure)
-    {
-        $figure->setDateupdate(new \DateTime('now'));
-        $this->manager->persist($figure);
-        $this->manager->flush();
-        $this->bag->add('success', 'Votre figure a été mise a jour');
-    }
 }
