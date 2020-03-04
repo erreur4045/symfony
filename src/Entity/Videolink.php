@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Videolink
 {
+    public const PATTERNYT = '/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:&list=(\S+))?$/';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

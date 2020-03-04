@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Entity\Figure;
 use App\Entity\Pictureslink;
 use App\Entity\User;
+use App\Entity\Videolink;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -22,102 +23,136 @@ class FormResolverTricks extends FormResolver
         $figure = $form->getData();
         $figure->setUser($user);
         $figure->setDatecreate(new \DateTime('now'));
-        $patternYT = '/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:&list=(\S+))?$/';
         if ($figure->getPictureslinks()->count() == 0) {
-            /** @var Filesystem $filesystem */
-            $filesystem = new Filesystem();
-            $pictureDefault = new Pictureslink();
-            $randId = rand(0, 2);
-            $randPicture = Pictureslink::PICTURELINKTRICKRAND[$randId];
-            $newPicture = $randPicture . '-' . uniqid() . '.jpg';
-            $filesystem->copy(
-                $this->tricksPicturesDirectory . $randPicture,
-                $this->tricksPicturesDirectory . $newPicture
-            );
-            $pictureDefault->setFigure($figure)
-                ->setLinkpictures($newPicture)
-                ->setFirstImage(1)
-                ->setAlt('snow');
-            if ($figure->getVideolinks()->count() > 0) {
-                foreach ($figure->getVideolinks() as $video) {
-                    $videoEmbed = preg_match(
-                        $patternYT,
-                        $video->getLinkvideo(),
-                        $matches
-                    );
-                    $linkToStock = 'https://www.youtube.com/embed/' . $matches[1];
-                    $video->setLinkvideo($linkToStock);
-                }
-            }
-            $this->manager->persist($figure);
-            $this->manager->flush();
-            $this->manager->persist($pictureDefault);
-            $this->manager->flush();
-            $this->bag->add('success', 'Votre figure a été ajouter');
+            $this->addFigureLessPictures($figure);
         } else {
-            /**
-             *Return all differents images and check if at least one image
-             *is "image_first" otherwise the fist image is changed image_first = true
-             *
-             * @var array $elements
-             */
-            $elements = $figure->getPictureslinks()->getValues();
-            $bool = 0;
-            foreach ($elements as $first) {
-                if ($first->getFirstImage() == false) {
-                    $bool = 0;
-                } else {
-                    $bool = 1;
-                }
-            }
-            if ($bool == 0) {
-                $elements[0]->setFirstImage(1);
-            }
-
-            foreach ($figure->getPictureslinks() as $picture) {
-                /**
-                 *
-                 *
-                 * @var UploadedFile $nameImage
-                 */
-                $nameImage = $picture->getPicture();
-                $originalName = $nameImage->getClientOriginalName();
-                $safeFilename = transliterator_transliterate(
-                    'Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()',
-                    $originalName
-                );
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $nameImage->guessExtension();
-                try {
-                    $nameImage->move(
-                        $this->tricksPicturesDirectory,
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-                $picture->setLinkpictures($newFilename);
-            }
-            foreach ($figure->getVideolinks() as $video) {
-                $videoEmbed = preg_match(
-                    $patternYT,
-                    $video->getLinkvideo(),
-                    $matches
-                );
-                $linkToStock = 'https://www.youtube.com/embed/' . $matches[1];
-                $video->setLinkvideo($linkToStock);
-            }
-
+            $this->hasFirstImage($figure);
+            $this->setPicturesToFigure($figure);
+            $this->addVideosToFigure($figure, Videolink::PATTERNYT);
             $this->manager->persist($figure);
             $this->manager->flush();
             $this->bag->add('success', 'Votre figure a été ajouter');
         }
     }
 
+    /**
+     * @param Figure $figure
+     * @throws \Exception
+     */
     public function updateTrick(Figure $figure)
     {
         $figure->setDateupdate(new \DateTime('now'));
         $this->manager->persist($figure);
         $this->manager->flush();
         $this->bag->add('success', 'Votre figure a été mise a jour');
+    }
+
+    /**
+     * @param $figure
+     * @param string $patternYT
+     * @param $matches
+     * @return mixed
+     */
+    public function addVideosToFigure($figure, string $patternYT)
+    {
+        /** @var Videolink $video */
+        /** @var  Figure $figure */
+        foreach ($figure->getVideolinks() as $video) {
+            $videoEmbed = preg_match(
+                $patternYT,
+                $video->getLinkvideo(),
+                $matches
+            );
+            $linkToStock = 'https://www.youtube.com/embed/' . $matches[1];
+            $video->setLinkvideo($linkToStock);
+        }
+        return $matches;
+    }
+
+    /**
+     * @param $figure
+     */
+    public function addFigureLessPictures($figure): void
+    {
+        /** @var Filesystem $filesystem */
+        $filesystem = new Filesystem();
+        $pictureDefault = new Pictureslink();
+        $randId = rand(0, 2);
+        $randPicture = Pictureslink::PICTURELINKTRICKRAND[$randId];
+        $newPicture = $randPicture . '-' . uniqid() . '.jpg';
+        $filesystem->copy(
+            $this->tricksPicturesDirectory . $randPicture,
+            $this->tricksPicturesDirectory . $newPicture
+        );
+        $pictureDefault->setFigure($figure)
+            ->setLinkpictures($newPicture)
+            ->setFirstImage(1)
+            ->setAlt('snow');
+        if ($figure->getVideolinks()->count() > 0) {
+            $this->addVideosToFigure($figure, Videolink::PATTERNYT);
+        }
+        $this->manager->persist($figure);
+        $this->manager->flush();
+        $this->manager->persist($pictureDefault);
+        $this->manager->flush();
+        $this->bag->add('success', 'Votre figure a été ajouter');
+    }
+
+    /**
+     * @param $figure
+     */
+    public function hasFirstImage($figure): void
+    {
+        /**
+         *Ckeck all differents images and check if at least one image
+         *is "image_first" otherwise the fist image is changed image_first = true
+         *
+         * @var array $elements
+         */
+        /** @var  Figure $figure */
+        $elements = $figure->getPictureslinks()->getValues();
+        $bool = 0;
+        foreach ($elements as $first) {
+            if ($first->getFirstImage() == false) {
+                $bool = 0;
+            } else {
+                $bool = 1;
+            }
+        }
+        if ($bool == 0) {
+            $elements[0]->setFirstImage(1);
+        }
+    }
+
+    /**
+     * @param $figure
+     */
+    public function setPicturesToFigure($figure): void
+    {
+        /** @var Pictureslink $picture */
+        /** @var  Figure $figure */
+        foreach ($figure->getPictureslinks() as $picture) {
+            /**
+             *
+             *
+             * @var UploadedFile $nameImage
+             */
+            $nameImage = $picture->getPicture();
+            $originalName = $nameImage->getClientOriginalName();
+            $safeFilename = transliterator_transliterate(
+                'Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()',
+                $originalName
+            );
+            $newFilename = $safeFilename . '-' . uniqid() . '.' . $nameImage->guessExtension();
+            try {
+                $nameImage->move(
+                    $this->tricksPicturesDirectory,
+                    $newFilename
+                );
+            } catch (FileException $e) {
+                // ... handle exception if something happens during file upload
+            }
+            $picture->setLinkpictures($newFilename);
+        }
     }
 }
