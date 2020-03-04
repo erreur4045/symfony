@@ -6,16 +6,12 @@
         "/build/vendors~addpictures~addvideos~app~carrousel~checkbox~deletecheckbox~loadmorecoms~loadmoretricks.js",
         "/build/vendors~app.js",
         "/build/app.js"
-      ],
-      "css": [
-        "/build/app.css"
       ]
     },
     "addpictures": {
       "js": [
         "/build/runtime.js",
         "/build/vendors~addpictures~addvideos~app~carrousel~checkbox~deletecheckbox~loadmorecoms~loadmoretricks.js",
-        "/build/vendors~addpictures~addvideos~carrousel.js",
         "/build/addpictures.js"
       ]
     },
@@ -23,7 +19,6 @@
       "js": [
         "/build/runtime.js",
         "/build/vendors~addpictures~addvideos~app~carrousel~checkbox~deletecheckbox~loadmorecoms~loadmoretricks.js",
-        "/build/vendors~addpictures~addvideos~carrousel.js",
         "/build/addvideos.js"
       ]
     },
@@ -38,8 +33,6 @@
       "js": [
         "/build/runtime.js",
         "/build/vendors~addpictures~addvideos~app~carrousel~checkbox~deletecheckbox~loadmorecoms~loadmoretricks.js",
-        "/build/vendors~addpictures~addvideos~carrousel.js",
-        "/build/vendors~carrousel.js",
         "/build/carrousel.js"
       ]
     },
