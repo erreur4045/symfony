@@ -12,20 +12,42 @@
 
 namespace App\Actions\Medias\Video;
 
-use App\Actions\OwnAbstractController;
 use App\Entity\Videolink;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class DeleteVideo extends OwnAbstractController
+/**
+ * @Route("/media/delete/video/{id}", name="delete.video")
+ * @IsGranted("ROLE_USER")
+ */
+class DeleteVideo
 {
+    /** @var UrlGeneratorInterface  */
+    private $router;
+    /** @var FlashBagInterface  */
+    private $bag;
+    /** @var EntityManagerInterface  */
+    private $manager;
+
     /**
-     * @Route("/media/delete/video/{id}", name="delete.video")
-     * @IsGranted("ROLE_USER")
+     * DeleteVideo constructor.
+     * @param UrlGeneratorInterface $router
+     * @param FlashBagInterface $bag
+     * @param EntityManagerInterface $manager
      */
-    public function deleteVideo(Request $request)
+    public function __construct(UrlGeneratorInterface $router, FlashBagInterface $bag, EntityManagerInterface $manager)
+    {
+        $this->router = $router;
+        $this->bag = $bag;
+        $this->manager = $manager;
+    }
+
+    public function __invoke(Request $request)
     {
         $video = $this->manager->getRepository(Videolink::class)->findBy(['id' => $request->attributes->getInt('id')]);
         $this->manager->remove($video[0]);

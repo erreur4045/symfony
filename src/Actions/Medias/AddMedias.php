@@ -12,22 +12,66 @@
 
 namespace App\Actions\Medias;
 
-use App\Actions\OwnAbstractController;
 use App\Entity\Figure;
 use App\Form\FigureAddMediaType;
+use App\Services\FormResolvers\FormResolverMedias;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Environment;
 
-class AddMedias extends OwnAbstractController
+/**
+ * @Route("/edit/medias/{slug}", name="add.medias")
+ * @IsGranted("ROLE_USER")
+ */
+class AddMedias
 {
+    /** @var EntityManagerInterface  */
+    private $manager;
+    /** @var FlashBagInterface  */
+    private $bag;
+    /** @var Environment  */
+    private $environment;
+    /** @var UrlGeneratorInterface  */
+    private $router;
+    /** @var FormResolverMedias  */
+    private $formResolverMedias;
+
     /**
-     * @Route("/edit/medias/{slug}", name="add.medias")
-     * @IsGranted("ROLE_USER")
+     * AddMedias constructor.
+     * @param EntityManagerInterface $manager
+     * @param FlashBagInterface $bag
+     * @param Environment $environment
+     * @param UrlGeneratorInterface $router
+     * @param FormResolverMedias $formResolverMedias
      */
-    public function editMedias(Request $request)
+    public function __construct(
+        EntityManagerInterface $manager,
+        FlashBagInterface $bag,
+        Environment $environment,
+        UrlGeneratorInterface $router,
+        FormResolverMedias $formResolverMedias
+    ) {
+        $this->manager = $manager;
+        $this->bag = $bag;
+        $this->environment = $environment;
+        $this->router = $router;
+        $this->formResolverMedias = $formResolverMedias;
+    }
+
+    /**
+     * @param Request $request
+     * @return RedirectResponse|Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function __invoke(Request $request)
     {
         /** @var Figure $figure */
         $figure = $this->manager->getRepository(Figure::class)->findOneBy(

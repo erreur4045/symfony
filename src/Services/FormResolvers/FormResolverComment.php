@@ -1,21 +1,39 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\FormResolvers;
 
-use App\Controller\MailController;
 use App\Entity\Comments;
 use App\Entity\Figure;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class FormResolverComment extends FormResolver
 {
+    /** @var EntityManagerInterface  */
+    private $manager;
+    /** @var FormFactoryInterface  */
+    protected $formFactory;
+
+    /**
+     * FormResolverComment constructor.
+     * @param EntityManagerInterface $manager
+     * @param FormFactoryInterface $formFactory
+     */
+    public function __construct(EntityManagerInterface $manager, FormFactoryInterface $formFactory)
+    {
+        $this->manager = $manager;
+        $this->formFactory = $formFactory;
+        parent::__construct($formFactory);
+    }
+
+
+    /**
+     * @param FormInterface $form
+     * @param Comments $comment
+     * @throws \Exception
+     */
     public function updateCom(FormInterface $form, Comments $comment)
     {
         $comment->setText($form->getData()->getText())
@@ -24,6 +42,12 @@ class FormResolverComment extends FormResolver
         $this->manager->flush();
     }
 
+    /**
+     * @param FormInterface $form
+     * @param User $user
+     * @param Figure $figure
+     * @throws \Exception
+     */
     public function addCom(FormInterface $form, User $user, Figure $figure)
     {
         $comment = $form->getData();

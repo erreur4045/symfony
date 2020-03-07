@@ -12,21 +12,66 @@
 
 namespace App\Actions\Trick;
 
-use App\Actions\OwnAbstractController;
 use App\Entity\User;
 use App\Form\FigureType;
+use App\Services\FormResolvers\FormResolverTricks;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Twig\Environment;
 
-class AddTrick extends OwnAbstractController
+/**
+ * @Route("/addtrick", name="addtrick")
+ */
+class AddTrick
 {
+    /** @var Environment  */
+    private $templating;
+    /** @var UrlGeneratorInterface  */
+    private $router;
+    /** @var EntityManagerInterface  */
+    private $manager;
+    /** @var TokenStorageInterface  */
+    private $tokenStorage;
+    /** @var FormResolverTricks */
+    private $formResolverTricks;
+
     /**
-     * @Route("/addtrick", name="addtrick")
+     * AddTrick constructor.
+     * @param Environment $templating
+     * @param UrlGeneratorInterface $router
+     * @param EntityManagerInterface $manager
+     * @param TokenStorageInterface $tokenStorage
+     * @param FormResolverTricks $formResolverTricks
      */
-    public function addTrick(Request $request)
+    public function __construct(
+        Environment $templating,
+        UrlGeneratorInterface $router,
+        EntityManagerInterface $manager,
+        TokenStorageInterface $tokenStorage,
+        FormResolverTricks $formResolverTricks
+    ) {
+        $this->templating = $templating;
+        $this->router = $router;
+        $this->manager = $manager;
+        $this->tokenStorage = $tokenStorage;
+        $this->formResolverTricks = $formResolverTricks;
+    }
+
+
+    /**
+     * @param Request $request
+     * @return RedirectResponse|Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function __invoke(Request $request)
     {
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();

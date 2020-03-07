@@ -29,7 +29,7 @@ class Figure
 
     /**
      * @Gedmo\Slug(fields={"name"})
-     * @ORM\Column(                 unique=true, nullable=true, length=255)
+     * @ORM\Column(unique=true, nullable=true, length=255)
      */
     private $slug;
 

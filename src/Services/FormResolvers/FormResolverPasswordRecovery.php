@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\FormResolvers;
 
 use App\Entity\User;
+use App\Services\OwnTools\MailSender;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -12,6 +13,45 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class FormResolverPasswordRecovery extends FormResolver
 {
+    /** @var EntityManagerInterface  */
+    private $manager;
+    /** @var FlashBagInterface  */
+    private $bag;
+    /** @var UrlGeneratorInterface  */
+    private $router;
+    /** @var MailSender  */
+    private $mailSender;
+    /** @var FormFactoryInterface  */
+    protected $formFactory;
+
+    /**
+     * FormResolverPasswordRecovery constructor.
+     * @param EntityManagerInterface $manager
+     * @param FlashBagInterface $bag
+     * @param UrlGeneratorInterface $router
+     * @param MailSender $mailSender
+     * @param FormFactoryInterface $formFactory
+     */
+    public function __construct(
+        EntityManagerInterface $manager,
+        FlashBagInterface $bag,
+        UrlGeneratorInterface $router,
+        MailSender $mailSender,
+        FormFactoryInterface $formFactory
+    ) {
+        $this->manager = $manager;
+        $this->bag = $bag;
+        $this->router = $router;
+        $this->mailSender = $mailSender;
+        $this->formFactory = $formFactory;
+        parent::__construct($formFactory);
+    }
+
+
+    /**
+     * @param FormInterface $form
+     * @return RedirectResponse
+     */
     public function treatment(FormInterface $form)
     {
         $data = $form->getData();

@@ -1,21 +1,66 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\FormResolvers;
 
 use App\Entity\Figure;
 use App\Entity\Pictureslink;
 use App\Entity\User;
 use App\Entity\Videolink;
+use App\Services\OwnTools\UploaderPicture;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class FormResolverMedias extends FormResolver
 {
+    /** @var EntityManagerInterface  */
+    private $manager;
+    /** @var FlashBagInterface  */
+    private $bag;
+    /** @var UploaderPicture  */
+    private $uploaderPicture;
+    /** @var Filesystem  */
+    private $filesystem;
+    /** @var string */
+    private $tricksPicturesDirectory;
+    /** @var FormFactoryInterface  */
+    protected $formFactory;
+
+    /**
+     * FormResolverMedias constructor.
+     * @param EntityManagerInterface $manager
+     * @param FlashBagInterface $bag
+     * @param UploaderPicture $uploaderPicture
+     * @param Filesystem $filesystem
+     * @param string $tricksPicturesDirectory
+     * @param FormFactoryInterface $formFactory
+     */
+    public function __construct(
+        EntityManagerInterface $manager,
+        FlashBagInterface $bag,
+        UploaderPicture $uploaderPicture,
+        Filesystem $filesystem,
+        string $tricksPicturesDirectory,
+        FormFactoryInterface $formFactory
+    ) {
+        $this->manager = $manager;
+        $this->bag = $bag;
+        $this->uploaderPicture = $uploaderPicture;
+        $this->filesystem = $filesystem;
+        $this->tricksPicturesDirectory = $tricksPicturesDirectory;
+        $this->formFactory = $formFactory;
+        parent::__construct($formFactory);
+    }
+
+
+    /**
+     * @param FormInterface $form
+     * @param User $user
+     */
     public function updateProfilePicture(FormInterface $form, User $user)
     {
 
@@ -28,7 +73,12 @@ class FormResolverMedias extends FormResolver
         $this->bag->add('success', 'Votre avatar a été modifié');
     }
 
-    public function updatePictureTrick(FormInterface $form, $user, Figure $figure, Pictureslink $exPicture)
+    /**
+     * @param FormInterface $form
+     * @param Figure $figure
+     * @param Pictureslink $exPicture
+     */
+    public function updatePictureTrick(FormInterface $form, Figure $figure, Pictureslink $exPicture)
     {
         /** @var Pictureslink $newPicture */
         $newPicture = $form->getData();
@@ -68,13 +118,18 @@ class FormResolverMedias extends FormResolver
         }
     }
 
+    /**
+     * @param FormInterface $form
+     * @param Figure $figure
+     * @param null $exVideo
+     */
     public function updateVideoLink(FormInterface $form, Figure $figure, $exVideo = null)
     {
         /** @var Videolink $newVideo */
         $newVideo = $form->getData();
         $newVideoLink = $form['linkvideo']->getData();
         $videoEmbed = preg_match(
-            '/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:&list=(\S+))?$/',
+            Videolink::PATTERNYT,
             $newVideoLink,
             $matches
         );
@@ -86,6 +141,10 @@ class FormResolverMedias extends FormResolver
         $this->manager->flush();
     }
 
+    /**
+     * @param FormInterface $form
+     * @param Figure $figure
+     */
     public function updateMedias(FormInterface $form, Figure $figure)
     {
         /** @var UploadedFile $uploadedFile */
@@ -116,7 +175,7 @@ class FormResolverMedias extends FormResolver
         $newVideoLink = $form['videolinks']->getData();
         foreach ($newVideoLink as $linkToUpload) {
             $videoEmbed = preg_match(
-                '/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:&list=(\S+))?$/',
+                Videolink::PATTERNYT,
                 $linkToUpload->getLinkvideo(),
                 $matches
             );

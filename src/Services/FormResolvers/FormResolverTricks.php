@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\FormResolvers;
 
 use App\Entity\Figure;
 use App\Entity\Pictureslink;
@@ -13,11 +13,45 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class FormResolverTricks extends FormResolver
 {
 
+    /** @var string */
+    private $tricksPicturesDirectory;
+    /** @var EntityManagerInterface  */
+    private $manager;
+    /** @var FlashBagInterface  */
+    private $bag;
+    /** @var FormFactoryInterface  */
+    protected $formFactory;
+
+    /**
+     * FormResolverTricks constructor.
+     * @param string $tricksPicturesDirectory
+     * @param EntityManagerInterface $manager
+     * @param FlashBagInterface $bag
+     * @param FormFactoryInterface $formFactory
+     */
+    public function __construct(
+        string $tricksPicturesDirectory,
+        EntityManagerInterface $manager,
+        FlashBagInterface $bag,
+        FormFactoryInterface $formFactory
+    ) {
+        $this->tricksPicturesDirectory = $tricksPicturesDirectory;
+        $this->manager = $manager;
+        $this->bag = $bag;
+        $this->formFactory = $formFactory;
+        parent::__construct($formFactory);
+    }
+
+
+    /**
+     * @param FormInterface $form
+     * @param User $user
+     * @throws \Exception
+     */
     public function addTrick(FormInterface $form, User $user)
     {
         /** @var  $figure */
@@ -52,7 +86,6 @@ class FormResolverTricks extends FormResolver
      * @param $figure
      * @param string $patternYT
      * @param $matches
-     * @return mixed
      */
     public function addVideosToFigure($figure, string $patternYT)
     {
@@ -67,7 +100,6 @@ class FormResolverTricks extends FormResolver
             $linkToStock = 'https://www.youtube.com/embed/' . $matches[1];
             $video->setLinkvideo($linkToStock);
         }
-        return $matches;
     }
 
     /**

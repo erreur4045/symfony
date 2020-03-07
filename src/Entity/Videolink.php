@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\VideolinkRepository")
@@ -20,6 +21,12 @@ class Videolink
 
     /**
      * @ORM\Column(type="string", length=512)
+     * @Assert\NotBlank
+     * @Assert\Regex(
+     *     pattern="/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:&list=(\S+))?$/",
+     *     match="false",
+     *     message="Vous ne pouvez envoyer que des videos ou playlistes YouTube, merci de verrifer votre liens"
+     * )
      */
     private $linkvideo;
 

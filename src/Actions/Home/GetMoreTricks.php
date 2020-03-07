@@ -2,18 +2,42 @@
 
 namespace App\Actions\Home;
 
-use App\Actions\OwnAbstractController;
 use App\Entity\Figure;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
 
-class GetMoreTricks extends OwnAbstractController
+/**
+ * @Route("/more_tricks", name="more.tricks")
+ */
+class GetMoreTricks
 {
+    /** @var Environment  */
+    private $environment;
+    /** @var EntityManagerInterface  */
+    private $manager;
+
     /**
-     * @Route("/more_tricks", name="more.tricks")
+     * GetMoreTricks constructor.
+     * @param Environment $environment
+     * @param EntityManagerInterface $manager
      */
-    public function loadTricks(Request $request)
+    public function __construct(Environment $environment, EntityManagerInterface $manager)
+    {
+        $this->environment = $environment;
+        $this->manager = $manager;
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function __invoke(Request $request)
     {
         $pageId = $request->query->get('page');
         $offset = $pageId * Figure::LIMIT_PER_PAGE - Figure::LIMIT_PER_PAGE ;
