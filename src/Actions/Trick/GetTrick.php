@@ -12,35 +12,77 @@
 
 namespace App\Actions\Trick;
 
-use App\Actions\OwnAbstractController;
 use App\Entity\Comments;
 use App\Entity\Figure;
 use App\Entity\Pictureslink;
 use App\Entity\User;
 use App\Entity\Videolink;
 use App\Form\CommentType;
+use App\Services\FormResolvers\FormResolverComment;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Twig\Environment;
 
-class GetTrick extends OwnAbstractController
+/**
+ * @Route("/tricks/details/{slug}", name="trick")
+ */
+class GetTrick
 {
+    /** @var Environment  */
+    private $templating;
+    /** @var UrlGeneratorInterface  */
+    private $router;
+    /** @var EntityManagerInterface  */
+    private $manager;
+    /** @var FlashBagInterface  */
+    private $bag;
+    /** @var TokenStorageInterface  */
+    private $tokenStorage;
+    /** @var FormResolverComment  */
+    private $formResolverComment;
+
     /**
-     * @Route("/tricks/details/{slug}", name="trick")
+     * GetTrick constructor.
+     * @param Environment $templating
+     * @param UrlGeneratorInterface $router
+     * @param EntityManagerInterface $manager
+     * @param FlashBagInterface $bag
+     * @param TokenStorageInterface $tokenStorage
+     * @param FormResolverComment $formResolverComment
+     */
+    public function __construct(
+        Environment $templating,
+        UrlGeneratorInterface $router,
+        EntityManagerInterface $manager,
+        FlashBagInterface $bag,
+        TokenStorageInterface $tokenStorage,
+        FormResolverComment $formResolverComment
+    ) {
+        $this->templating = $templating;
+        $this->router = $router;
+        $this->manager = $manager;
+        $this->bag = $bag;
+        $this->tokenStorage = $tokenStorage;
+        $this->formResolverComment = $formResolverComment;
+    }
+
+    /**
      * @param Request $request
      * @return RedirectResponse|Response
      * @throws EntityNotFoundException
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
-    public function getTrick(Request $request)
+    public function __invoke(Request $request)
     {
         /** @var Figure $figure */
         $figure = $this->manager->getRepository(Figure::class)

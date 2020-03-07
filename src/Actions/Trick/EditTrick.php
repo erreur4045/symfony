@@ -12,11 +12,12 @@
 
 namespace App\Actions\Trick;
 
-use App\Actions\OwnAbstractController;
 use App\Entity\Figure;
 use App\Entity\Pictureslink;
 use App\Entity\Videolink;
 use App\Form\FigureEditType;
+use App\Services\FormResolvers\FormResolverTricks;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -24,14 +25,51 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Environment;
 
-class EditTrick extends OwnAbstractController
+/**
+ * @Route("/edit/{slug}", name="edit.trick")
+ * @IsGranted("ROLE_USER")
+ */
+class EditTrick
 {
+    /** @var Environment  */
+    private $templating;
+    /** @var UrlGeneratorInterface  */
+    private $router;
+    /** @var EntityManagerInterface  */
+    private $manager;
+    /** @var FormResolverTricks */
+    private $formResolverTricks;
+
     /**
-     * @Route("/edit/{slug}", name="edit.trick")
-     * @IsGranted("ROLE_USER")
+     * EditTrick constructor.
+     * @param Environment $templating
+     * @param UrlGeneratorInterface $router
+     * @param EntityManagerInterface $manager
+     * @param FormResolverTricks $formResolverTricks
      */
-    public function editTrick(Request $request)
+    public function __construct(
+        Environment $templating,
+        UrlGeneratorInterface $router,
+        EntityManagerInterface $manager,
+        FormResolverTricks $formResolverTricks
+    ) {
+        $this->templating = $templating;
+        $this->router = $router;
+        $this->manager = $manager;
+        $this->formResolverTricks = $formResolverTricks;
+    }
+
+    /**
+     * @param Request $request
+     * @return RedirectResponse|Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function __invoke(Request $request)
     {
         /** @var Figure $datatricks */
         $figure = $this->manager->getRepository(Figure::class)

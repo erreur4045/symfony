@@ -12,31 +12,42 @@
 
 namespace App\Actions\Security;
 
-use App\Actions\OwnAbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
+use Twig\Environment;
 
-class Login extends OwnAbstractController
+/**
+ * @Route("/login", name="app_login")
+ */
+class Login
 {
+    /** @var Environment  */
+    private $environment;
+
     /**
-     * @Route("/login", name="app_login")
-     * @param           AuthenticationUtils $authenticationUtils
-     * @return          Response
-     * @throws          LoaderError
-     * @throws          RuntimeError
-     * @throws          SyntaxError
+     * Login constructor.
+     * @param Environment $environment
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function __construct(Environment $environment)
+    {
+        $this->environment = $environment;
+    }
+
+    /**
+     * @param AuthenticationUtils $authenticationUtils
+     * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function __invoke(AuthenticationUtils $authenticationUtils): Response
     {
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
-        return new Response($this->templating->render(
+        return new Response($this->environment->render(
             'security/login.html.twig',
             ['last_username' => $lastUsername,
                 'error' => $error]

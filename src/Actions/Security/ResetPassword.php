@@ -12,22 +12,61 @@
 
 namespace App\Actions\Security;
 
-use App\Actions\OwnAbstractController;
 use App\Entity\User;
 use App\Form\ResetPasswordType;
+use App\Services\FormResolvers\FormResolverRecoveryPassword;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Twig\Environment;
 
-class ResetPassword extends OwnAbstractController
+/**
+ * @Route("/reset_password/{slug}", name="app_recoverypassword")
+ */
+class ResetPassword
 {
+    /** @var Environment  */
+    private $templating;
+    /** @var UrlGeneratorInterface  */
+    private $router;
+    /** @var EntityManagerInterface  */
+    private $manager;
+    /** @var FormResolverRecoveryPassword */
+    private $formResolverRecoveryPassword;
+
     /**
-     * @Route("/reset_password/{slug}", name="app_recoverypassword")
+     * ResetPassword constructor.
+     * @param Environment $templating
+     * @param UrlGeneratorInterface $router
+     * @param EntityManagerInterface $manager
+     * @param FormResolverRecoveryPassword $formResolverRecoveryPassword
      */
-    public function changePassword(Request $request, UserPasswordEncoderInterface $encoder)
+    public function __construct(
+        Environment $templating,
+        UrlGeneratorInterface $router,
+        EntityManagerInterface $manager,
+        FormResolverRecoveryPassword $formResolverRecoveryPassword
+    ) {
+        $this->templating = $templating;
+        $this->router = $router;
+        $this->manager = $manager;
+        $this->formResolverRecoveryPassword = $formResolverRecoveryPassword;
+    }
+
+    /**
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * @return RedirectResponse|Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function __invoke(Request $request, UserPasswordEncoderInterface $encoder)
     {
         /** @var User $user */
         $user = $this->manager->getRepository(User::class)

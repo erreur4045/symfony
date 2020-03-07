@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\OwnTools;
 
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -11,6 +11,7 @@ class MailSender
 {
     /** @var MailerInterface  */
     private $mailer;
+
     public function __construct(MailerInterface $mailer)
     {
         $this->mailer = $mailer;

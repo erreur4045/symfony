@@ -12,17 +12,35 @@
 
 namespace App\Actions\Home;
 
-use App\Actions\OwnAbstractController;
 use App\Entity\Figure;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Twig\Environment;
 
-class GetHomePage extends OwnAbstractController
+/**
+ * @Route("/", name="home")
+ */
+class GetHomePage
 {
+    /** @var Environment  */
+    private $environment;
+    /** @var EntityManagerInterface  */
+    private $manager;
+
     /**
-     * @Route("/", name="home")
+     * GetHomePage constructor.
+     * @param Environment $environment
+     * @param EntityManagerInterface $manager
      */
-    public function index()
+    public function __construct(Environment $environment, EntityManagerInterface $manager)
+    {
+        $this->environment = $environment;
+        $this->manager = $manager;
+    }
+
+
+    public function __invoke()
     {
         /** @var Figure $figures */
         $figures = $this->manager->getRepository(Figure::class)
