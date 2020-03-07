@@ -9,7 +9,7 @@
  * PHP Version : 7.3.5
  */
 
-namespace App\Services\OwnToolsInterfaces;
+namespace App\Services\Interfaces\OwnToolsInterfaces;
 
 interface MailSenderInterface
 {
