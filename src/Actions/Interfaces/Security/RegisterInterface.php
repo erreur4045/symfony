@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -10,7 +11,6 @@
  */
 
 namespace App\Actions\Interfaces\Security;
-
 
 use App\Services\FormResolvers\FormResolverRegistration;
 use Symfony\Component\HttpFoundation\RedirectResponse;

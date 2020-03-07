@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -11,7 +12,6 @@
 
 namespace App\Actions\Interfaces\Home;
 
-
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +23,15 @@ use Twig\Environment;
  */
 interface GetMoreTricksInterface
 {
-    public function __construct(Environment $environment, EntityManagerInterface $manager);
+    /**
+     * GetMoreTricksInterface constructor.
+     * @param Environment $environment
+     * @param EntityManagerInterface $manager
+     */
+    public function __construct(
+        Environment $environment,
+        EntityManagerInterface $manager
+    );
 
     /**
      * @param Request $request

@@ -2,21 +2,30 @@
 
 namespace App\Services\OwnTools;
 
+use App\Services\Interfaces\OwnTools\MailSenderInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mailer\SentMessage;
 
-class MailSender
+class MailSender implements MailSenderInterface
 {
     /** @var MailerInterface  */
     private $mailer;
 
+    /**
+     * MailSender constructor.
+     * @param MailerInterface $mailer
+     */
     public function __construct(MailerInterface $mailer)
     {
         $this->mailer = $mailer;
     }
 
+    /**
+     * @param $token
+     * @param string $emailUser
+     */
     public function sendEmailWithToken($token, string $emailUser)
     {
         $email = (new TemplatedEmail())

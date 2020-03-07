@@ -3,6 +3,7 @@
 namespace App\Services\FormResolvers;
 
 use App\Entity\User;
+use App\Services\Interfaces\FormResolversInterfaces\FormResolverPasswordRecoveryInterface;
 use App\Services\OwnTools\MailSender;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -11,7 +12,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class FormResolverPasswordRecovery extends FormResolver
+class FormResolverPasswordRecovery extends FormResolver implements FormResolverPasswordRecoveryInterface
 {
     /** @var EntityManagerInterface  */
     private $manager;

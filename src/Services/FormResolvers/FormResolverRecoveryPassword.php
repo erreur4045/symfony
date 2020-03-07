@@ -3,13 +3,14 @@
 namespace App\Services\FormResolvers;
 
 use App\Entity\User;
+use App\Services\Interfaces\FormResolversInterfaces\FormResolverRecoveryPasswordInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class FormResolverRecoveryPassword extends FormResolver
+class FormResolverRecoveryPassword extends FormResolver implements FormResolverRecoveryPasswordInterface
 {
     /** @var EntityManagerInterface  */
     private $manager;

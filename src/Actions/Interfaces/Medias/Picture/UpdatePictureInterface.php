@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -10,7 +11,6 @@
  */
 
 namespace App\Actions\Interfaces\Medias\Picture;
-
 
 use App\Services\FormResolvers\FormResolverMedias;
 use Doctrine\ORM\EntityManagerInterface;
@@ -46,5 +46,11 @@ interface UpdatePictureInterface
         Environment $environment
     );
 
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @return mixed
+     */
     public function __invoke($id, Request $request);
 }

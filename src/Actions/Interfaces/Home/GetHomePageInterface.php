@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -10,7 +11,6 @@
  */
 
 namespace App\Actions\Interfaces\Home;
-
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +27,10 @@ interface GetHomePageInterface
      * @param Environment $environment
      * @param EntityManagerInterface $manager
      */
-    public function __construct(Environment $environment, EntityManagerInterface $manager);
+    public function __construct(
+        Environment $environment,
+        EntityManagerInterface $manager
+    );
 
     /**
      * @return Response

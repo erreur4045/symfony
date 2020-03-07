@@ -5,11 +5,12 @@ namespace App\Services\FormResolvers;
 use App\Entity\Comments;
 use App\Entity\Figure;
 use App\Entity\User;
+use App\Services\Interfaces\FormResolversInterfaces\FormResolverCommentInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 
-class FormResolverComment extends FormResolver
+class FormResolverComment extends FormResolver implements FormResolverCommentInterface
 {
     /** @var EntityManagerInterface  */
     private $manager;

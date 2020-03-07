@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -10,7 +11,6 @@
  */
 
 namespace App\Actions\Interfaces\Medias\Video;
-
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -32,7 +32,11 @@ interface DeleteVideoInterface
      * @param FlashBagInterface $bag
      * @param EntityManagerInterface $manager
      */
-    public function __construct(UrlGeneratorInterface $router, FlashBagInterface $bag, EntityManagerInterface $manager);
+    public function __construct(
+        UrlGeneratorInterface $router,
+        FlashBagInterface $bag,
+        EntityManagerInterface $manager
+    );
 
     /**
      * @param Request $request

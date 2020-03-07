@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -10,7 +11,6 @@
  */
 
 namespace App\Actions\Interfaces\Comments;
-
 
 use App\Entity\Comments;
 use Doctrine\ORM\EntityManagerInterface;
@@ -47,5 +47,8 @@ interface DeleteComInterface
      * @param Request $request
      * @return RedirectResponse
      */
-    public function __invoke(Comments $comment, Request $request);
+    public function __invoke(
+        Comments $comment,
+        Request $request
+    );
 }

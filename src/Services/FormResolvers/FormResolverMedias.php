@@ -6,6 +6,7 @@ use App\Entity\Figure;
 use App\Entity\Pictureslink;
 use App\Entity\User;
 use App\Entity\Videolink;
+use App\Services\Interfaces\FormResolversInterfaces\FormResolverMediasInterface;
 use App\Services\OwnTools\UploaderPicture;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -15,7 +16,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
-class FormResolverMedias extends FormResolver
+class FormResolverMedias extends FormResolver implements FormResolverMediasInterface
 {
     /** @var EntityManagerInterface  */
     private $manager;

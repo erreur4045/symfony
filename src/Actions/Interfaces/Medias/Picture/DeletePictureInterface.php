@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -10,7 +11,6 @@
  */
 
 namespace App\Actions\Interfaces\Medias\Picture;
-
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -41,5 +41,9 @@ interface DeletePictureInterface
         UrlGeneratorInterface $router
     );
 
+    /**
+     * @param $picture
+     * @return mixed
+     */
     public function __invoke($picture);
 }

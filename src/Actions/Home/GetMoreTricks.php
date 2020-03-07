@@ -2,7 +2,6 @@
 
 namespace App\Actions\Home;
 
-
 use App\Actions\Interfaces\Home\GetMoreTricksInterface;
 use App\Entity\Figure;
 use Doctrine\ORM\EntityManagerInterface;

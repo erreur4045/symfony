@@ -3,12 +3,13 @@
 namespace App\Services\OwnTools;
 
 use App\Entity\User;
+use App\Services\Interfaces\OwnTools\UploaderPictureInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class UploaderPicture
+class UploaderPicture implements UploaderPictureInterface
 {
     /** @var string  */
     private $pictureLinkDirectory;
@@ -19,6 +20,12 @@ class UploaderPicture
     /** @var EntityManagerInterface  */
     private $manager;
 
+    /**
+     * UploaderPicture constructor.
+     * @param string $pictureLinkDirectory
+     * @param Filesystem $filesystem
+     * @param EntityManagerInterface $manager
+     */
     public function __construct(
         string $pictureLinkDirectory,
         Filesystem $filesystem,
@@ -29,6 +36,10 @@ class UploaderPicture
         $this->manager = $manager;
     }
 
+    /**
+     * @param UploadedFile $uploadedFile
+     * @param User $user
+     */
     public function uploadProfilePicture(UploadedFile $uploadedFile, User $user)
     {
         if ($uploadedFile) {
@@ -50,6 +61,10 @@ class UploaderPicture
         }
     }
 
+    /**
+     * @param UploadedFile $uploadedFile
+     * @param User $user
+     */
     public function updateProfilePicture(UploadedFile $uploadedFile, User $user)
     {
         $this->filesystem->remove(
