@@ -2,6 +2,7 @@
 
 namespace App\Services\OwnTools;
 
+use App\Entity\Pictureslink;
 use App\Entity\User;
 use App\Services\Interfaces\OwnToolsInterfaces\UploaderPictureInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -67,13 +68,15 @@ class UploaderPicture implements UploaderPictureInterface
      */
     public function updateProfilePicture(UploadedFile $uploadedFile, User $user)
     {
-        $this->filesystem->remove(
-            [
-            '',
-            '',
-            $this->pictureLinkDirectory . $user->getProfilePicture()
-            ]
-        );
+        if (($user->getProfilePicture() != Pictureslink::PICTURELINKUSERRAND) == true) {
+            $this->filesystem->remove(
+                [
+                    '',
+                    '',
+                    $this->pictureLinkDirectory . $user->getProfilePicture()
+                ]
+            );
+        }
         if ($uploadedFile) {
             $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
             // this is needed to safely include the file name as part of the URL
