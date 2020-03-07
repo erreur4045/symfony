@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -22,9 +23,5 @@ interface FormResolverInterface
      * @param null $data
      * @return FormInterface
      */
-    public function getForm(
-        Request $request,
-        string $classType,
-        $data = null
-    ): FormInterface;
+    public function getForm(Request $request, string $classType, $data = null): FormInterface;
 }

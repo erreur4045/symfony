@@ -3,7 +3,7 @@
 namespace App\Services\OwnTools;
 
 use App\Entity\User;
-use App\Services\Interfaces\OwnTools\UploaderPictureInterface;
+use App\Services\Interfaces\OwnToolsInterfaces\UploaderPictureInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;

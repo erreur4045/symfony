@@ -10,7 +10,7 @@
  * PHP Version : 7.3.5
  */
 
-namespace App\Services\Interfaces\OwnTools;
+namespace App\Services\Interfaces\OwnToolsInterfaces;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
