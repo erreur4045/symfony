@@ -129,13 +129,7 @@
                                                         data-slug="{{ path('delete.comment', {id: comment.id}) }}"
                                                         data-message="Êtes-vous sûr de vouloir supprimer cette votre commentaire ?">Supprimer
                                                 </button>
-                                                <button class="btn btn-info text-right p-0 btn_edit_coms"
-                                                        data-id = "{{ comment.id }}" data-url="{{ path('edit.comment', {id: comment.id}) }}"
-                                                ><a>Modifier</a>
-                                                </button>
-                                                <button class="btn btn-info text-right p-0 btn_edit_coms" data-toggle="modal"
-                                                        data-id = "{{ comment.id }}" data-url="{{ path('edit.comment', {id: comment.id}) }}">
-                                                    <a>Modifier via modal</a>
+                                                <button class="btn btn-info text-right p-0"><a href="{{ path('edit.comment', {id: comment.id}) }}" style="color: white">Modifier</a>
                                                 </button>
                                                 </span>
                                         {% endif %}
