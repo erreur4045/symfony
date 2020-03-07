@@ -12,6 +12,7 @@
 
 namespace App\Actions\Security;
 
+use App\Actions\Interfaces\Security\ResetPasswordInterface;
 use App\Entity\User;
 use App\Form\ResetPasswordType;
 use App\Services\FormResolvers\FormResolverRecoveryPassword;
@@ -28,7 +29,7 @@ use Twig\Environment;
 /**
  * @Route("/reset_password/{slug}", name="app_recoverypassword")
  */
-class ResetPassword
+class ResetPassword implements ResetPasswordInterface
 {
     /** @var Environment  */
     private $templating;

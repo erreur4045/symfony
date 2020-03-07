@@ -12,6 +12,7 @@
 
 namespace App\Actions\Security;
 
+use App\Actions\Interfaces\Security\ForgotPasswordInterface;
 use App\Form\PasswordRecoveryMailType;
 use App\Services\FormResolvers\FormResolverPasswordRecovery;
 use Symfony\Component\Form\Form;
@@ -25,7 +26,7 @@ use Twig\Environment;
 /**
  * @Route("/forgot_password", name="app_passwordrecovery")
  */
-class ForgotPassword
+class ForgotPassword implements ForgotPasswordInterface
 {
     /** @var Environment  */
     private $templating;

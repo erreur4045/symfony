@@ -12,6 +12,7 @@
 
 namespace App\Actions\Comments;
 
+use App\Actions\Interfaces\Comments\EditComInterface;
 use App\Entity\Comments;
 use App\Entity\Figure;
 use App\Form\EditComType;
@@ -34,7 +35,7 @@ use Twig\Error\SyntaxError;
  * @Route("/editcom/{id}", name="edit.comment")
  * @IsGranted("ROLE_USER")
 */
-class EditCom
+class EditCom implements EditComInterface
 {
 
     /** @var Environment  */

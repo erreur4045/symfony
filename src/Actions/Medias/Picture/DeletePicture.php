@@ -12,6 +12,7 @@
 
 namespace App\Actions\Medias\Picture;
 
+use App\Actions\Interfaces\Medias\Picture\DeletePictureInterface;
 use App\Entity\Pictureslink;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -25,7 +26,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @Route("/media/delete/picture/{picture}", name="delete.image")
  * @IsGranted("ROLE_USER")
  */
-class DeletePicture
+class DeletePicture implements DeletePictureInterface
 {
     /** @var EntityManagerInterface  */
     private $manager;

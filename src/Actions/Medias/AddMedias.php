@@ -12,6 +12,7 @@
 
 namespace App\Actions\Medias;
 
+use App\Actions\Interfaces\Medias\AddMediasInterface;
 use App\Entity\Figure;
 use App\Form\FigureAddMediaType;
 use App\Services\FormResolvers\FormResolverMedias;
@@ -29,7 +30,7 @@ use Twig\Environment;
  * @Route("/edit/medias/{slug}", name="add.medias")
  * @IsGranted("ROLE_USER")
  */
-class AddMedias
+class AddMedias implements AddMediasInterface
 {
     /** @var EntityManagerInterface  */
     private $manager;

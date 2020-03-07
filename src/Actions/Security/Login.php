@@ -12,6 +12,7 @@
 
 namespace App\Actions\Security;
 
+use App\Actions\Interfaces\Security\LoginInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -20,7 +21,7 @@ use Twig\Environment;
 /**
  * @Route("/login", name="app_login")
  */
-class Login
+class Login implements LoginInterface
 {
     /** @var Environment  */
     private $environment;

@@ -2,6 +2,7 @@
 
 namespace App\Actions\Dashboard;
 
+use App\Actions\Interfaces\Dashboard\GetDashboardInterface;
 use App\Entity\Figure;
 use App\Entity\User;
 use App\Form\ProfilePictureType;
@@ -20,7 +21,7 @@ use Twig\Environment;
  * @Route("/dashboard", name="app_dashboard")
  * @IsGranted("ROLE_USER")
  */
-class GetDashboard
+class GetDashboard implements GetDashboardInterface
 {
     /** @var Environment  */
     private $environment;
@@ -55,6 +56,13 @@ class GetDashboard
         $this->router = $router;
     }
 
+    /**
+     * @param Request $request
+     * @return RedirectResponse|Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function __invoke(Request $request)
     {
         /** @var Figure $figures */

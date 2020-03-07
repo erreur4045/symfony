@@ -12,6 +12,7 @@
 
 namespace App\Actions\Medias\Video;
 
+use App\Actions\Interfaces\Medias\Video\DeleteVideoInterface;
 use App\Entity\Videolink;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -25,7 +26,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @Route("/media/delete/video/{id}", name="delete.video")
  * @IsGranted("ROLE_USER")
  */
-class DeleteVideo
+class DeleteVideo implements DeleteVideoInterface
 {
     /** @var UrlGeneratorInterface  */
     private $router;
@@ -47,6 +48,10 @@ class DeleteVideo
         $this->manager = $manager;
     }
 
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
     public function __invoke(Request $request)
     {
         $video = $this->manager->getRepository(Videolink::class)->findBy(['id' => $request->attributes->getInt('id')]);

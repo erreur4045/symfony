@@ -12,6 +12,7 @@
 
 namespace App\Actions\Trick;
 
+use App\Actions\Interfaces\Trick\DeleteTrickInterface;
 use App\Entity\Figure;
 use App\Entity\Pictureslink;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,7 +27,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @Route("/delete/{slug}", name="delete.trick")
  * @IsGranted("ROLE_USER")
  */
-class DeleteTrick
+class DeleteTrick implements DeleteTrickInterface
 {
 
     /** @var UrlGeneratorInterface  */

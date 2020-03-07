@@ -12,6 +12,7 @@
 
 namespace App\Actions\Medias\Picture;
 
+use App\Actions\Interfaces\Medias\Picture\UpdatePictureInterface;
 use App\Entity\Figure;
 use App\Entity\Pictureslink;
 use App\Entity\User;
@@ -32,7 +33,7 @@ use Twig\Environment;
  * @Route("/media/update/picture/{id}", name="update.picture")
  * @IsGranted("ROLE_USER")
  */
-class UpdatePicture
+class UpdatePicture implements UpdatePictureInterface
 {
     /** @var EntityManagerInterface  */
     private $manager;
