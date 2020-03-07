@@ -2,7 +2,8 @@
 
 namespace App\Services\OwnTools;
 
-use App\Services\Interfaces\OwnTools\MailSenderInterface;
+
+use App\Services\OwnToolsInterfaces\MailSenderInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;

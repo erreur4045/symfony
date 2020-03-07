@@ -2,7 +2,8 @@
 
 namespace App\Services\FormResolvers;
 
-use App\Services\Interfaces\FormResolvers\FormResolverInterface;
+
+use App\Services\Interfaces\FormResolversInterfaces\FormResolverInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;

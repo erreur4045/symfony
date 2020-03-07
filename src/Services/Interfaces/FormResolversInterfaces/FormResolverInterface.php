@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -10,20 +9,13 @@
  * PHP Version : 7.3.5
  */
 
-namespace App\Services\Interfaces\FormResolvers;
+namespace App\Services\Interfaces\FormResolversInterfaces;
 
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 interface FormResolverInterface
 {
-    /**
-     * FormResolver constructor.
-     * @param FormFactoryInterface $formFactory
-     */
-    public function __construct(FormFactoryInterface $formFactory);
-
     /**
      * @param Request $request
      * @param string $classType
