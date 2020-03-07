@@ -58,12 +58,3 @@ function addPictureFormDeleteLink($tagFormLi) {
     });
 }
 
-$(function () {
-    $(document).delegate('.custom-file-input', 'change', function () {
-        let inputFile = $(event.currentTarget);
-        let labelToShow = $(inputFile[0].activeElement.labels[1]);
-        $(inputFile)
-            .find(labelToShow)
-            .html(inputFile[0].activeElement.files[0].name);
-    });
-});
