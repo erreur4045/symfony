@@ -2,6 +2,7 @@
 
 namespace App\Actions\Comments;
 
+use App\Actions\Interfaces\Comments\MoreComInterface;
 use App\Actions\OwnAbstractController;
 use App\Entity\Comments;
 use App\Form\FigureType;
@@ -22,7 +23,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
 
-class MoreCom
+/**
+ * Class MoreCom
+ * @package App\Actions\Comments
+ * @Route("tricks/details/more_com", name="more.coms")
+ *
+ */
+class MoreCom implements MoreComInterface
 {
     /** @var UrlGeneratorInterface  */
     private $router;
@@ -59,7 +66,11 @@ class MoreCom
     }
 
     /**
-     * @Route("tricks/details/more_com", name="more.coms")
+     * @param Request $request
+     * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function __invoke(Request $request)
     {

@@ -12,6 +12,7 @@
 
 namespace App\Actions\Trick;
 
+use App\Actions\Interfaces\Trick\AddTrickInterface;
 use App\Entity\User;
 use App\Form\FigureType;
 use App\Services\FormResolvers\FormResolverTricks;
@@ -28,7 +29,7 @@ use Twig\Environment;
 /**
  * @Route("/addtrick", name="addtrick")
  */
-class AddTrick
+class AddTrick implements AddTrickInterface
 {
     /** @var Environment  */
     private $templating;

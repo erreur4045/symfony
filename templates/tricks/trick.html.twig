@@ -107,10 +107,10 @@
                             </div>
                         {% endif %}
                         {% if comment %}
-                            <div class="col-12" >
+                            <div class="col-12" id="coms_list">
                                 <h1 id="comment" class="text-center">Commentaires :</h1>
                                 {% for comment in comment %}
-                                    <div class="col-12" id="coms_list">
+                                    <div class="col-12" >
                                         <img src="{{ asset('uploads/profilepicture/' ~ comment.user.profilePicture) }}"
                                              class="mr-3 rounded-circle embed-responsive userimg d-inline-block p-1"
                                              alt="{{ 'image_utilisateur' }}">

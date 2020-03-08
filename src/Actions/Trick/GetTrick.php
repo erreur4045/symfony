@@ -12,6 +12,7 @@
 
 namespace App\Actions\Trick;
 
+use App\Actions\Interfaces\Trick\GetTrickInterface;
 use App\Entity\Comments;
 use App\Entity\Figure;
 use App\Entity\Pictureslink;
@@ -34,7 +35,7 @@ use Twig\Environment;
 /**
  * @Route("/tricks/details/{slug}", name="trick")
  */
-class GetTrick
+class GetTrick implements GetTrickInterface
 {
     /** @var Environment  */
     private $templating;

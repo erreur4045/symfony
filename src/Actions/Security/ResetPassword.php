@@ -12,6 +12,7 @@
 
 namespace App\Actions\Security;
 
+use App\Actions\Interfaces\Security\ResetPasswordInterface;
 use App\Entity\User;
 use App\Form\ResetPasswordType;
 use App\Services\FormResolvers\FormResolverRecoveryPassword;
@@ -28,7 +29,7 @@ use Twig\Environment;
 /**
  * @Route("/reset_password/{slug}", name="app_recoverypassword")
  */
-class ResetPassword
+class ResetPassword implements ResetPasswordInterface
 {
     /** @var Environment  */
     private $templating;
@@ -70,7 +71,7 @@ class ResetPassword
     {
         /** @var User $user */
         $user = $this->manager->getRepository(User::class)
-            ->findOneBy(['token' => $request->query->get('slug')]);
+            ->findOneBy(['token' => $request->attributes->get('slug')]);
         if (!empty($user)) {
         /** @var Form $form */
             $form = $this->formResolverRecoveryPassword->getForm($request, ResetPasswordType::class);

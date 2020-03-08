@@ -2,6 +2,7 @@
 
 namespace App\Actions\Home;
 
+use App\Actions\Interfaces\Home\GetMoreTricksInterface;
 use App\Entity\Figure;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,18 +13,13 @@ use Twig\Environment;
 /**
  * @Route("/more_tricks", name="more.tricks")
  */
-class GetMoreTricks
+class GetMoreTricks implements GetMoreTricksInterface
 {
     /** @var Environment  */
     private $environment;
     /** @var EntityManagerInterface  */
     private $manager;
 
-    /**
-     * GetMoreTricks constructor.
-     * @param Environment $environment
-     * @param EntityManagerInterface $manager
-     */
     public function __construct(Environment $environment, EntityManagerInterface $manager)
     {
         $this->environment = $environment;

@@ -12,9 +12,11 @@
 
 namespace App\Actions\Comments;
 
+use App\Actions\Interfaces\Comments\EditComInterface;
 use App\Entity\Comments;
 use App\Entity\Figure;
 use App\Form\EditComType;
+use App\Services\FormResolvers\FormResolverComment;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -33,7 +35,7 @@ use Twig\Error\SyntaxError;
  * @Route("/editcom/{id}", name="edit.comment")
  * @IsGranted("ROLE_USER")
 */
-class EditCom
+class EditCom implements EditComInterface
 {
 
     /** @var Environment  */
@@ -46,6 +48,8 @@ class EditCom
     private $bag;
     /** @var TokenStorageInterface  */
     private $tokenStorage;
+    /** @var FormResolverComment */
+    private $formResolverComment;
 
     /**
      * EditCom constructor.
@@ -54,22 +58,26 @@ class EditCom
      * @param EntityManagerInterface $manager
      * @param FlashBagInterface $bag
      * @param TokenStorageInterface $tokenStorage
+     * @param FormResolverComment $formResolverComment
      */
     public function __construct(
         Environment $environment,
         UrlGeneratorInterface $router,
         EntityManagerInterface $manager,
         FlashBagInterface $bag,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        FormResolverComment $formResolverComment
     ) {
         $this->environment = $environment;
         $this->router = $router;
         $this->manager = $manager;
         $this->bag = $bag;
         $this->tokenStorage = $tokenStorage;
+        $this->formResolverComment = $formResolverComment;
     }
 
-/**
+
+    /**
      * @param Request $request
      * @return RedirectResponse|Response
      * @throws LoaderError

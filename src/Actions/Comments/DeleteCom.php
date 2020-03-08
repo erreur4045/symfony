@@ -12,6 +12,7 @@
 
 namespace App\Actions\Comments;
 
+use App\Actions\Interfaces\Comments\DeleteComInterface;
 use App\Entity\Comments;
 use App\Entity\Figure;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,7 +28,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  * @Route("/deletecom/{id}", name="delete.comment")
  * @IsGranted("ROLE_USER")
  */
-class DeleteCom
+class DeleteCom implements DeleteComInterface
 {
     /** @var UrlGeneratorInterface  */
     private $router;

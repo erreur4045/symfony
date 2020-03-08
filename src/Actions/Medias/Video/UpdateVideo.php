@@ -12,6 +12,7 @@
 
 namespace App\Actions\Medias\Video;
 
+use App\Actions\Interfaces\Medias\Video\UpdateVideoInterface;
 use App\Entity\Figure;
 use App\Entity\Videolink;
 use App\Form\VideolinkType;
@@ -30,7 +31,7 @@ use Twig\Environment;
  * @Route("/media/update/video/{id}", name="update.video")
  * @IsGranted("ROLE_USER")
  */
-class UpdateVideo
+class UpdateVideo implements UpdateVideoInterface
 {
     /** @var FormResolverMedias  */
     private $formResolverMedias;

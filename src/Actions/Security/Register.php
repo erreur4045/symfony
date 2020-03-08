@@ -12,6 +12,7 @@
 
 namespace App\Actions\Security;
 
+use App\Actions\Interfaces\Security\RegisterInterface;
 use App\Form\RegistrationType;
 use App\Services\FormResolvers\FormResolverRegistration;
 use Symfony\Component\Form\Form;
@@ -25,7 +26,7 @@ use Twig\Environment;
 /**
  * @Route("/registration", name="registration")
  */
-class Register
+class Register implements RegisterInterface
 {
     /** @var FormResolverRegistration */
     private $fromResolverRegistration;

@@ -4,6 +4,7 @@ namespace App\Services\FormResolvers;
 
 use App\Entity\Pictureslink;
 use App\Entity\User;
+use App\Services\Interfaces\FormResolversInterfaces\FormResolverRegistrationInterface;
 use App\Services\OwnTools\UploaderPicture;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -11,8 +12,9 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Services\FormResolvers\FormResolver;
 
-class FormResolverRegistration extends FormResolver
+class FormResolverRegistration extends FormResolver implements FormResolverRegistrationInterface
 {
     /** @var EntityManagerInterface  */
     private $manager;

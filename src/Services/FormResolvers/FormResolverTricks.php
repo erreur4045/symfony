@@ -6,6 +6,7 @@ use App\Entity\Figure;
 use App\Entity\Pictureslink;
 use App\Entity\User;
 use App\Entity\Videolink;
+use App\Services\Interfaces\FormResolversInterfaces\FormResolverTricksInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -14,7 +15,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
-class FormResolverTricks extends FormResolver
+class FormResolverTricks extends FormResolver implements FormResolverTricksInterface
 {
 
     /** @var string */

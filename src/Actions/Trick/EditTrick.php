@@ -12,6 +12,7 @@
 
 namespace App\Actions\Trick;
 
+use App\Actions\Interfaces\Trick\EditTrickInterface;
 use App\Entity\Figure;
 use App\Entity\Pictureslink;
 use App\Entity\Videolink;
@@ -32,7 +33,7 @@ use Twig\Environment;
  * @Route("/edit/{slug}", name="edit.trick")
  * @IsGranted("ROLE_USER")
  */
-class EditTrick
+class EditTrick implements EditTrickInterface
 {
     /** @var Environment  */
     private $templating;

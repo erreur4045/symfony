@@ -12,6 +12,7 @@
 
 namespace App\Actions\Home;
 
+use App\Actions\Interfaces\Home\GetHomePageInterface;
 use App\Entity\Figure;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +22,7 @@ use Twig\Environment;
 /**
  * @Route("/", name="home")
  */
-class GetHomePage
+class GetHomePage implements GetHomePageInterface
 {
     /** @var Environment  */
     private $environment;
@@ -40,6 +41,12 @@ class GetHomePage
     }
 
 
+    /**
+     * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function __invoke()
     {
         /** @var Figure $figures */
