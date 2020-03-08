@@ -52,6 +52,6 @@ class FormResolverRecoveryPassword extends FormResolver implements FormResolverR
         $user->setToken(null)->setPassword($hash);
         $this->manager->persist($user);
         $this->manager->flush();
-        $this->bag->add('success', 'Votre mot de passe été modifié avec succès');
+        $this->bag->add('success', 'Votre mot de passe a été modifié avec succès');
     }
 }

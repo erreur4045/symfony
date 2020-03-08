@@ -103,7 +103,7 @@ class GetTrick implements GetTrickInterface
         $user = $this->tokenStorage->getToken()->getUser();
         if ($form->isSubmitted() && $form->isValid() && $user != null) {
             $this->formResolverComment->addCom($form, $user, $figure);
-            $this->bag->add('success', 'Votre commentaire a été ajouter');
+            $this->bag->add('success', 'Votre commentaire a été ajouté');
             return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
         }
 

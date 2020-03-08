@@ -81,7 +81,7 @@ class AddMedias implements AddMediasInterface
         $form = $this->formResolverMedias->getForm($request, FigureAddMediaType::class);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->formResolverMedias->updateMedias($form, $figure);
-            $this->bag->add('success', 'Les medias ont été ajouter');
+            $this->bag->add('success', 'Les medias ont a été ajoutés');
             return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
         }
         return new Response($this->environment->render('media/UpdateMedias.html.twig', [

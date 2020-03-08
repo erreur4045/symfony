@@ -33,13 +33,13 @@ class PicturelinkType extends AbstractType
                             "image/jpg",
                             "image/gif",
                         ],
-                        'mimeTypesMessage' => 'Veuillez uploader un fichier conforme',
+                        'mimeTypesMessage' => 'Veuillez télécharger un fichier conforme',
                         ]
                     )
                 ]
                 ]
             )
-            ->add('alt', TextType::class, ['label' => 'Desciption de l\'image'])
+            ->add('alt', TextType::class, ['label' => 'Description de l\'image'])
             ->add(
                 'first_image',
                 CheckboxType::class,

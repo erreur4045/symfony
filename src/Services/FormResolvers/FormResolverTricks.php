@@ -67,7 +67,7 @@ class FormResolverTricks extends FormResolver implements FormResolverTricksInter
             $this->addVideosToFigure($figure, Videolink::PATTERNYT);
             $this->manager->persist($figure);
             $this->manager->flush();
-            $this->bag->add('success', 'Votre figure a été ajouter');
+            $this->bag->add('success', 'Votre figure a été ajoutée');
         }
     }
 
@@ -129,7 +129,7 @@ class FormResolverTricks extends FormResolver implements FormResolverTricksInter
         $this->manager->flush();
         $this->manager->persist($pictureDefault);
         $this->manager->flush();
-        $this->bag->add('success', 'Votre figure a été ajouter');
+        $this->bag->add('success', 'Votre figure a été ajoutée');
     }
 
     /**
