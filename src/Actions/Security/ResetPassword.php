@@ -71,7 +71,7 @@ class ResetPassword implements ResetPasswordInterface
     {
         /** @var User $user */
         $user = $this->manager->getRepository(User::class)
-            ->findOneBy(['token' => $request->query->get('slug')]);
+            ->findOneBy(['token' => $request->attributes->get('slug')]);
         if (!empty($user)) {
         /** @var Form $form */
             $form = $this->formResolverRecoveryPassword->getForm($request, ResetPasswordType::class);
