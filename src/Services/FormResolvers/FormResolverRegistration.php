@@ -73,6 +73,6 @@ class FormResolverRegistration extends FormResolver implements FormResolverRegis
         }
         $this->manager->persist($user);
         $this->manager->flush();
-        $this->bag->add('success', 'Votre inscription est ok');
+        $this->bag->add('success', 'Votre inscription est validée');
     }
 }

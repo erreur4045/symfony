@@ -19,7 +19,7 @@ class AddSinglePictureType extends AbstractType
                 FileType::class,
                 [
                 'attr' => ['placeholder' => 'Cliquer pour choisir une nouvelle image'],
-                'label' => 'Choisisez votre nouvelle photo au formats .png .jpg .jpeg',
+                'label' => 'Choisissez votre nouvelle photo aux formats .png .jpg .jpeg',
                 'mapped' => false,
                 'required' => false,
                 'constraints' => [
@@ -31,7 +31,7 @@ class AddSinglePictureType extends AbstractType
                             "image/jpeg",
                             "image/jpg",
                         ],
-                        'mimeTypesMessage' => 'Seul les formats .png .jpg .jpeg sont accepté' ,
+                        'mimeTypesMessage' => 'Seuls les formats .png .jpg .jpeg sont acceptés' ,
                         ]
                     )
                 ],

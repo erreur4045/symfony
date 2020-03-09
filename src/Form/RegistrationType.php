@@ -22,7 +22,7 @@ class RegistrationType extends AbstractType
                 'profilePicture',
                 FileType::class,
                 [
-                'label' => 'Choisisez votre nouvelle photo de profile au formats .png .jpg .jpeg',
+                'label' => 'Choisissez votre nouvelle photo de profil aux formats .png .jpg .jpeg',
                 'required' => false,
                 'constraints' => [
                     new File(
@@ -33,7 +33,7 @@ class RegistrationType extends AbstractType
                             "image/jpeg",
                             "image/jpg",
                         ],
-                        'mimeTypesMessage' => 'Seul les formats .png .jpg .jpeg sont accepté' ,
+                        'mimeTypesMessage' => 'Seuls les formats .png .jpg .jpeg sont acceptés' ,
                         ]
                     )
                 ],

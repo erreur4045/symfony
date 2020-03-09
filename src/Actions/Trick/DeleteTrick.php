@@ -81,7 +81,7 @@ class DeleteTrick implements DeleteTrickInterface
         }
             $this->manager->remove($figure);
         $this->manager->flush();
-        $this->bag->add('success', 'La figure a été supprimé');
+        $this->bag->add('success', 'La figure a été supprimée');
         return new RedirectResponse($this->router->generate('home'));
     }
 }

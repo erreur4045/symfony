@@ -85,7 +85,7 @@ class UpdatePicture implements UpdatePictureInterface
         $form = $this->formResolverMedias->getForm($request, AddSinglePictureType::class);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->formResolverMedias->updatePictureTrick($form, $figure, $exPicture);
-            $this->bag->add('success', 'La photo a été modifié');
+            $this->bag->add('success', 'La photo a été modifiée');
             return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
         }
             return new Response($this->environment->render('media/UpdatePicture.html.twig', [

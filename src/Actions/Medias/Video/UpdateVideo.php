@@ -82,7 +82,7 @@ class UpdateVideo implements UpdateVideoInterface
         $form = $this->formResolverMedias->getForm($request, VideolinkType::class);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->formResolverMedias->updateVideoLink($form, $figure, $exVideo);
-            $this->bag->add('success', 'La video a été modifié');
+            $this->bag->add('success', 'La video a été modifiée');
             return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
         }
 
