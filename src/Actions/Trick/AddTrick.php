@@ -17,6 +17,7 @@ use App\Entity\User;
 use App\Form\FigureType;
 use App\Services\FormResolvers\FormResolverTricks;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
