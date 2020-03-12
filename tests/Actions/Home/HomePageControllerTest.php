@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create by Maxime THIERRY
  * Email : maximethi@hotmail.fr
@@ -11,12 +12,8 @@
 
 namespace App\Tests\Actions\Home;
 
-
-use App\DataFixtures\AppFixtures;
 use App\Tests\AbstractTestCase;
-use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class HomePageControllerTest extends WebTestCase
 {
