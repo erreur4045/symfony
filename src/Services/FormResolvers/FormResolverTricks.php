@@ -55,13 +55,16 @@ class FormResolverTricks extends FormResolver implements FormResolverTricksInter
      */
     public function addTrick(FormInterface $form, User $user)
     {
-        /** @var  $figure */
+        /** @var Figure  $figure */
         $figure = $form->getData();
+
         $figure->setUser($user);
         $figure->setDatecreate(new \DateTime('now'));
         if ($figure->getPictureslinks()->count() == 0) {
             $this->addFigureLessPictures($figure);
         } else {
+            $slug = strtolower(str_replace(' ', '-', $figure->getName()));
+            $figure->setSlug($slug);
             $this->hasFirstImage($figure);
             $this->setPicturesToFigure($figure);
             $this->addVideosToFigure($figure, Videolink::PATTERNYT);
@@ -125,6 +128,8 @@ class FormResolverTricks extends FormResolver implements FormResolverTricksInter
         if ($figure->getVideolinks()->count() > 0) {
             $this->addVideosToFigure($figure, Videolink::PATTERNYT);
         }
+        $slug = strtolower(str_replace(' ', '-', $figure->getName()));
+        $figure->setSlug($slug);
         $this->manager->persist($figure);
         $this->manager->flush();
         $this->manager->persist($pictureDefault);
