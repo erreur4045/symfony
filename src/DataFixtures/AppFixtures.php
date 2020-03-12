@@ -165,7 +165,16 @@ class AppFixtures extends Fixture
                     $manager->getRepository(Figuregroup::class)
                         ->findOneBy(['name' => $figureData['categorie']])
                 )
-                ->setDescription($figureData['desciption']);
+                ->setDescription($figureData['desciption'])
+                ->setSlug(
+                    strtolower(
+                        str_replace(
+                            ' ',
+                            '-',
+                            $figureData['titre']
+                        )
+                    )
+                );
             $manager->persist($figure);
                 $filesystem = new Filesystem();
                 $pictureDefault = new Pictureslink();

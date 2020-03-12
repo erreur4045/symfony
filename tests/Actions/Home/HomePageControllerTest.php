@@ -12,11 +12,15 @@
 
 namespace App\Tests\Actions\Home;
 
-use App\Tests\AbstractTestCase;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\AbstractWebCasse;
 
-class HomePageControllerTest extends WebTestCase
+class HomePageControllerTest extends AbstractWebCasse
 {
+    protected function setUp()
+    {
+        self::reloadDataFixtures();
+    }
+
     public function testIndex()
     {
         $this->ensureKernelShutdown();
