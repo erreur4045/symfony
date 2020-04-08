@@ -2,7 +2,7 @@
   "entrypoints": {
     "app": {
       "js": [
-        "/build/runtime.48b1eea2.js",
+        "/build/runtime.b7b3ac74.js",
         "/build/0.aadc66de.js",
         "/build/1.a4ec2d2f.js",
         "/build/app.cce3c4f6.js"
@@ -10,49 +10,49 @@
     },
     "addpictures": {
       "js": [
-        "/build/runtime.48b1eea2.js",
+        "/build/runtime.b7b3ac74.js",
         "/build/0.aadc66de.js",
         "/build/addpictures.e66380e8.js"
       ]
     },
     "addvideos": {
       "js": [
-        "/build/runtime.48b1eea2.js",
+        "/build/runtime.b7b3ac74.js",
         "/build/0.aadc66de.js",
         "/build/addvideos.f86613ce.js"
       ]
     },
     "checkbox": {
       "js": [
-        "/build/runtime.48b1eea2.js",
+        "/build/runtime.b7b3ac74.js",
         "/build/0.aadc66de.js",
         "/build/checkbox.26c63aa6.js"
       ]
     },
     "carrousel": {
       "js": [
-        "/build/runtime.48b1eea2.js",
+        "/build/runtime.b7b3ac74.js",
         "/build/0.aadc66de.js",
         "/build/carrousel.022eb5fe.js"
       ]
     },
     "loadmorecoms": {
       "js": [
-        "/build/runtime.48b1eea2.js",
+        "/build/runtime.b7b3ac74.js",
         "/build/0.aadc66de.js",
         "/build/loadmorecoms.42aca9d5.js"
       ]
     },
     "loadmoretricks": {
       "js": [
-        "/build/runtime.48b1eea2.js",
+        "/build/runtime.b7b3ac74.js",
         "/build/0.aadc66de.js",
         "/build/loadmoretricks.02dd9e3b.js"
       ]
     },
     "deletecheckbox": {
       "js": [
-        "/build/runtime.48b1eea2.js",
+        "/build/runtime.b7b3ac74.js",
         "/build/0.aadc66de.js",
         "/build/deletecheckbox.c36e8797.js"
       ]

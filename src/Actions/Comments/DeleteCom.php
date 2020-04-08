@@ -63,20 +63,48 @@ class DeleteCom implements DeleteComInterface
      * @param Request $request
      * @return RedirectResponse
      */
-    public function __invoke(Comments $comment, Request $request)
-    {
-        /** @var Figure $datatricks */
-        $datatricks = $this->manager
-            ->getRepository(Figure::class)
-            ->findOneBy(['id' => $request->attributes->get('comment')->getIdfigure()->getId()]);
-        if ($comment->getUser()->getMail() == $this->tokenStorage->getToken()->getUser()->getMail()) {
-            $this->manager->remove($comment);
-            $this->manager->flush();
-            $this->bag->add('success', 'Votre commentaire a été supprimé');
-            return new RedirectResponse($this->router->generate('trick', ['slug' => $datatricks->getSlug()]));
-        } else {
+    public function __invoke(
+        Comments $comment,
+        Request $request
+    ) {
+        $trick = $this->getTrickFromCommentAttribute($request);
+        if (!$this->isConnectedUserConsistentWithCommentUser($comment))
             $this->bag->add('warning', 'Vous ne pouvez pas supprimer ce commentaire');
-        }
-        return new RedirectResponse($this->router->generate('trick', ['slug' => $datatricks->getSlug()]));
+        else
+            $this->deleteComment($comment);
+        return new RedirectResponse($this->router->generate('trick', ['slug' => $trick->getSlug()]));
+    }
+
+    /**
+     * @param Comments $comment
+     * @return bool
+     */
+    public function isConnectedUserConsistentWithCommentUser(Comments $comment): bool
+    {
+        return $comment->getUser() == $this->tokenStorage->getToken()->getUser();
+    }
+
+    /**
+     * @param Comments $comment
+     */
+    public function deleteComment(Comments $comment): void
+    {
+        $this->manager->remove($comment);
+        $this->manager->flush();
+        $this->bag->add('success', 'Votre commentaire a été supprimé');
+    }
+
+    /**
+     * @param Request $request
+     * @return Figure|object|null
+     */
+    public function getTrickFromCommentAttribute(Request $request)
+    {
+        $commentAttribute = $request->attributes->get('comment');
+        $trickId = $commentAttribute->getIdfigure()->getId();
+        /** @var Figure $trick */
+        $figureRepo = $this->manager->getRepository(Figure::class);
+        $trick = $figureRepo->findOneBy(['id' => $trickId]);
+        return $trick;
     }
 }
