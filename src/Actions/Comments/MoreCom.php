@@ -29,7 +29,8 @@ class MoreCom
      * MoreCom constructor.
      * @param Environment $environment
      */
-    public function __construct(Environment $environment) {
+    public function __construct(Environment $environment)
+    {
         $this->environment = $environment;
     }
 

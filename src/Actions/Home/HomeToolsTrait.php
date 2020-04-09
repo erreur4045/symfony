@@ -3,7 +3,6 @@
 
 namespace App\Actions\Home;
 
-
 use App\Entity\Figure;
 use App\Repository\FigureRepository;
 use Symfony\Component\HttpFoundation\Request;

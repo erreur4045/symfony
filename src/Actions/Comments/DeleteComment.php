@@ -38,7 +38,8 @@ class DeleteComment
      * DeleteCom constructor.
      * @param UrlGeneratorInterface $router
      */
-    public function __construct(UrlGeneratorInterface $router) {
+    public function __construct(UrlGeneratorInterface $router)
+    {
         $this->router = $router;
     }
 

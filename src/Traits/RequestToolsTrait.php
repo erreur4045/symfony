@@ -3,7 +3,6 @@
 
 namespace App\Traits;
 
-
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -28,5 +27,4 @@ trait RequestToolsTrait
     {
         return $this->tokenStorage->getToken()->getUser();
     }
-
 }
