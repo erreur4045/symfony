@@ -10,7 +10,7 @@
     <arg name="warning-severity" value="6"/>
 
     <rule ref="PSR1"/>
-    <rule ref="PSR12"/>
+    <rule ref="PSR2"/>
 
     <file>src/</file>
     <exclude-pattern>*/src/Migrations/*</exclude-pattern>

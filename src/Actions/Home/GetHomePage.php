@@ -12,7 +12,6 @@
 
 namespace App\Actions\Home;
 
-use App\Actions\Interfaces\Home\GetHomePageInterface;
 use App\Entity\Figure;
 use App\Repository\FigureRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -45,8 +44,7 @@ class GetHomePage
         Environment $environment,
         EntityManagerInterface $manager,
         FigureRepository $tricksRepo
-    )
-    {
+    ) {
         $this->environment = $environment;
         $this->manager = $manager;
         $this->tricksRepo = $tricksRepo;
@@ -63,16 +61,19 @@ class GetHomePage
     {
         /** @var Figure $figures */
         $figures = $this->tricksRepo->findBy([], [], Figure::LIMIT_PER_PAGE, null);
-        $tricksCount = $this->tricksRepo->count([]);
-        $lastPage = ceil($tricksCount / Figure::LIMIT_PER_PAGE);
+        $countTricks = $this->tricksRepo->count([]);
+        $lastPage = ceil($countTricks / Figure::LIMIT_PER_PAGE);
         $hasTricksToDisplay = $lastPage > 1;
         return new Response(
             $this->environment->render(
-                'home/index.html.twig', [
+                'home/index.html.twig',
+                [
                     'figures' => $figures,
                     'title' => 'SnowTricks',
                     'last-page' => $lastPage,
-                    'has-tricks-to-display' => $hasTricksToDisplay
-                ]));
+                    'hasTricksToDisplay' => $hasTricksToDisplay,
+                ]
+            )
+        );
     }
 }

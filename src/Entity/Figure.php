@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -214,7 +215,7 @@ class Figure
     {
         if (!$this->comments->contains($comment)) {
             $this->comments[] = $comment;
-            $comment->setIdfigure($this);
+            $comment->setIdFigure($this);
         }
 
         return $this;
@@ -225,8 +226,8 @@ class Figure
         if ($this->comments->contains($comment)) {
             $this->comments->removeElement($comment);
             // set the owning side to null (unless already changed)
-            if ($comment->getIdfigure() === $this) {
-                $comment->setIdfigure(null);
+            if ($comment->getIdFigure() === $this) {
+                $comment->setIdFigure(null);
             }
         }
 
@@ -245,24 +246,24 @@ class Figure
         return $this;
     }
 
-    public function getDatecreate(): ?\DateTimeInterface
+    public function getDatecreate(): ?DateTimeInterface
     {
         return $this->datecreate;
     }
 
-    public function setDatecreate(\DateTimeInterface $datecreate): self
+    public function setDatecreate(DateTimeInterface $datecreate): self
     {
         $this->datecreate = $datecreate;
 
         return $this;
     }
 
-    public function getDateupdate(): ?\DateTimeInterface
+    public function getDateupdate(): ?DateTimeInterface
     {
         return $this->dateupdate;
     }
 
-    public function setDateupdate(?\DateTimeInterface $dateupdate): self
+    public function setDateupdate(?DateTimeInterface $dateupdate): self
     {
         $this->dateupdate = $dateupdate;
 

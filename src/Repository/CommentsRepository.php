@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Comments;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,6 +20,15 @@ class CommentsRepository extends ServiceEntityRepository
         parent::__construct($registry, Comments::class);
     }
 
+    /**
+     * @param Comments $comment
+     * @throws ORMException
+     */
+    public function deleteComment(Comments $comment): void
+    {
+        $this->_em->remove($comment);
+        $this->_em->flush();
+    }
     // /**
     //  * @return Comments[] Returns an array of Comments objects
     //  */

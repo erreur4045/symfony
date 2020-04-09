@@ -5,40 +5,58 @@ namespace App\Services\FormResolvers;
 use App\Entity\Comments;
 use App\Entity\Figure;
 use App\Entity\User;
-use App\Services\Interfaces\FormResolversInterfaces\FormResolverCommentInterface;
+use App\Form\EditComType;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
-class FormResolverComment extends FormResolver implements FormResolverCommentInterface
+class FormResolverComment extends FormResolver
 {
     /** @var EntityManagerInterface  */
     private $manager;
     /** @var FormFactoryInterface  */
     protected $formFactory;
+    /** @var Environment  */
+    private $environment;
+    /** @var FormResolverComment */
+    private $resolver;
 
     /**
      * FormResolverComment constructor.
      * @param EntityManagerInterface $manager
      * @param FormFactoryInterface $formFactory
+     * @param Environment $environment
+     * @param FormResolverComment $resolver
      */
-    public function __construct(EntityManagerInterface $manager, FormFactoryInterface $formFactory)
+    public function __construct(EntityManagerInterface $manager, FormFactoryInterface $formFactory, Environment $environment, FormResolverComment $resolver)
     {
         $this->manager = $manager;
         $this->formFactory = $formFactory;
+        $this->environment = $environment;
+        $this->resolver = $resolver;
         parent::__construct($formFactory);
     }
-
 
     /**
      * @param FormInterface $form
      * @param Comments $comment
-     * @throws \Exception
+     * @throws Exception
      */
-    public function updateCom(FormInterface $form, Comments $comment)
+    public function pushComment(FormInterface $form, Comments $comment)
     {
-        $comment->setText($form->getData()->getText())
-            ->setDateupdate(new \DateTime('now'));
+        //todo : DTO comment
+        $text = $form->getData()->getText();
+        $comment->setText($text);
+        $comment->setDateUpdate(new DateTime('now'));
         $this->manager->persist($comment);
         $this->manager->flush();
     }
@@ -47,13 +65,46 @@ class FormResolverComment extends FormResolver implements FormResolverCommentInt
      * @param FormInterface $form
      * @param User $user
      * @param Figure $figure
-     * @throws \Exception
+     * @throws Exception
      */
     public function addCom(FormInterface $form, User $user, Figure $figure)
     {
         $comment = $form->getData();
-        $comment->setDatecreate(new \DateTime())->setIdfigure($figure)->setUser($user);
+        $comment->setDatecreate(new DateTime())->setIdfigure($figure)->setUser($user);
         $this->manager->persist($comment);
         $this->manager->flush();
+    }
+
+    /**
+     * @param Request $request
+     * @param Comments $comment
+     * @param string $trickUrl
+     * @return RedirectResponse|Response
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     * @throws Exception
+     */
+    public function updateComment(
+        Request $request,
+        Comments $comment,
+        string $trickUrl
+    ) {
+        /** @var FormResolverComment $resolver */
+        $resolver = $this->resolver;
+        $form = $resolver->getForm($request, EditComType::class);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $resolver->pushComment($form, $comment);
+            return new RedirectResponse($trickUrl);
+        }
+        return new Response(
+            $this->environment->render(
+                'comments/index.html.twig',
+                [
+                    'form' => $form->createView(),
+                    'comment' => $comment->getText()
+                ]
+            )
+        );
     }
 }
