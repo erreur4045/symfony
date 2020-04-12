@@ -20,17 +20,23 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-trait CommentsToolsTrait
+/**
+ * Class CommentsTools
+ * @package App\Actions\Comments
+ */
+abstract class  CommentsTools
 {
+
     /** @var EntityManagerInterface  */
     private $manager;
     /** @var TokenStorageInterface  */
     private $tokenStorage;
-    /** @var CommentsRepository */
-    private $commentsRepo;
     /** @var FigureRepository */
     private $tricksRepo;
+    /** @var CommentsRepository */
+    protected $commentsRepo;
     /** @var UrlGeneratorInterface  */
     private $router;
 
@@ -38,24 +44,23 @@ trait CommentsToolsTrait
      * CommentsTools constructor.
      * @param EntityManagerInterface $manager
      * @param TokenStorageInterface $tokenStorage
-     * @param CommentsRepository $commentsRepo
      * @param FigureRepository $tricksRepo
+     * @param CommentsRepository $commentsRepo
      * @param UrlGeneratorInterface $router
      */
     public function __construct(
         EntityManagerInterface $manager,
         TokenStorageInterface $tokenStorage,
-        CommentsRepository $commentsRepo,
         FigureRepository $tricksRepo,
+        CommentsRepository $commentsRepo,
         UrlGeneratorInterface $router
     ) {
         $this->manager = $manager;
         $this->tokenStorage = $tokenStorage;
-        $this->commentsRepo = $commentsRepo;
         $this->tricksRepo = $tricksRepo;
+        $this->commentsRepo = $commentsRepo;
         $this->router = $router;
     }
-
 
     /**
      * @param Comments $comment
@@ -63,7 +68,7 @@ trait CommentsToolsTrait
      */
     public function isConnectedUserConsistentWithCommentUser(Comments $comment): bool
     {
-        return $comment->getUser() == $this->getUserFromToken();
+        return $comment->getUser() === $this->getConnectedUser();
     }
 
     /**
@@ -72,12 +77,9 @@ trait CommentsToolsTrait
      */
     public function getTrick(Request $request)
     {
-        $commentAttribute = $request->attributes->get('comment');
-        $trickId = $commentAttribute->getIdfigure()->getId();
-        /** @var Figure $trick */
-        $figureRepo = $this->manager->getRepository(Figure::class);
-        $trick = $figureRepo->findOneBy(['id' => $trickId]);
-        return $trick;
+        $commentId = $request->attributes->getInt('id');
+        $trickId = $this->getFigureFromIdComment($commentId)->getId();
+        return $this->tricksRepo->findOneBy(['id' => $trickId]);
     }
 
     /**
@@ -104,8 +106,7 @@ trait CommentsToolsTrait
      */
     public function getTrickUrl(Figure $tricks): string
     {
-        return $this->router
-            ->generate('trick', ['slug' => $tricks->getSlug()]);
+        return $this->router->generate('trick', ['slug' => $tricks->getSlug()]);
     }
 
     /**
@@ -120,12 +121,12 @@ trait CommentsToolsTrait
 
 
     /**
-     * @param $figureId
      * @return int|void
      */
-    public function countCommentsByIdTrick($figureId)
+    public function countCommentsByIdTrick()
     {
-        return count($this->commentsRepo->findBy(['idfigure' => $figureId]));
+
+        return count($this->tricksRepo->findAll());
     }
 
     /**
@@ -136,10 +137,27 @@ trait CommentsToolsTrait
     public function getCommentsToShow($trickId, $offset): array
     {
         return $this->commentsRepo->findBy(
-            ['idfigure' => $trickId],
+            ['figure' => $trickId],
             [],
             Comments::LIMIT_PER_PAGE,
             $offset
         );
+    }
+
+    /**
+     * @return string|UserInterface
+     */
+    public function getConnectedUser()
+    {
+        return $this->tokenStorage->getToken()->getUser();
+    }
+
+    /**
+     * @param int $commentId
+     * @return Figure|null
+     */
+    public function getFigureFromIdComment(int $commentId)
+    {
+        return $this->commentsRepo->getFigure($commentId)->getFigure();
     }
 }

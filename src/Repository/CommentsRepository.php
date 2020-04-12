@@ -57,4 +57,8 @@ class CommentsRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function getFigure($idTrick)
+    {
+        return $this->find($idTrick);
+    }
 }

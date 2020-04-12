@@ -14,14 +14,19 @@ namespace App\Actions\Comments;
 
 use App\Entity\Comments;
 use App\Entity\Figure;
+use App\Repository\CommentsRepository;
+use App\Repository\FigureRepository;
 use App\Services\FormResolvers\FormResolverComment;
 use App\Traits\ViewsToolsTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -30,20 +35,23 @@ use Twig\Error\SyntaxError;
  * @Route("/editcom/{id}", name="edit.comment")
  * @IsGranted("ROLE_USER")
 */
-class EditComment
+class EditComment extends CommentsTools
 {
-    use CommentsToolsTrait, ViewsToolsTrait;
+    use ViewsToolsTrait;
 
     /** @var FormResolverComment */
     private $resolver;
 
-    /**
-     * EditCom constructor.
-     * @param FormResolverComment $formResolverComment
-     */
-    public function __construct(FormResolverComment $formResolverComment)
-    {
-        $this->resolver = $formResolverComment;
+    public function __construct(
+        FormResolverComment $resolver,
+        EntityManagerInterface $manager,
+        TokenStorageInterface $tokenStorage,
+        FigureRepository $tricksRepo,
+        CommentsRepository $commentsRepo,
+        UrlGeneratorInterface $router
+    ) {
+        parent::__construct($manager,$tokenStorage,$tricksRepo,$commentsRepo, $router);
+        $this->resolver = $resolver;
     }
 
     /**

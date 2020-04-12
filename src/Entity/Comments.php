@@ -38,7 +38,7 @@ class Comments
      * @ORM\ManyToOne(targetEntity="App\Entity\Figure", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $idFigure;
+    private $figure;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
@@ -97,14 +97,14 @@ class Comments
         return $this;
     }
 
-    public function getIdFigure(): ?Figure
+    public function getFigure(): ?Figure
     {
-        return $this->idFigure;
+        return $this->figure;
     }
 
-    public function setIdFigure(?Figure $idFigure): self
+    public function setFigure(?Figure $figure): self
     {
-        $this->idFigure = $idFigure;
+        $this->figure = $figure;
 
         return $this;
     }

@@ -13,6 +13,8 @@
 namespace App\Actions\Comments;
 
 use App\Entity\Comments;
+use App\Repository\CommentsRepository;
+use App\Repository\FigureRepository;
 use App\Traits\ViewsToolsTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
@@ -21,25 +23,27 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @Route("/deletecom/{id}", name="delete.comment")
  * @IsGranted("ROLE_USER")
  */
-class DeleteComment
+class DeleteComment extends CommentsTools
 {
-    use CommentsToolsTrait, ViewsToolsTrait;
+    use ViewsToolsTrait;
 
     /** @var UrlGeneratorInterface  */
     private $router;
-    /** @var EntityManagerInterface  */
 
-    /**
-     * DeleteCom constructor.
-     * @param UrlGeneratorInterface $router
-     */
-    public function __construct(UrlGeneratorInterface $router)
-    {
+    public function __construct(
+        EntityManagerInterface $manager,
+        TokenStorageInterface $tokenStorage,
+        FigureRepository $tricksRepo,
+        CommentsRepository $commentsRepo,
+        UrlGeneratorInterface $router
+    ) {
+        parent::__construct($manager,$tokenStorage,$tricksRepo,$commentsRepo, $router);
         $this->router = $router;
     }
 

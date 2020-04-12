@@ -27,22 +27,18 @@ class FormResolverComment extends FormResolver
     protected $formFactory;
     /** @var Environment  */
     private $environment;
-    /** @var FormResolverComment */
-    private $resolver;
 
     /**
      * FormResolverComment constructor.
      * @param EntityManagerInterface $manager
      * @param FormFactoryInterface $formFactory
      * @param Environment $environment
-     * @param FormResolverComment $resolver
      */
-    public function __construct(EntityManagerInterface $manager, FormFactoryInterface $formFactory, Environment $environment, FormResolverComment $resolver)
+    public function __construct(EntityManagerInterface $manager, FormFactoryInterface $formFactory, Environment $environment)
     {
         $this->manager = $manager;
         $this->formFactory = $formFactory;
         $this->environment = $environment;
-        $this->resolver = $resolver;
         parent::__construct($formFactory);
     }
 
@@ -70,7 +66,7 @@ class FormResolverComment extends FormResolver
     public function addCom(FormInterface $form, User $user, Figure $figure)
     {
         $comment = $form->getData();
-        $comment->setDatecreate(new DateTime())->setIdfigure($figure)->setUser($user);
+        $comment->setDatecreate(new DateTime())->setFigure($figure)->setUser($user);
         $this->manager->persist($comment);
         $this->manager->flush();
     }
@@ -90,11 +86,9 @@ class FormResolverComment extends FormResolver
         Comments $comment,
         string $trickUrl
     ) {
-        /** @var FormResolverComment $resolver */
-        $resolver = $this->resolver;
-        $form = $resolver->getForm($request, EditComType::class);
+        $form = $this->getForm($request, EditComType::class);
         if ($form->isSubmitted() && $form->isValid()) {
-            $resolver->pushComment($form, $comment);
+            $this->pushComment($form, $comment);
             return new RedirectResponse($trickUrl);
         }
         return new Response(

@@ -222,7 +222,7 @@ class AppFixtures extends Fixture
                         $manager->getRepository(User::class)
                             ->findOneBy(['id' => $userIds[array_rand($userIds)]])
                     )
-                    ->setIdFigure($figure)
+                    ->setFigure($figure)
                     ->setText($RandComments[array_rand($RandComments)]);
                 $manager->persist($comment);
             }

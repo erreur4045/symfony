@@ -54,7 +54,7 @@ class Figure
     private $videolinks;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comments", mappedBy="idfigure", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Comments", mappedBy="figure", orphanRemoval=true)
      */
     private $comments;
 
@@ -215,7 +215,7 @@ class Figure
     {
         if (!$this->comments->contains($comment)) {
             $this->comments[] = $comment;
-            $comment->setIdFigure($this);
+            $comment->setFigure($this);
         }
 
         return $this;
@@ -226,8 +226,8 @@ class Figure
         if ($this->comments->contains($comment)) {
             $this->comments->removeElement($comment);
             // set the owning side to null (unless already changed)
-            if ($comment->getIdFigure() === $this) {
-                $comment->setIdFigure(null);
+            if ($comment->getFigure() === $this) {
+                $comment->setFigure(null);
             }
         }
 
