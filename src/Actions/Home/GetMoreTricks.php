@@ -17,7 +17,10 @@ use Twig\Error\SyntaxError;
  */
 class GetMoreTricks
 {
-    use HomeToolsTrait;
+    use HomeTools;
+
+    const BLOCK_FOR_TRICKS_TWIG_PATH = 'block_for_include/block_for_tricks_ajax.html.twig';
+
     /** @var Environment  */
     private $environment;
     /** @var EntityManagerInterface  */
@@ -50,13 +53,14 @@ class GetMoreTricks
      */
     public function __invoke(Request $request)
     {
+        $contextView = [
+            'tricksToDisplay' => $this->getTricksToDisplay($request),
+            'hasTricksToDisplay' => $this->hasTricksToDisplay($request),
+        ];
         return new Response(
             $this->environment->render(
-                'block_for_include/block_for_tricks_ajax.html.twig',
-                [
-                    'tricksToDisplay' => $this->getTricksToDisplay($request),
-                    'hasTricksToDisplay' => $this->hasTricksToDisplay($request),
-                ]
+                self::BLOCK_FOR_TRICKS_TWIG_PATH,
+                $contextView
             )
         );
     }

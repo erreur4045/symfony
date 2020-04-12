@@ -23,29 +23,39 @@ use Twig\Error\SyntaxError;
  * @Route("tricks/details/more_com", name="more.coms")
  *
  */
-class MoreComments extends CommentsTools
+class MoreComments
 {
+    use CommentsTools;
+
+    /** @var EntityManagerInterface  */
+    private $manager;
+    /** @var TokenStorageInterface  */
+    private $tokenStorage;
+    /** @var FigureRepository */
+    private $tricksRepo;
+    /** @var CommentsRepository */
+    private $commentsRepo;
+    /** @var UrlGeneratorInterface  */
+    private $router;
     /** @var Environment  */
     private $environment;
 
     /**
      * MoreComments constructor.
-     * @param Environment $environment
      * @param EntityManagerInterface $manager
      * @param TokenStorageInterface $tokenStorage
      * @param FigureRepository $tricksRepo
      * @param CommentsRepository $commentsRepo
      * @param UrlGeneratorInterface $router
+     * @param Environment $environment
      */
-    public function __construct(
-        Environment $environment,
-        EntityManagerInterface $manager,
-        TokenStorageInterface $tokenStorage,
-        FigureRepository $tricksRepo,
-        CommentsRepository $commentsRepo,
-        UrlGeneratorInterface $router
-    ) {
-        parent::__construct($manager,$tokenStorage,$tricksRepo,$commentsRepo, $router);
+    public function __construct(EntityManagerInterface $manager, TokenStorageInterface $tokenStorage, FigureRepository $tricksRepo, CommentsRepository $commentsRepo, UrlGeneratorInterface $router, Environment $environment)
+    {
+        $this->manager = $manager;
+        $this->tokenStorage = $tokenStorage;
+        $this->tricksRepo = $tricksRepo;
+        $this->commentsRepo = $commentsRepo;
+        $this->router = $router;
         $this->environment = $environment;
     }
 

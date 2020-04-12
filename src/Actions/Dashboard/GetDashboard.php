@@ -3,7 +3,6 @@
 namespace App\Actions\Dashboard;
 
 use App\Entity\Figure;
-use App\Entity\User;
 use App\Form\ProfilePictureType;
 use App\Repository\FigureRepository;
 use App\Services\FormResolvers\FormResolverMedias;
@@ -24,8 +23,10 @@ use Twig\Error\SyntaxError;
  * @Route("/dashboard", name="app_dashboard")
  * @IsGranted("ROLE_USER")
  */
-class GetDashboard extends AbstractDashboard
+class GetDashboard
 {
+    use DashboardTools;
+
     const DASHBOARD_TWIG_PATH = 'dashboard/index.html.twig';
     const PROFILE_PICTURE_FORM = ProfilePictureType::class;
     const ROUTE_NAME = 'app_dashboard';
@@ -34,25 +35,34 @@ class GetDashboard extends AbstractDashboard
     private $environment;
     /** @var TokenStorageInterface  */
     private $tokenStorage;
+    /** @var FormResolverMedias  */
+    private $formResolverMedias;
+    /** @var UrlGeneratorInterface  */
+    private $router;
+    /** @var FigureRepository */
+    private $trickRepo;
 
     /**
      * GetDashboard constructor.
      * @param Environment $environment
-     * @param FormResolverMedias $formResolverMedias
      * @param TokenStorageInterface $tokenStorage
+     * @param FormResolverMedias $formResolverMedias
      * @param UrlGeneratorInterface $router
      * @param FigureRepository $trickRepo
      */
     public function __construct(
         Environment $environment,
-        FormResolverMedias $formResolverMedias,
         TokenStorageInterface $tokenStorage,
+        FormResolverMedias $formResolverMedias,
         UrlGeneratorInterface $router,
         FigureRepository $trickRepo
-    ) {
+    )
+    {
         $this->environment = $environment;
         $this->tokenStorage = $tokenStorage;
-        parent::__construct($environment,$formResolverMedias,$tokenStorage,$router,$trickRepo);
+        $this->formResolverMedias = $formResolverMedias;
+        $this->router = $router;
+        $this->trickRepo = $trickRepo;
     }
 
     /**
@@ -64,15 +74,13 @@ class GetDashboard extends AbstractDashboard
      */
     public function __invoke(Request $request)
     {
-        /** @var User $connectedUser */
-        $connectedUser = $this->getConnectedUser();
         /** @var Figure[] $figures */
-        $figures = $this->getTricksFromUser($connectedUser);
+        $figures = $this->getTricksFromUser();
         /** @var FormInterface $form */
         $form = $this->getForm($request);
 
         if ($this->isConform($form)) {
-            $this->updateProfilePicture($form, $connectedUser);
+            $this->updateProfilePicture($form);
             return $this->getRedirect(self::ROUTE_NAME);
         }
 
@@ -81,7 +89,7 @@ class GetDashboard extends AbstractDashboard
             'controller_name' => 'Mon Dashboard',
             'title' => 'Mon Dashboard',
             'figure' => $figures,
-            'image' => $connectedUser->getProfilePicture()
+            'image' => $this->getProfilePicture()
         ];
 
         return new Response(

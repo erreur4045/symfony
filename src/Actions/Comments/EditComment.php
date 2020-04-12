@@ -17,7 +17,7 @@ use App\Entity\Figure;
 use App\Repository\CommentsRepository;
 use App\Repository\FigureRepository;
 use App\Services\FormResolvers\FormResolverComment;
-use App\Traits\ViewsToolsTrait;
+use App\Traits\ViewsTools;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -35,24 +35,43 @@ use Twig\Error\SyntaxError;
  * @Route("/editcom/{id}", name="edit.comment")
  * @IsGranted("ROLE_USER")
 */
-class EditComment extends CommentsTools
+class EditComment
 {
-    use ViewsToolsTrait;
+
+    use ViewsTools, CommentsTools;
 
     /** @var FormResolverComment */
     private $resolver;
+    /** @var EntityManagerInterface  */
+    private $manager;
+    /** @var TokenStorageInterface  */
+    private $tokenStorage;
+    /** @var FigureRepository */
+    private $tricksRepo;
+    /** @var CommentsRepository */
+    private $commentsRepo;
+    /** @var UrlGeneratorInterface  */
+    private $router;
 
-    public function __construct(
-        FormResolverComment $resolver,
-        EntityManagerInterface $manager,
-        TokenStorageInterface $tokenStorage,
-        FigureRepository $tricksRepo,
-        CommentsRepository $commentsRepo,
-        UrlGeneratorInterface $router
-    ) {
-        parent::__construct($manager,$tokenStorage,$tricksRepo,$commentsRepo, $router);
+    /**
+     * EditComment constructor.
+     * @param FormResolverComment $resolver
+     * @param EntityManagerInterface $manager
+     * @param TokenStorageInterface $tokenStorage
+     * @param FigureRepository $tricksRepo
+     * @param CommentsRepository $commentsRepo
+     * @param UrlGeneratorInterface $router
+     */
+    public function __construct(FormResolverComment $resolver, EntityManagerInterface $manager, TokenStorageInterface $tokenStorage, FigureRepository $tricksRepo, CommentsRepository $commentsRepo, UrlGeneratorInterface $router)
+    {
         $this->resolver = $resolver;
+        $this->manager = $manager;
+        $this->tokenStorage = $tokenStorage;
+        $this->tricksRepo = $tricksRepo;
+        $this->commentsRepo = $commentsRepo;
+        $this->router = $router;
     }
+
 
     /**
      * @param Request $request
@@ -60,7 +79,6 @@ class EditComment extends CommentsTools
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
-     * @throws Exception
      */
     public function __invoke(Request $request)
     {

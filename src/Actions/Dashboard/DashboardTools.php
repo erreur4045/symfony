@@ -5,7 +5,6 @@ namespace App\Actions\Dashboard;
 
 
 use App\Entity\Figure;
-use App\Entity\User;
 use App\Repository\FigureRepository;
 use App\Services\FormResolvers\FormResolverMedias;
 use Symfony\Component\Form\FormInterface;
@@ -16,42 +15,18 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\User\UserInterface;
 use Twig\Environment;
 
-abstract class AbstractDashboard
+trait DashboardTools
 {
-
     /** @var Environment  */
     private $environment;
-    /** @var FormResolverMedias  */
-    private $formResolverMedias;
     /** @var TokenStorageInterface  */
     private $tokenStorage;
+    /** @var FormResolverMedias  */
+    private $formResolverMedias;
     /** @var UrlGeneratorInterface  */
     private $router;
     /** @var FigureRepository */
     private $trickRepo;
-
-    /**
-     * AbstractDashbord constructor.
-     * @param Environment $environment
-     * @param FormResolverMedias $formResolverMedias
-     * @param TokenStorageInterface $tokenStorage
-     * @param UrlGeneratorInterface $router
-     * @param FigureRepository $trickRepo
-     */
-    public function __construct(
-        Environment $environment,
-        FormResolverMedias $formResolverMedias,
-        TokenStorageInterface $tokenStorage,
-        UrlGeneratorInterface $router,
-        FigureRepository $trickRepo
-    ) {
-        $this->environment = $environment;
-        $this->formResolverMedias = $formResolverMedias;
-        $this->tokenStorage = $tokenStorage;
-        $this->router = $router;
-        $this->trickRepo = $trickRepo;
-    }
-
 
     /**
      * @return string|UserInterface
@@ -62,12 +37,12 @@ abstract class AbstractDashboard
     }
 
     /**
-     * @param User $connectedUser
      * @return Figure[]
      */
-    public function getTricksFromUser(User $connectedUser): array
+    public function getTricksFromUser(): array
     {
-        return $this->trickRepo->findBy(['user' => $connectedUser->getId()]);
+        $user = $this->getConnectedUser();
+        return $this->trickRepo->findBy(['user' => $user->getId()]);
     }
 
     /**
@@ -90,13 +65,11 @@ abstract class AbstractDashboard
 
     /**
      * @param FormInterface $form
-     * @param User $connectedUser
      */
-    public function updateProfilePicture(
-        FormInterface $form,
-        User $connectedUser
-    ) {
-        return $this->formResolverMedias->updateProfilePicture($form, $connectedUser);
+    public function updateProfilePicture(FormInterface $form)
+    {
+        $user = $this->getConnectedUser();
+        $this->formResolverMedias->updateProfilePicture($form, $user);
     }
 
     /**
@@ -106,5 +79,13 @@ abstract class AbstractDashboard
     public function getRedirect($routeName): RedirectResponse
     {
         return new RedirectResponse($this->router->generate($routeName));
+    }
+
+    /**
+     * @return string
+     */
+    public function getProfilePicture(): string
+    {
+        return $this->getConnectedUser()->getProfilePicture();
     }
 }

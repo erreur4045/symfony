@@ -11,20 +11,16 @@ use Symfony\Component\HttpFoundation\Request;
  * Trait HomeToolsTrait
  * @package App\Actions\Home
  */
-trait HomeToolsTrait
+trait HomeTools
 {
-    /** @var FigureRepository */
-    private $tricksRepo;
 
     /**
-     * HomeToolsTrait constructor.
-     * @param FigureRepository $tricksRepo
+     * @return Figure[]
      */
-    public function __construct(FigureRepository $tricksRepo)
+    public function getFirstPageOfTricks(): array
     {
-        $this->tricksRepo = $tricksRepo;
+        return $this->tricksRepo->findBy([], [], Figure::LIMIT_PER_PAGE, null);
     }
-
 
     /**
      * @param $pageId

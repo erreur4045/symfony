@@ -27,6 +27,7 @@ use Twig\Error\SyntaxError;
  */
 class GetHomePage
 {
+    use HomeTools;
     /** @var Environment  */
     private $environment;
     /** @var EntityManagerInterface  */
@@ -60,18 +61,17 @@ class GetHomePage
     public function __invoke()
     {
         /** @var Figure $figures */
-        $figures = $this->tricksRepo->findBy([], [], Figure::LIMIT_PER_PAGE, null);
+        $figures = $this->getFirstPageOfTricks();
         $countTricks = $this->tricksRepo->count([]);
         $lastPage = ceil($countTricks / Figure::LIMIT_PER_PAGE);
-        $hasTricksToDisplay = $lastPage > 1;
         return new Response(
             $this->environment->render(
                 'home/index.html.twig',
                 [
                     'figures' => $figures,
                     'title' => 'SnowTricks',
-                    'last-page' => $lastPage,
-                    'hasTricksToDisplay' => $hasTricksToDisplay,
+                    'lastPage' => $lastPage,
+                    'hasTricksToDisplay' => $lastPage > 1,
                 ]
             )
         );

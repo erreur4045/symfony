@@ -20,15 +20,6 @@ class CommentsRepository extends ServiceEntityRepository
         parent::__construct($registry, Comments::class);
     }
 
-    /**
-     * @param Comments $comment
-     * @throws ORMException
-     */
-    public function deleteComment(Comments $comment): void
-    {
-        $this->_em->remove($comment);
-        $this->_em->flush();
-    }
     // /**
     //  * @return Comments[] Returns an array of Comments objects
     //  */
@@ -57,8 +48,4 @@ class CommentsRepository extends ServiceEntityRepository
         ;
     }
     */
-    public function getFigure($idTrick)
-    {
-        return $this->find($idTrick);
-    }
 }

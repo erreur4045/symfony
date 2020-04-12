@@ -110,7 +110,27 @@ class AppFixtures extends Fixture
                 'titre' => 'Stalefish',
                 'desciption' => ' Figure aérienne où l’athlète saisit la carre côté talons derrière la jambe arrière avec la main arrière pendant que la jambe arrière est redressée.',
                 'categorie' => 'Les grabs'
-            ]
+            ],
+            [
+                'titre' => 'Japaasdfsadfn air',
+                'desciption' => 'Saisie de l\'avant de la planche, avec la main avant, du côté de la carre frontside.',
+                'categorie' => 'Les grabs'
+            ],
+            [
+                'titre' => 'Jaasdfsadfpan air',
+                'desciption' => 'Saisie de l\'avant de la planche, avec la main avant, du côté de la carre frontside.',
+                'categorie' => 'Les grabs'
+            ],
+            [
+                'titre' => 'Japasdfasdfasan air',
+                'desciption' => 'Saisie de l\'avant de la planche, avec la main avant, du côté de la carre frontside.',
+                'categorie' => 'Les grabs'
+            ],
+            [
+                'titre' => 'Jdfasdfasdfapan air',
+                'desciption' => 'Saisie de l\'avant de la planche, avec la main avant, du côté de la carre frontside.',
+                'categorie' => 'Les grabs'
+            ],
         ];
 
         $RandComments = [

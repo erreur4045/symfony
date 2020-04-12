@@ -23,44 +23,21 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Class CommentsTools
+ * Trait CommentsTools
  * @package App\Actions\Comments
  */
-abstract class  CommentsTools
+trait CommentsTools
 {
-
-    /** @var EntityManagerInterface  */
-    private $manager;
     /** @var TokenStorageInterface  */
     private $tokenStorage;
     /** @var FigureRepository */
     private $tricksRepo;
-    /** @var CommentsRepository */
-    protected $commentsRepo;
     /** @var UrlGeneratorInterface  */
     private $router;
-
-    /**
-     * CommentsTools constructor.
-     * @param EntityManagerInterface $manager
-     * @param TokenStorageInterface $tokenStorage
-     * @param FigureRepository $tricksRepo
-     * @param CommentsRepository $commentsRepo
-     * @param UrlGeneratorInterface $router
-     */
-    public function __construct(
-        EntityManagerInterface $manager,
-        TokenStorageInterface $tokenStorage,
-        FigureRepository $tricksRepo,
-        CommentsRepository $commentsRepo,
-        UrlGeneratorInterface $router
-    ) {
-        $this->manager = $manager;
-        $this->tokenStorage = $tokenStorage;
-        $this->tricksRepo = $tricksRepo;
-        $this->commentsRepo = $commentsRepo;
-        $this->router = $router;
-    }
+    /** @var EntityManagerInterface  */
+    private $manager;
+    /** @var CommentsRepository */
+    private $commentsRepo;
 
     /**
      * @param Comments $comment
@@ -77,8 +54,7 @@ abstract class  CommentsTools
      */
     public function getTrick(Request $request)
     {
-        $commentId = $request->attributes->getInt('id');
-        $trickId = $this->getFigureFromIdComment($commentId)->getId();
+        $trickId = $this->getTrickFromIdComment($request)->getId();
         return $this->tricksRepo->findOneBy(['id' => $trickId]);
     }
 
@@ -111,11 +87,11 @@ abstract class  CommentsTools
 
     /**
      * @param Request $request
-     * @return Comments|null
+     * @return Comments
      */
     public function getComment(Request $request)
     {
-        $commentId = $request->attributes->get('id');
+        $commentId = $this->getIdCommentFrom($request);
         return $this->commentsRepo->findOneBy(['id' => $commentId]);
     }
 
@@ -153,11 +129,30 @@ abstract class  CommentsTools
     }
 
     /**
-     * @param int $commentId
-     * @return Figure|null
+     * @param Request $request
+     * @return Figure
      */
-    public function getFigureFromIdComment(int $commentId)
+    public function getTrickFromIdComment(Request $request) :Figure
     {
-        return $this->commentsRepo->getFigure($commentId)->getFigure();
+        $comment = $this->commentsRepo->find($this->getIdCommentFrom($request));
+        return $comment->getFigure();
+    }
+
+    /**
+     * @param Comments $comment
+     */
+    public function deleteComment(Comments $comment): void
+    {
+        $this->manager->remove($comment);
+        $this->manager->flush();
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function getIdCommentFrom(Request $request)
+    {
+        return $request->get('id');
     }
 }

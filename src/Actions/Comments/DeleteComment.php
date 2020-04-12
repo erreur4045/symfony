@@ -15,12 +15,14 @@ namespace App\Actions\Comments;
 use App\Entity\Comments;
 use App\Repository\CommentsRepository;
 use App\Repository\FigureRepository;
-use App\Traits\ViewsToolsTrait;
+use App\Traits\ViewsTools;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
+use phpDocumentor\Reflection\Types\This;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -29,39 +31,59 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  * @Route("/deletecom/{id}", name="delete.comment")
  * @IsGranted("ROLE_USER")
  */
-class DeleteComment extends CommentsTools
+class DeleteComment
 {
-    use ViewsToolsTrait;
+    use CommentsTools, ViewsTools;
 
     /** @var UrlGeneratorInterface  */
     private $router;
-
-    public function __construct(
-        EntityManagerInterface $manager,
-        TokenStorageInterface $tokenStorage,
-        FigureRepository $tricksRepo,
-        CommentsRepository $commentsRepo,
-        UrlGeneratorInterface $router
-    ) {
-        parent::__construct($manager,$tokenStorage,$tricksRepo,$commentsRepo, $router);
-        $this->router = $router;
-    }
+    /** @var EntityManagerInterface  */
+    private $manager;
+    /** @var TokenStorageInterface  */
+    private $tokenStorage;
+    /** @var FigureRepository */
+    private $tricksRepo;
+    /** @var CommentsRepository */
+    private $commentsRepo;
+    /** @var FlashBagInterface */
+    private $bag;
+    /** @var Comments */
+    private $comment;
 
     /**
-     * @param Comments $comment
+     * DeleteComment constructor.
+     * @param UrlGeneratorInterface $router
+     * @param EntityManagerInterface $manager
+     * @param TokenStorageInterface $tokenStorage
+     * @param FigureRepository $tricksRepo
+     * @param CommentsRepository $commentsRepo
+     * @param FlashBagInterface $bag
+     */
+    public function __construct(UrlGeneratorInterface $router, EntityManagerInterface $manager, TokenStorageInterface $tokenStorage, FigureRepository $tricksRepo, CommentsRepository $commentsRepo, FlashBagInterface $bag)
+    {
+        $this->router = $router;
+        $this->manager = $manager;
+        $this->tokenStorage = $tokenStorage;
+        $this->tricksRepo = $tricksRepo;
+        $this->commentsRepo = $commentsRepo;
+        $this->bag = $bag;
+    }
+
+
+    /**
      * @param Request $request
+     * @param Comments $comments
      * @return RedirectResponse
-     * @throws ORMException
      */
     public function __invoke(
-        Comments $comment,
-        Request $request
+        Request $request,
+        Comments $comments
     ) {
         $trick = $this->getTrick($request);
-        if (!$this->isConnectedUserConsistentWithCommentUser($comment)) {
+        if (!$this->isConnectedUserConsistentWithCommentUser($comments)) {
             $this->displayMessage('warning', 'Vous ne pouvez pas supprimer ce commentaire');
         } else {
-            $this->commentsRepo->deleteComment($comment);
+            $this->deleteComment($comments);
             $this->displayMessage('success', 'Votre commentaire a été supprimé');
         }
         return new RedirectResponse($this->router->generate('trick', ['slug' => $trick->getSlug()]));
