@@ -28,6 +28,9 @@ use Twig\Error\SyntaxError;
 class GetHomePage
 {
     use HomeTools;
+
+    const HOME_TWIG = 'home/index.html.twig';
+
     /** @var Environment  */
     private $environment;
     /** @var EntityManagerInterface  */
@@ -64,15 +67,16 @@ class GetHomePage
         $figures = $this->getFirstPageOfTricks();
         $countTricks = $this->tricksRepo->count([]);
         $lastPage = ceil($countTricks / Figure::LIMIT_PER_PAGE);
+        $contextView = [
+            'figures' => $figures,
+            'title' => 'SnowTricks',
+            'lastPage' => $lastPage,
+            'hasTricksToDisplay' => $lastPage > 1,
+        ];
         return new Response(
             $this->environment->render(
-                'home/index.html.twig',
-                [
-                    'figures' => $figures,
-                    'title' => 'SnowTricks',
-                    'lastPage' => $lastPage,
-                    'hasTricksToDisplay' => $lastPage > 1,
-                ]
+                self::HOME_TWIG,
+                $contextView
             )
         );
     }

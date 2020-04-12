@@ -17,8 +17,6 @@ use App\Repository\CommentsRepository;
 use App\Repository\FigureRepository;
 use App\Traits\ViewsTools;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
-use phpDocumentor\Reflection\Types\This;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,6 +32,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class DeleteComment
 {
     use CommentsTools, ViewsTools;
+
+    const ROUTE_NAME = 'trick';
 
     /** @var UrlGeneratorInterface  */
     private $router;
@@ -59,8 +59,14 @@ class DeleteComment
      * @param CommentsRepository $commentsRepo
      * @param FlashBagInterface $bag
      */
-    public function __construct(UrlGeneratorInterface $router, EntityManagerInterface $manager, TokenStorageInterface $tokenStorage, FigureRepository $tricksRepo, CommentsRepository $commentsRepo, FlashBagInterface $bag)
-    {
+    public function __construct(
+        UrlGeneratorInterface $router,
+        EntityManagerInterface $manager,
+        TokenStorageInterface $tokenStorage,
+        FigureRepository $tricksRepo,
+        CommentsRepository $commentsRepo,
+        FlashBagInterface $bag
+    ) {
         $this->router = $router;
         $this->manager = $manager;
         $this->tokenStorage = $tokenStorage;
@@ -86,6 +92,7 @@ class DeleteComment
             $this->deleteComment($comments);
             $this->displayMessage('success', 'Votre commentaire a été supprimé');
         }
-        return new RedirectResponse($this->router->generate('trick', ['slug' => $trick->getSlug()]));
+        $context = ['slug' => $trick->getSlug()];
+        return new RedirectResponse($this->router->generate(self::ROUTE_NAME, $context));
     }
 }

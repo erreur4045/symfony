@@ -19,7 +19,6 @@ use App\Repository\FigureRepository;
 use App\Services\FormResolvers\FormResolverComment;
 use App\Traits\ViewsTools;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,8 +61,14 @@ class EditComment
      * @param CommentsRepository $commentsRepo
      * @param UrlGeneratorInterface $router
      */
-    public function __construct(FormResolverComment $resolver, EntityManagerInterface $manager, TokenStorageInterface $tokenStorage, FigureRepository $tricksRepo, CommentsRepository $commentsRepo, UrlGeneratorInterface $router)
-    {
+    public function __construct(
+        FormResolverComment $resolver,
+        EntityManagerInterface $manager,
+        TokenStorageInterface $tokenStorage,
+        FigureRepository $tricksRepo,
+        CommentsRepository $commentsRepo,
+        UrlGeneratorInterface $router
+    ) {
         $this->resolver = $resolver;
         $this->manager = $manager;
         $this->tokenStorage = $tokenStorage;
