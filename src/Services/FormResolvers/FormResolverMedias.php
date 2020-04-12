@@ -4,9 +4,7 @@ namespace App\Services\FormResolvers;
 
 use App\Entity\Figure;
 use App\Entity\Pictureslink;
-use App\Entity\User;
 use App\Entity\Videolink;
-use App\Services\Interfaces\FormResolversInterfaces\FormResolverMediasInterface;
 use App\Services\OwnTools\UploaderPicture;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -15,8 +13,13 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class FormResolverMedias extends FormResolver implements FormResolverMediasInterface
+/**
+ * Class FormResolverMedias
+ * @package App\Services\FormResolvers
+ */
+class FormResolverMedias extends FormResolver
 {
     /** @var EntityManagerInterface  */
     private $manager;
@@ -60,9 +63,9 @@ class FormResolverMedias extends FormResolver implements FormResolverMediasInter
 
     /**
      * @param FormInterface $form
-     * @param User $user
+     * @param UserInterface $user
      */
-    public function updateProfilePicture(FormInterface $form, User $user)
+    public function updateProfilePicture(FormInterface $form, UserInterface $user)
     {
 
         /** @var UploadedFile $uploadedFile */

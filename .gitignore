@@ -24,14 +24,12 @@ npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
-###> symfony/webpack-encore-pack ###
-/node_modules/
-npm-debug.log
-yarn-error.log
-###< symfony/webpack-encore-pack ###
 
 ###> squizlabs/php_codesniffer ###
 /.phpcs-cache
 /phpcs.xml
 ###< squizlabs/php_codesniffer ###
 /public/uploads/
+.idea
+public/
+.swp
