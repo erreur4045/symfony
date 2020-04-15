@@ -9,8 +9,8 @@ use App\Entity\Pictureslink;
 use App\Entity\User;
 use App\Entity\Videolink;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 use Faker;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -177,15 +177,16 @@ class AppFixturesTest extends Fixture
             }
             for ($n = 0; $n <= 15; $n++) {
                 $comment = new Comments();
-                $comment->setDatecreate(
+                $comment->setDateCreate(
                     $faker->dateTimeInInterval('-30 days', '+5 days')
                 )
                     ->setUser(
                         $manager->getRepository(User::class)
                             ->findOneBy(['id' => $userIds[array_rand($userIds)]])
                     )
-                    ->setIdfigure($figure)
-                    ->setText($RandComments[array_rand($RandComments)]);
+                    ->setFigure($figure)
+                    ->setText($RandComments[array_rand($RandComments)])
+                    ->setDateCreate(new \DateTime());
                 $manager->persist($comment);
             }
         }

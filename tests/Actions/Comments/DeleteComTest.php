@@ -13,9 +13,9 @@ namespace App\Tests\Comments;
 
 
 use App\Entity\Comments;
-use App\Tests\AbstractWebCasse;
+use App\Tests\AbstractWebCase;
 
-class DeleteComTest extends AbstractWebCasse
+class DeleteComTest extends AbstractWebCase
 {
     protected function setUp(): void
     {

@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PictureslinkRepository")
  */
+
+//todo : change class name to Picture
 class Pictureslink
 {
     public const PICTURELINKTRICKRAND = ['1snow','2snow','3snow',];
@@ -111,13 +113,5 @@ class Pictureslink
     public function getPicture()
     {
         return $this->picture;
-    }
-
-    /**
-     * @param mixed $picture
-     */
-    public function setPicture($picture): void
-    {
-        $this->picture = $picture;
     }
 }

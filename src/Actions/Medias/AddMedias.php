@@ -12,81 +12,90 @@
 
 namespace App\Actions\Medias;
 
-use App\Actions\Interfaces\Medias\AddMediasInterface;
 use App\Entity\Figure;
 use App\Form\FigureAddMediaType;
+use App\Repository\FigureRepository;
 use App\Services\FormResolvers\FormResolverMedias;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Traits\RequestTools;
+use App\Traits\ViewsTools;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 /**
  * @Route("/edit/medias/{slug}", name="add.medias")
  * @IsGranted("ROLE_USER")
  */
-class AddMedias implements AddMediasInterface
+class AddMedias
 {
-    /** @var EntityManagerInterface  */
-    private $manager;
-    /** @var FlashBagInterface  */
-    private $bag;
+    use ViewsTools, RequestTools;
+
+    const MEDIA_UPDATE_TWIG = 'media/UpdateMedias.html.twig';
+    const FORM = FigureAddMediaType::class;
+
     /** @var Environment  */
     private $environment;
     /** @var UrlGeneratorInterface  */
     private $router;
     /** @var FormResolverMedias  */
     private $formResolverMedias;
+    /** @var FigureRepository */
+    private $figureRepo;
 
     /**
      * AddMedias constructor.
-     * @param EntityManagerInterface $manager
-     * @param FlashBagInterface $bag
      * @param Environment $environment
      * @param UrlGeneratorInterface $router
      * @param FormResolverMedias $formResolverMedias
+     * @param FigureRepository $figureRepo
      */
     public function __construct(
-        EntityManagerInterface $manager,
-        FlashBagInterface $bag,
         Environment $environment,
         UrlGeneratorInterface $router,
-        FormResolverMedias $formResolverMedias
+        FormResolverMedias $formResolverMedias,
+        FigureRepository $figureRepo
     ) {
-        $this->manager = $manager;
-        $this->bag = $bag;
         $this->environment = $environment;
         $this->router = $router;
         $this->formResolverMedias = $formResolverMedias;
+        $this->figureRepo = $figureRepo;
     }
+
 
     /**
      * @param Request $request
      * @return RedirectResponse|Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function __invoke(Request $request)
     {
+        $figureSlug = $this->getSlugFrom($request);
+
         /** @var Figure $figure */
-        $figure = $this->manager->getRepository(Figure::class)->findOneBy(
-            ['slug' => $request->attributes->get('slug')]
-        );
-        $form = $this->formResolverMedias->getForm($request, FigureAddMediaType::class);
+        $figure = $this->figureRepo->getTrickFromSlug($figureSlug);
+
+        $form = $this->formResolverMedias->getForm($request, self::FORM);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->formResolverMedias->updateMedias($form, $figure);
-            $this->bag->add('success', 'Les medias ont a été ajoutés');
-            return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
+            $this->displayMessage('success', 'Les medias ont a été ajoutés');
+            $context = ['slug' => $figureSlug];
+            return new RedirectResponse($this->router->generate('trick', $context));
         }
-        return new Response($this->environment->render('media/UpdateMedias.html.twig', [
-                    'form' => $form->createView(),
-                    'title' => 'Changer une image'
-                ]));
+
+        $contextView = ['form' => $form->createView(),];
+        return new Response($this->environment->render(
+            self::MEDIA_UPDATE_TWIG,
+            $contextView
+        )
+        );
     }
 }

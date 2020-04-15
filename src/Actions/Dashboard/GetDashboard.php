@@ -2,94 +2,104 @@
 
 namespace App\Actions\Dashboard;
 
-use App\Actions\Interfaces\Dashboard\GetDashboardInterface;
 use App\Entity\Figure;
 use App\Entity\User;
 use App\Form\ProfilePictureType;
+use App\Repository\FigureRepository;
 use App\Services\FormResolvers\FormResolverMedias;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Traits\DashboardTools;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 /**
  * @Route("/dashboard", name="app_dashboard")
  * @IsGranted("ROLE_USER")
  */
-class GetDashboard implements GetDashboardInterface
+class GetDashboard
 {
+    use DashboardTools;
+
+    const DASHBOARD_TWIG_PATH = 'dashboard/index.html.twig';
+    const PROFILE_PICTURE_FORM = ProfilePictureType::class;
+    const ROUTE_NAME = 'app_dashboard';
+
     /** @var Environment  */
     private $environment;
-    /** @var FormResolverMedias  */
-    private $formResolverMedias;
-    /** @var EntityManagerInterface  */
-    private $manager;
     /** @var TokenStorageInterface  */
     private $tokenStorage;
+    /** @var FormResolverMedias  */
+    private $formResolverMedias;
     /** @var UrlGeneratorInterface  */
     private $router;
+    /** @var FigureRepository */
+    private $trickRepo;
 
     /**
      * GetDashboard constructor.
      * @param Environment $environment
-     * @param FormResolverMedias $formResolverMedias
-     * @param EntityManagerInterface $manager
      * @param TokenStorageInterface $tokenStorage
+     * @param FormResolverMedias $formResolverMedias
      * @param UrlGeneratorInterface $router
+     * @param FigureRepository $trickRepo
      */
     public function __construct(
         Environment $environment,
-        FormResolverMedias $formResolverMedias,
-        EntityManagerInterface $manager,
         TokenStorageInterface $tokenStorage,
-        UrlGeneratorInterface $router
-    ) {
+        FormResolverMedias $formResolverMedias,
+        UrlGeneratorInterface $router,
+        FigureRepository $trickRepo
+    )
+    {
         $this->environment = $environment;
-        $this->formResolverMedias = $formResolverMedias;
-        $this->manager = $manager;
         $this->tokenStorage = $tokenStorage;
+        $this->formResolverMedias = $formResolverMedias;
         $this->router = $router;
+        $this->trickRepo = $trickRepo;
     }
 
     /**
      * @param Request $request
      * @return RedirectResponse|Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function __invoke(Request $request)
     {
-        /** @var Figure $figures */
-        $figures = $this->manager->getRepository(Figure::class)
-            ->findBy(
-                ['user' => $this->tokenStorage->getToken()->getUser()->getId()]
-            );
+        /** @var User $connectedUser */
+        $connectedUser = $this->getConnectedUser();
+        /** @var Figure[] $figures */
+        $figures = $this->trickRepo->getTricksFromUser($connectedUser);
+        /** @var FormInterface $form */
+        $form = $this->getForm($request);
 
-        /** @var User $userData */
-        $userData = $this->tokenStorage->getToken()->getUser();
-
-        $type = ProfilePictureType::class;
-        $form = $this->formResolverMedias->getForm($request, $type);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->formResolverMedias->updateProfilePicture($form, $userData);
-            return new RedirectResponse($this->router->generate('app_dashboard'));
+        if ($this->isConform($form)) {
+            $this->updateProfilePicture($form);
+            return $this->getRedirect(self::ROUTE_NAME);
         }
+
+        $contextView = [
+            'form' => $form->createView(),
+            'controller_name' => 'Mon Dashboard',
+            'title' => 'Mon Dashboard',
+            'figure' => $figures,
+            'image' => $this->getProfilePicture()
+        ];
+
         return new Response(
             $this->environment->render(
-                'dashboard/index.html.twig',
-                [
-                    'form' => $form->createView(),
-                    'controller_name' => 'Mon Dashboard',
-                    'title' => 'Mon Dashboard',
-                    'figure' => $figures,
-                    'image' => $userData->getProfilePicture()
-                ]
+                self::DASHBOARD_TWIG_PATH,
+                $contextView
             )
         );
     }

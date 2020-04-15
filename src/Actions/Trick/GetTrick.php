@@ -109,10 +109,10 @@ class GetTrick implements GetTrickInterface
 
         /** @var Comments $comments */
         $comments = $this->manager->getRepository(Comments::class)
-            ->findBy(['idfigure' => $figure->getId()], [], Comments::LIMIT_PER_PAGE, null);
+            ->findBy(['figure' => $figure->getId()], [], Comments::LIMIT_PER_PAGE, null);
         $nbPageMaxCom = ceil(count($this->manager
                     ->getRepository(Comments::class)
-                    ->findBy(['idfigure' => $figure->getId()])) / Comments::LIMIT_PER_PAGE);
+                    ->findBy(['figure' => $figure->getId()])) / Comments::LIMIT_PER_PAGE);
         $rest = $nbPageMaxCom > 1 ? true : false;
         return new Response($this->templating->render('tricks/trick.html.twig', [
                     'form' => $form->createView(),

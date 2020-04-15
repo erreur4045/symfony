@@ -4,13 +4,13 @@ namespace App\Services\OwnTools;
 
 use App\Entity\Pictureslink;
 use App\Entity\User;
-use App\Services\Interfaces\OwnToolsInterfaces\UploaderPictureInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class UploaderPicture implements UploaderPictureInterface
+class UploaderPicture
 {
     /** @var string  */
     private $pictureLinkDirectory;
@@ -64,9 +64,9 @@ class UploaderPicture implements UploaderPictureInterface
 
     /**
      * @param UploadedFile $uploadedFile
-     * @param User $user
+     * @param UserInterface $user
      */
-    public function updateProfilePicture(UploadedFile $uploadedFile, User $user)
+    public function updateProfilePicture(UploadedFile $uploadedFile, UserInterface $user)
     {
         if (($user->getProfilePicture() != Pictureslink::PICTURELINKUSERRAND) == true) {
             $this->filesystem->remove(

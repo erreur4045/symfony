@@ -2,12 +2,14 @@
 
 namespace App\Services\FormResolvers;
 
+use App\Actions\Medias\Picture\PictureTools;
 use App\Entity\Figure;
 use App\Entity\Pictureslink;
-use App\Entity\User;
 use App\Entity\Videolink;
-use App\Services\Interfaces\FormResolversInterfaces\FormResolverMediasInterface;
 use App\Services\OwnTools\UploaderPicture;
+use App\Traits\DoctrineTools;
+use App\Traits\UploaderFileTools;
+use App\Traits\ViewsTools;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -15,9 +17,17 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class FormResolverMedias extends FormResolver implements FormResolverMediasInterface
+/**
+ * Class FormResolverMedias
+ * @package App\Services\FormResolvers
+ */
+class FormResolverMedias extends FormResolver
 {
+
+    use PictureTools, DoctrineTools, ViewsTools, UploaderFileTools;
+
     /** @var EntityManagerInterface  */
     private $manager;
     /** @var FlashBagInterface  */
@@ -60,62 +70,42 @@ class FormResolverMedias extends FormResolver implements FormResolverMediasInter
 
     /**
      * @param FormInterface $form
-     * @param User $user
+     * @param UserInterface $user
      */
-    public function updateProfilePicture(FormInterface $form, User $user)
+    public function updateProfilePicture(FormInterface $form, UserInterface $user)
     {
-
         /** @var UploadedFile $uploadedFile */
         $uploadedFile = $form['profilePicture']->getData();
         $this->uploaderPicture->updateProfilePicture($uploadedFile, $user);
-
-        $this->manager->persist($user);
-        $this->manager->flush();
-        $this->bag->add('success', 'Votre avatar a été modifié');
+        $this->pushInDataBase($user);
+        $this->displayMessage('success', 'Votre avatar a été modifié');
     }
 
     /**
      * @param FormInterface $form
      * @param Figure $figure
-     * @param Pictureslink $exPicture
+     * @param Pictureslink $expiredFile
      */
-    public function updatePictureTrick(FormInterface $form, Figure $figure, Pictureslink $exPicture)
+    public function updateOnePicture(FormInterface $form, Figure $figure, Pictureslink $expiredFile = null)
     {
-        /** @var Pictureslink $newPicture */
-        $newPicture = $form->getData();
-        $newPicture->setFigure($figure);
-        if ($exPicture->getFirstImage() == true) {
-            $newPicture->setFirstImage(true);
-        }
-        /** @var UploadedFile $uploadedFile */
-        $uploadedFile = $form['picture']->getData();
+        // todo : swich case USER and Figure
+        /** @var Pictureslink $newFile */
+        $newFile = $form->getData();
+        $newFile->setFigure($figure);
+        $this->setIsFirstImage($expiredFile, $newFile);
+
+        /** @var Pictureslink $uploadedFile */
+        $uploadedFile = $this->getDataFromField($form, 'picture');
 
         if ($uploadedFile) {
-            $this->filesystem->remove(
-                [
-                '',
-                '',
-                $this->tricksPicturesDirectory . $exPicture
-                ]
-            );
-            $this->manager->remove($exPicture);
-            $this->manager->flush();
-            $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFilename = transliterator_transliterate(
-                'Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()',
-                $originalFilename
-            );
-            $newFilename = $safeFilename . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
+            $this->removeExpireFile($expiredFile);
+            $newFilename = $this->assignValidName($uploadedFile);
             try {
-                $uploadedFile->move(
-                    $this->tricksPicturesDirectory,
-                    $newFilename
-                );
+                $this->moveFileOnPath($uploadedFile, $newFilename);
             } catch (FileException $e) {
             }
-            $newPicture->setLinkpictures($newFilename);
-            $this->manager->persist($newPicture);
-            $this->manager->flush();
+            $newFile->setLinkpictures($newFilename);
+            $this->pushInDataBase($newFile);
         }
     }
 
@@ -128,18 +118,12 @@ class FormResolverMedias extends FormResolver implements FormResolverMediasInter
     {
         /** @var Videolink $newVideo */
         $newVideo = $form->getData();
-        $newVideoLink = $form['linkvideo']->getData();
-        $videoEmbed = preg_match(
-            Videolink::PATTERNYT,
-            $newVideoLink,
-            $matches
-        );
-        $linkToStock = 'https://www.youtube.com/embed/' . $matches[1];
+        $newVideoLink = $this->getDataFromField($form, 'linkvideo');
+        $linkToStock = $this->getEmbedFromYoutubeLink($newVideoLink);
         $newVideo->setFigure($figure);
         $newVideo->setLinkvideo($linkToStock);
-        $this->manager->remove($exVideo);
-        $this->manager->persist($newVideo);
-        $this->manager->flush();
+        $this->removeFromDataBase($exVideo);
+        $this->pushInDataBase($newVideo);
     }
 
     /**
@@ -149,43 +133,38 @@ class FormResolverMedias extends FormResolver implements FormResolverMediasInter
     public function updateMedias(FormInterface $form, Figure $figure)
     {
         /** @var UploadedFile $uploadedFile */
-        $uploadedFile = $form['pictureslinks']->getData();
+        $uploadedFile = $this->getDataFromField($form, 'pictureslinks');
+        /** @var Pictureslink $fileToUpload */
         foreach ($uploadedFile as $fileToUpload) {
             if ($fileToUpload) {
-                $originalFilename = pathinfo($fileToUpload->getPicture()->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = transliterator_transliterate(
-                    'Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()',
-                    $originalFilename
-                );
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $fileToUpload->getPicture()->guessExtension();
+                $fileToUpload->setFigure($figure);
+                $newFilename = $this->assignValidName($fileToUpload);
                 try {
-                    $fileToUpload->getPicture()->move(
-                        $this->tricksPicturesDirectory,
-                        $newFilename
-                    );
+                  $this->moveFileOnPath($fileToUpload, $newFilename);
                 } catch (FileException $e) {
                 }
-                /** @var Pictureslink $fileToUpload */
-                $fileToUpload->setFigure($figure);
                 $fileToUpload->setLinkpictures($newFilename);
-                $this->manager->persist($fileToUpload);
+                $this->pushInDataBase($fileToUpload);
             }
-            $this->manager->flush();
         }
-        /** @var Videolink $newVideo */
-        $newVideoLink = $form['videolinks']->getData();
+        /** @var Videolink[] $newVideo */
+        $newVideoLink = $this->getDataFromField($form, 'videolinks');
+        /** @var Videolink $linkToUpload */
         foreach ($newVideoLink as $linkToUpload) {
-            $videoEmbed = preg_match(
-                Videolink::PATTERNYT,
-                $linkToUpload->getLinkvideo(),
-                $matches
-            );
-            $linkToStock = 'https://www.youtube.com/embed/' . $matches[1];
+            $linkToStock = $this->getEmbedFromYoutubeLink($linkToUpload);
             $linkToUpload->setFigure($figure);
             $linkToUpload->setLinkvideo($linkToStock);
-            $this->manager->persist($linkToUpload);
-            $this->manager->flush();
+            $this->pushInDataBase($linkToUpload);
         }
-        $this->manager->persist($figure);
+    }
+
+    protected function getEmbedFromYoutubeLink(Videolink $newVideoLink)
+    {
+        preg_match(
+            Videolink::PATTERNYT,
+            $newVideoLink->getLinkvideo(),
+            $matches
+        );
+        return Videolink::HTTPS_YOUTUBE_EMBED . $matches[1];
     }
 }

@@ -12,55 +12,73 @@
 
 namespace App\Actions\Home;
 
-use App\Actions\Interfaces\Home\GetHomePageInterface;
 use App\Entity\Figure;
+use App\Repository\FigureRepository;
+use App\Traits\HomeTools;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 /**
  * @Route("/", name="home")
  */
-class GetHomePage implements GetHomePageInterface
+class GetHomePage
 {
+    use HomeTools;
+
+    const HOME_TWIG = 'home/index.html.twig';
+
     /** @var Environment  */
     private $environment;
     /** @var EntityManagerInterface  */
     private $manager;
+    /** @var FigureRepository */
+    private $tricksRepo;
 
     /**
      * GetHomePage constructor.
      * @param Environment $environment
      * @param EntityManagerInterface $manager
+     * @param FigureRepository $tricksRepo
      */
-    public function __construct(Environment $environment, EntityManagerInterface $manager)
-    {
+    public function __construct(
+        Environment $environment,
+        EntityManagerInterface $manager,
+        FigureRepository $tricksRepo
+    ) {
         $this->environment = $environment;
         $this->manager = $manager;
+        $this->tricksRepo = $tricksRepo;
     }
 
 
     /**
      * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function __invoke()
     {
         /** @var Figure $figures */
-        $figures = $this->manager->getRepository(Figure::class)
-            ->findBy([], [], Figure::LIMIT_PER_PAGE, null);
-        /** @var $nbPageMax */
-        $nbPageMax = ceil($this->manager->getRepository(Figure::class)
-                ->count([]) / Figure::LIMIT_PER_PAGE);
-        $rest = $nbPageMax > 1 ? true : false;
-        return new Response($this->environment->render('home/index.html.twig', [
-                    'figures' => $figures,
-                    'title' => 'SnowTricks',
-                    'pagemax' => $nbPageMax,
-                    'rest' => $rest
-                ]));
+        $figures = $this->tricksRepo->getFirstPageOfTricks();
+        $countTricks = $this->tricksRepo->count([]);
+        $lastPage = ceil($countTricks / Figure::LIMIT_PER_PAGE);
+        $contextView = [
+            'figures' => $figures,
+            'title' => 'SnowTricks',
+            'lastPage' => $lastPage,
+            'hasTricksToDisplay' => $lastPage > 1,
+        ];
+        return new Response(
+            $this->environment->render(
+                self::HOME_TWIG,
+                $contextView
+            )
+        );
     }
 }

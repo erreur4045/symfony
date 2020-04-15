@@ -12,6 +12,7 @@
 namespace App\Tests\Entity;
 
 use App\Entity\Comments;
+use DateTime;
 use PHPUnit\Framework\TestCase;
 
 class CommentsTest extends TestCase
@@ -26,12 +27,12 @@ class CommentsTest extends TestCase
 
     public function testAttributes()
     {
-        $date = new \DateTime('2020-03-11 20:36:43');
-        $this->comment->setDatecreate($date);
-        $this->comment->setDateupdate($date);
+        $date = new DateTime('2020-03-11 20:36:43');
+        $this->comment->setDateCreate($date);
+        $this->comment->setDateUpdate($date);
         $this->comment->setText('test');
-        static::assertEquals($date, $this->comment->getDatecreate());
-        static::assertEquals($date, $this->comment->getDateupdate());
+        static::assertEquals($date, $this->comment->getDateCreate());
+        static::assertEquals($date, $this->comment->getDateUpdate());
         static::assertEquals('test', $this->comment->getText());
     }
 }

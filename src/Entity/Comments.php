@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -26,24 +27,29 @@ class Comments
     /**
      * @ORM\Column(type="datetime")
      */
-    private $datecreate;
+    private $dateCreate;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $dateupdate;
+    private $dateUpdate;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Figure", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $idfigure;
+    private $figure;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+
+    /**
+     * @var ArrayCollection
+     */
+    private $figures;
 
     public function __construct()
     {
@@ -67,38 +73,38 @@ class Comments
         return $this;
     }
 
-    public function getDatecreate(): ?\DateTimeInterface
+    public function getDateCreate(): ?DateTimeInterface
     {
-        return $this->datecreate;
+        return $this->dateCreate;
     }
 
-    public function setDatecreate(\DateTimeInterface $datecreate): self
+    public function setDateCreate(DateTimeInterface $dateCreate): self
     {
-        $this->datecreate = $datecreate;
+        $this->dateCreate = $dateCreate;
 
         return $this;
     }
 
-    public function getDateupdate(): ?\DateTimeInterface
+    public function getDateUpdate(): ?DateTimeInterface
     {
-        return $this->dateupdate;
+        return $this->dateUpdate;
     }
 
-    public function setDateupdate(?\DateTimeInterface $dateupdate): self
+    public function setDateUpdate(?DateTimeInterface $dateUpdate): self
     {
-        $this->dateupdate = $dateupdate;
+        $this->dateUpdate = $dateUpdate;
 
         return $this;
     }
 
-    public function getIdfigure(): ?Figure
+    public function getFigure(): ?Figure
     {
-        return $this->idfigure;
+        return $this->figure;
     }
 
-    public function setIdfigure(?Figure $idfigure): self
+    public function setFigure(?Figure $figure): self
     {
-        $this->idfigure = $idfigure;
+        $this->figure = $figure;
 
         return $this;
     }
