@@ -90,7 +90,7 @@ class EditComment
     public function __invoke(Request $request)
     {
         /** @var Comments $comment */
-        $comment = $this->getComment($request);
+        $comment = $this->commentsRepo->getCommentFrom($request);
         /** @var Figure $tricks */
         $tricks = $this->getTrick($request);
         /** @var string $trickUrl */

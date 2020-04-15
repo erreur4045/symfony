@@ -65,7 +65,7 @@ class GetHomePage
     public function __invoke()
     {
         /** @var Figure $figures */
-        $figures = $this->getFirstPageOfTricks();
+        $figures = $this->tricksRepo->getFirstPageOfTricks();
         $countTricks = $this->tricksRepo->count([]);
         $lastPage = ceil($countTricks / Figure::LIMIT_PER_PAGE);
         $contextView = [

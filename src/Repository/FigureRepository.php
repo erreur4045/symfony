@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Figure;
+use App\Traits\HomeTools;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @method Figure|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,11 +16,11 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class FigureRepository extends ServiceEntityRepository
 {
+    use HomeTools;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Figure::class);
     }
-
 
     /**
      * @param $slug
@@ -29,33 +31,43 @@ class FigureRepository extends ServiceEntityRepository
         return $this->findOneBy(['slug' => $slug]);
     }
 
-
-    // /**
-    //  * @return Figure[] Returns an array of Figure objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param $user
+     * @return Figure[]
+     */
+    public function getTricksFromUser($user): array
     {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('f.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->findBy(['user' => $user]);
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Figure
+    /**
+     * @return Figure[]
+     */
+    public function getFirstPageOfTricks(): array
     {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $this->findBy([], [], Figure::LIMIT_PER_PAGE, null);
     }
-    */
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function getTricksToDisplay(Request $request): array
+    {
+        $pageId = $request->query->get('page');
+        return $this->findBy(
+            [],
+            [],
+            Figure::LIMIT_PER_PAGE,
+            $this->computeOffset($pageId)
+        );
+    }
+
+    /**
+     * @return int
+     */
+    public function countTricks(): int
+    {
+        return $this->count([]);
+    }
 }

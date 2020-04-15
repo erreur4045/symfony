@@ -84,7 +84,7 @@ class MoreComments
         $countComments = $this->commentsRepo->countCommentsByIdTrick($trickId);
         $contextView = [
             'user' => $this->getConnectedUser(),
-            'commentsToShow' => $this->getCommentsToShow($trickId, $offset),
+            'commentsToShow' => $this->commentsRepo->getCommentsToShow($trickId, $offset),
             'rest' => $this->isRest($countComments, $pageId)
         ];
         return new Response(

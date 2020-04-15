@@ -7,6 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @method Comments|null find($id, $lockMode = null, $lockVersion = null)
@@ -41,6 +42,32 @@ class CommentsRepository extends ServiceEntityRepository
     {
         return count($this->findBy(['figure' => $idFigure ]));
     }
+
+    /**
+     * @param Request $request
+     * @return Comments
+     */
+    public function getCommentFrom(Request $request)
+    {
+        $commentId = $request->get('id');;
+        return $this->findOneBy(['id' => $commentId]);
+    }
+
+    /**
+     * @param $trickId
+     * @param $offset
+     * @return Comments[]
+     */
+    public function getCommentsToShow($trickId, $offset): array
+    {
+        return $this->findBy(
+            ['figure' => $trickId],
+            [],
+            Comments::LIMIT_PER_PAGE,
+            $offset
+        );
+    }
+
     // /**
     //  * @return Comments[] Returns an array of Comments objects
     //  */

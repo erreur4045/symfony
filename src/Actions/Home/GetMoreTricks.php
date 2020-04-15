@@ -55,7 +55,7 @@ class GetMoreTricks
     public function __invoke(Request $request)
     {
         $contextView = [
-            'tricksToDisplay' => $this->getTricksToDisplay($request),
+            'tricksToDisplay' => $this->tricksRepo->getTricksToDisplay($request),
             'hasTricksToDisplay' => $this->hasTricksToDisplay($request),
         ];
         return new Response(

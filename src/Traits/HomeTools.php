@@ -4,6 +4,7 @@
 namespace App\Traits;
 
 use App\Entity\Figure;
+use App\Repository\FigureRepository;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -13,13 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 trait HomeTools
 {
 
-    /**
-     * @return Figure[]
-     */
-    public function getFirstPageOfTricks(): array
-    {
-        return $this->tricksRepo->findBy([], [], Figure::LIMIT_PER_PAGE, null);
-    }
+    /** @var FigureRepository */
+    private $tricksRepo;
 
     /**
      * @param $pageId
@@ -36,25 +32,8 @@ trait HomeTools
      */
     public function hasTricksToDisplay(Request $request): bool
     {
-        return $this->getPageId($request) * Figure::LIMIT_PER_PAGE < $this->countTricks();
+        return $this->getPageId($request) * Figure::LIMIT_PER_PAGE < $this->tricksRepo->countTricks();
     }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function getTricksToDisplay(Request $request): array
-    {
-        $pageId = $this->getPageId($request);
-        return $this->tricksRepo->findBy(
-            [],
-            [],
-            Figure::LIMIT_PER_PAGE,
-            $this->computeOffset($pageId)
-        );
-    }
-
-
     /**
      * @param Request $request
      * @return mixed
@@ -62,13 +41,5 @@ trait HomeTools
     public function getPageId(Request $request)
     {
         return $request->query->get('page');
-    }
-
-    /**
-     * @return int
-     */
-    public function countTricks(): int
-    {
-        return $this->tricksRepo->count([]);
     }
 }

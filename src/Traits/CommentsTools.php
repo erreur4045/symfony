@@ -17,7 +17,6 @@ use App\Entity\Figure;
 use App\Repository\CommentsRepository;
 use App\Repository\FigureRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -58,39 +57,12 @@ trait CommentsTools
     }
 
     /**
-     * @param Request $request
-     * @return Comments
-     */
-    public function getComment(Request $request)
-    {
-        $commentId = $this->getIdCommentFrom($request);
-        return $this->commentsRepo->findOneBy(['id' => $commentId]);
-    }
-
-    /**
-     * @param $trickId
-     * @param $offset
-     * @return Comments[]
-     */
-    public function getCommentsToShow($trickId, $offset): array
-    {
-        return $this->commentsRepo->findBy(
-            ['figure' => $trickId],
-            [],
-            Comments::LIMIT_PER_PAGE,
-            $offset
-        );
-    }
-
-    /**
      * @return string|UserInterface
      */
     public function getConnectedUser()
     {
         return $this->tokenStorage->getToken()->getUser();
     }
-
-
 
     /**
      * @param $pageId

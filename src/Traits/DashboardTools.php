@@ -5,7 +5,6 @@ namespace App\Traits;
 
 
 use App\Actions\Dashboard\GetDashboard;
-use App\Entity\Figure;
 use App\Repository\FigureRepository;
 use App\Services\FormResolvers\FormResolverMedias;
 use Symfony\Component\Form\FormInterface;
@@ -35,15 +34,6 @@ trait DashboardTools
     public function getConnectedUser()
     {
         return $this->tokenStorage->getToken()->getUser();
-    }
-
-    /**
-     * @return Figure[]
-     */
-    public function getTricksFromUser(): array
-    {
-        $user = $this->getConnectedUser();
-        return $this->trickRepo->findBy(['user' => $user->getId()]);
     }
 
     /**

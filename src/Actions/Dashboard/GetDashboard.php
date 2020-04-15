@@ -3,6 +3,7 @@
 namespace App\Actions\Dashboard;
 
 use App\Entity\Figure;
+use App\Entity\User;
 use App\Form\ProfilePictureType;
 use App\Repository\FigureRepository;
 use App\Services\FormResolvers\FormResolverMedias;
@@ -75,8 +76,10 @@ class GetDashboard
      */
     public function __invoke(Request $request)
     {
+        /** @var User $connectedUser */
+        $connectedUser = $this->getConnectedUser();
         /** @var Figure[] $figures */
-        $figures = $this->getTricksFromUser();
+        $figures = $this->trickRepo->getTricksFromUser($connectedUser);
         /** @var FormInterface $form */
         $form = $this->getForm($request);
 
