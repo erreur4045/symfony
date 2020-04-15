@@ -1,15 +1,14 @@
 <?php
 
 
-namespace App\Actions\Home;
+namespace App\Traits;
 
 use App\Entity\Figure;
-use App\Repository\FigureRepository;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Trait HomeToolsTrait
- * @package App\Actions\Home
+ * @package App\Traits\Home
  */
 trait HomeTools
 {

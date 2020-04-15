@@ -14,6 +14,7 @@ namespace App\Actions\Home;
 
 use App\Entity\Figure;
 use App\Repository\FigureRepository;
+use App\Traits\HomeTools;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;

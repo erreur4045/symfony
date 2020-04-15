@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Comments;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -20,6 +21,26 @@ class CommentsRepository extends ServiceEntityRepository
         parent::__construct($registry, Comments::class);
     }
 
+    public function deleteComment(Comments $comment)
+    {
+        try {
+            $this->_em->remove($comment);
+        } catch (ORMException $e) {
+        }
+        try {
+            $this->_em->flush();
+        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
+        }
+    }
+
+    /**
+     * @return int|void
+     */
+    public function countCommentsByIdTrick($idFigure)
+    {
+        return count($this->findBy(['figure' => $idFigure ]));
+    }
     // /**
     //  * @return Comments[] Returns an array of Comments objects
     //  */

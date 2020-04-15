@@ -10,7 +10,7 @@
  * PHP Version : 7.3.5
  */
 
-namespace App\Actions\Comments;
+namespace App\Traits;
 
 use App\Entity\Comments;
 use App\Entity\Figure;
@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Trait CommentsTools
- * @package App\Actions\Comments
+ * @package App\Traits
  */
 trait CommentsTools
 {
@@ -49,34 +49,6 @@ trait CommentsTools
     }
 
     /**
-     * @param Request $request
-     * @return Figure|object|null
-     */
-    public function getTrick(Request $request)
-    {
-        $trickId = $this->getTrickFromIdComment($request)->getId();
-        return $this->tricksRepo->findOneBy(['id' => $trickId]);
-    }
-
-    /**
-     * @param Request $request
-     * @return mixed
-     */
-    public function getPageId(Request $request)
-    {
-        return $request->query->get('page');
-    }
-
-    /**
-     * @param Request $request
-     * @return mixed
-     */
-    public function getTrickId(Request $request)
-    {
-        return $request->query->get('figureid');
-    }
-
-    /**
      * @param Figure $tricks
      * @return string
      */
@@ -93,16 +65,6 @@ trait CommentsTools
     {
         $commentId = $this->getIdCommentFrom($request);
         return $this->commentsRepo->findOneBy(['id' => $commentId]);
-    }
-
-
-    /**
-     * @return int|void
-     */
-    public function countCommentsByIdTrick()
-    {
-
-        return count($this->tricksRepo->findAll());
     }
 
     /**
@@ -128,31 +90,24 @@ trait CommentsTools
         return $this->tokenStorage->getToken()->getUser();
     }
 
+
+
     /**
-     * @param Request $request
-     * @return Figure
+     * @param $pageId
+     * @return float|int
      */
-    public function getTrickFromIdComment(Request $request) :Figure
+    protected function computeOffsetFrom($pageId)
     {
-        $comment = $this->commentsRepo->find($this->getIdCommentFrom($request));
-        return $comment->getFigure();
+        return $pageId * Comments::LIMIT_PER_PAGE - Comments::LIMIT_PER_PAGE;
     }
 
     /**
-     * @param Comments $comment
+     * @param int $countComments
+     * @param $pageId
+     * @return bool
      */
-    public function deleteComment(Comments $comment): void
+    protected function isRest(int $countComments, $pageId): bool
     {
-        $this->manager->remove($comment);
-        $this->manager->flush();
-    }
-
-    /**
-     * @param Request $request
-     * @return mixed
-     */
-    public function getIdCommentFrom(Request $request)
-    {
-        return $request->get('id');
+        return $countComments > Comments::LIMIT_PER_PAGE ? false : $pageId * Comments::LIMIT_PER_PAGE < $countComments;
     }
 }

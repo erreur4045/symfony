@@ -2,9 +2,10 @@
 
 namespace App\Actions\Comments;
 
-use App\Entity\Comments;
 use App\Repository\CommentsRepository;
 use App\Repository\FigureRepository;
+use App\Traits\CommentsTools;
+use App\Traits\RequestTools;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +25,8 @@ use Twig\Error\SyntaxError;
  */
 class MoreComments
 {
-    use CommentsTools;
+
+    use CommentsTools, RequestTools ;
 
     const BLOCK_COMMENTS_TWIG = 'block_for_include/block_for_coms_ajax.html.twig';
 
@@ -78,13 +80,12 @@ class MoreComments
     {
         $pageId = $this->getPageId($request);
         $trickId = $this->getTrickId($request);
-        $offset = $pageId * Comments::LIMIT_PER_PAGE - Comments::LIMIT_PER_PAGE;
-        $countComments = $this->countCommentsByIdTrick();
-        $rest = $countComments > Comments::LIMIT_PER_PAGE ? false : $pageId * Comments::LIMIT_PER_PAGE < $countComments;
+        $offset = $this->computeOffsetFrom($pageId);
+        $countComments = $this->commentsRepo->countCommentsByIdTrick($trickId);
         $contextView = [
             'user' => $this->getConnectedUser(),
             'commentsToShow' => $this->getCommentsToShow($trickId, $offset),
-            'rest' => $rest
+            'rest' => $this->isRest($countComments, $pageId)
         ];
         return new Response(
             $this->environment->render(

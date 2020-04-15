@@ -17,6 +17,8 @@ use App\Entity\Figure;
 use App\Repository\CommentsRepository;
 use App\Repository\FigureRepository;
 use App\Services\FormResolvers\FormResolverComment;
+use App\Traits\CommentsTools;
+use App\Traits\RequestTools;
 use App\Traits\ViewsTools;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -37,7 +39,7 @@ use Twig\Error\SyntaxError;
 class EditComment
 {
 
-    use ViewsTools, CommentsTools;
+    use ViewsTools, CommentsTools, RequestTools;
 
     /** @var FormResolverComment */
     private $resolver;

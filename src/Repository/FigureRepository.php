@@ -19,6 +19,17 @@ class FigureRepository extends ServiceEntityRepository
         parent::__construct($registry, Figure::class);
     }
 
+
+    /**
+     * @param $slug
+     * @return Figure
+     */
+    public function getTrickFromSlug($slug) :Figure
+    {
+        return $this->findOneBy(['slug' => $slug]);
+    }
+
+
     // /**
     //  * @return Figure[] Returns an array of Figure objects
     //  */

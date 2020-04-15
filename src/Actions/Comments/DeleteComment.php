@@ -15,6 +15,8 @@ namespace App\Actions\Comments;
 use App\Entity\Comments;
 use App\Repository\CommentsRepository;
 use App\Repository\FigureRepository;
+use App\Traits\CommentsTools;
+use App\Traits\RequestTools;
 use App\Traits\ViewsTools;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -31,7 +33,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class DeleteComment
 {
-    use CommentsTools, ViewsTools;
+    use CommentsTools, ViewsTools, RequestTools;
 
     const ROUTE_NAME = 'trick';
 
@@ -89,7 +91,7 @@ class DeleteComment
         if (!$this->isConnectedUserConsistentWithCommentUser($comments)) {
             $this->displayMessage('warning', 'Vous ne pouvez pas supprimer ce commentaire');
         } else {
-            $this->deleteComment($comments);
+            $this->commentsRepo->deleteComment($comments);
             $this->displayMessage('success', 'Votre commentaire a été supprimé');
         }
         $context = ['slug' => $trick->getSlug()];

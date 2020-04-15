@@ -6,6 +6,7 @@ use App\Entity\Figure;
 use App\Form\ProfilePictureType;
 use App\Repository\FigureRepository;
 use App\Services\FormResolvers\FormResolverMedias;
+use App\Traits\DashboardTools;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
