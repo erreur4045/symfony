@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Pictureslink;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,6 +21,42 @@ class PictureslinkRepository extends ServiceEntityRepository
         parent::__construct($registry, Pictureslink::class);
     }
 
+    public function deletePicture(Pictureslink $picture)
+    {
+        try {
+            $this->_em->remove($picture);
+        } catch (ORMException $e) {
+        }
+        try {
+            $this->_em->flush();
+        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
+        }
+    }
+
+    public function getNextImages(Pictureslink $pictureslink)
+    {
+        $figure = $pictureslink->getFigure();
+        return $this->findOneBy([
+            'figure' => $figure->getId(),
+            'first_image' => false
+        ]);
+    }
+
+    public function pushImage(Pictureslink $image)
+    {
+
+        try {
+            $this->_em->persist($image);
+        } catch (ORMException $e) {
+        }
+        try {
+            $this->_em->flush();
+        } catch (OptimisticLockException $e) {
+        } catch (ORMException $e) {
+        }
+
+    }
     // /**
     //  * @return Videolink[] Returns an array of Videolink objects
     //  */

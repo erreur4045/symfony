@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Videolink
 {
     public const PATTERNYT = '/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:&list=(\S+))?$/';
-
+    public const HTTPS_YOUTUBE_EMBED = 'https://www.youtube.com/embed/';
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
