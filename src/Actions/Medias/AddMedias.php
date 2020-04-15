@@ -95,7 +95,6 @@ class AddMedias
         return new Response($this->environment->render(
             self::MEDIA_UPDATE_TWIG,
             $contextView
-        )
-        );
+        ));
     }
 }

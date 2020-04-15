@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Figure;
 use App\Entity\Pictureslink;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -55,34 +56,15 @@ class PictureslinkRepository extends ServiceEntityRepository
         } catch (OptimisticLockException $e) {
         } catch (ORMException $e) {
         }
+    }
 
-    }
-    // /**
-    //  * @return Videolink[] Returns an array of Videolink objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param Figure $figure
+     * @return Pictureslink[]
+     */
+    public function getByTrick(Figure $figure): array
     {
-        return $this->createQueryBuilder('v')
-            ->andWhere('v.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('v.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $figureId = $figure->getId();
+        return $this->findBy(['figure' => $figureId]);
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Videolink
-    {
-        return $this->createQueryBuilder('v')
-            ->andWhere('v.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

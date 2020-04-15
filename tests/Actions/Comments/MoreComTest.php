@@ -11,15 +11,15 @@
 
 namespace App\Tests\Comments;
 
-
 use App\Entity\Figure;
 use App\Tests\AbstractWebCasse;
 
 class MoreComTest extends AbstractWebCasse
-{    protected function setUp(): void
 {
-    $this->reloadDataFixtures();
-}
+    protected function setUp(): void
+    {
+        $this->reloadDataFixtures();
+    }
     public function testIndex()
     {
         $kernel = static::createKernel();

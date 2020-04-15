@@ -3,7 +3,6 @@
 
 namespace App\Traits;
 
-
 use Doctrine\ORM\EntityManagerInterface;
 
 trait DoctrineTools
@@ -17,7 +16,7 @@ trait DoctrineTools
     protected function pushInDataBase($object): void
     {
         $this->manager->persist($object);
-        $this->getFlush();
+        $this->manager->flush();
     }
 
     /**
@@ -26,11 +25,6 @@ trait DoctrineTools
     protected function removeFromDataBase($object): void
     {
         $this->manager->remove($object);
-        $this->getFlush();
-    }
-
-    protected function getFlush(): void
-    {
         $this->manager->flush();
     }
 }

@@ -11,7 +11,6 @@
 
 namespace App\Tests;
 
-
 use App\DataFixtures\AppFixturesTest;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;

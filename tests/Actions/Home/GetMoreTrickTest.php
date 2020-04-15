@@ -11,7 +11,6 @@
 
 namespace App\Tests\Actions\Home;
 
-
 use App\Tests\AbstractWebCasse;
 
 class GetMoreTrickTest extends AbstractWebCasse

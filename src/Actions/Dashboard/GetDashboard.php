@@ -58,8 +58,7 @@ class GetDashboard
         FormResolverMedias $formResolverMedias,
         UrlGeneratorInterface $router,
         FigureRepository $trickRepo
-    )
-    {
+    ) {
         $this->environment = $environment;
         $this->tokenStorage = $tokenStorage;
         $this->formResolverMedias = $formResolverMedias;

@@ -3,7 +3,6 @@
 
 namespace App\Traits;
 
-
 use App\Actions\Dashboard\GetDashboard;
 use App\Repository\FigureRepository;
 use App\Services\FormResolvers\FormResolverMedias;

@@ -3,7 +3,6 @@
 
 namespace App\Traits;
 
-
 use App\Entity\Pictureslink;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\File;
@@ -74,8 +73,9 @@ trait UploaderFileTools
      */
     protected function setIsFirstImage(Pictureslink $expiredPicture, Pictureslink $newPicture): void
     {
-        if ($expiredPicture->getFirstImage() == true)
+        if ($expiredPicture->getFirstImage() == true) {
             $newPicture->setFirstImage(true);
+        }
     }
 
     /**

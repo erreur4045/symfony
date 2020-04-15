@@ -11,8 +11,6 @@
 
 namespace App\Tests\Entity;
 
-
-use App\Entity\Figure;
 use App\Entity\Figuregroup;
 use PHPUnit\Framework\TestCase;
 

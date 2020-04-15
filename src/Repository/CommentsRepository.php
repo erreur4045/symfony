@@ -49,7 +49,8 @@ class CommentsRepository extends ServiceEntityRepository
      */
     public function getCommentFrom(Request $request)
     {
-        $commentId = $request->get('id');;
+        $commentId = $request->get('id');
+        ;
         return $this->findOneBy(['id' => $commentId]);
     }
 

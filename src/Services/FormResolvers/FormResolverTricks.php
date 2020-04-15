@@ -171,11 +171,7 @@ class FormResolverTricks extends FormResolver implements FormResolverTricksInter
         /** @var Pictureslink $picture */
         /** @var  Figure $figure */
         foreach ($figure->getPictureslinks() as $picture) {
-            /**
-             *
-             *
-             * @var UploadedFile $nameImage
-             */
+            /** @var UploadedFile $nameImage */
             $nameImage = $picture->getPicture();
             $originalName = $nameImage->getClientOriginalName();
             $safeFilename = transliterator_transliterate(

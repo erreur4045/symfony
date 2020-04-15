@@ -3,7 +3,6 @@
 
 namespace App\Traits;
 
-
 use App\Entity\Figure;
 use App\Repository\CommentsRepository;
 use App\Repository\FigureRepository;

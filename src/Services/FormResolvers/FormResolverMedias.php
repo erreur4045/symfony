@@ -140,7 +140,7 @@ class FormResolverMedias extends FormResolver
                 $fileToUpload->setFigure($figure);
                 $newFilename = $this->assignValidName($fileToUpload);
                 try {
-                  $this->moveFileOnPath($fileToUpload, $newFilename);
+                    $this->moveFileOnPath($fileToUpload, $newFilename);
                 } catch (FileException $e) {
                 }
                 $fileToUpload->setLinkpictures($newFilename);

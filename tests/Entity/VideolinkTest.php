@@ -11,7 +11,6 @@
 
 namespace App\Tests\Entity;
 
-
 use App\Entity\Figure;
 use App\Entity\Videolink;
 use PHPUnit\Framework\TestCase;

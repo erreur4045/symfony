@@ -8,10 +8,9 @@
         "ext-intl": "*",
         "doctrine/annotations": "^1.8",
         "doctrine/doctrine-bundle": "^1.11",
+        "doctrine/orm": "2.7.*",
         "fzaninotto/faker": "^1.8",
-        "knplabs/knp-paginator-bundle": "^4.0",
         "sensio/framework-extra-bundle": "^5.1",
-        "stof/doctrine-extensions-bundle": "^1.3",
         "symfony/asset": "4.4.*",
         "symfony/console": "4.4.*",
         "symfony/dotenv": "4.4.*",
@@ -29,7 +28,6 @@
         "symfony/process": "4.4.*",
         "symfony/security-bundle": "4.4.*",
         "symfony/serializer-pack": "1.0.*",
-        "symfony/swiftmailer-bundle": "^3.1",
         "symfony/templating": "4.4.*",
         "symfony/translation": "4.4.*",
         "symfony/twig-bundle": "4.4.*",
@@ -42,8 +40,7 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.0.2",
-        "escapestudios/symfony2-coding-standard": "3.x-dev",
-        "squizlabs/php_codesniffer": "3.5.*",
+        "squizlabs/php_codesniffer": "*",
         "symfony/debug-pack": "1.0.*",
         "symfony/maker-bundle": "^1.0",
         "symfony/profiler-pack": "1.0.*",
@@ -92,12 +89,6 @@
         "symfony": {
             "allow-contrib": false,
             "require": "4.4.*"
-        }
-    },
-    "repositories": {
-        "greg0ire": {
-            "type": "vcs",
-            "url": "https://github.com/greg0ire/doctrine-orm"
         }
     }
 }

@@ -11,7 +11,6 @@
 
 namespace App\Tests\Actions\Trick;
 
-
 use App\Tests\AbstractWebCasse;
 
 class GetTrickTest extends AbstractWebCasse

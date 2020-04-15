@@ -85,7 +85,7 @@ class DeletePicture
             $this->pictureRepo->deletePicture($image);
         }
         $this->removeImageTrickOnServer($image);
-        $this->displayMessage('success','La figure a été mise a jour');
+        $this->displayMessage('success', 'La figure a été mise a jour');
         $context = ['slug' => $image->getFigure()->getSlug()];
         return new RedirectResponse($this->router->generate(self::TRICK_TWIG, $context));
     }

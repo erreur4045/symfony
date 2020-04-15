@@ -114,4 +114,12 @@ class Pictureslink
     {
         return $this->picture;
     }
+
+    /**
+     * @param mixed $picture
+     */
+    public function setPicture($picture): void
+    {
+        $this->picture = $picture;
+    }
 }

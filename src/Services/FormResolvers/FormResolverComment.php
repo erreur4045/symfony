@@ -66,7 +66,9 @@ class FormResolverComment extends FormResolver
     public function addCom(FormInterface $form, User $user, Figure $figure)
     {
         $comment = $form->getData();
-        $comment->setDatecreate(new DateTime())->setFigure($figure)->setUser($user);
+        $comment->setDatecreate(new DateTime());
+        $comment->setFigure($figure);
+        $comment->setUser($user);
         $this->manager->persist($comment);
         $this->manager->flush();
     }

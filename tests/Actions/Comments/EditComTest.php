@@ -11,14 +11,14 @@
 
 namespace App\Tests\Comments;
 
-
 use App\Tests\AbstractWebCasse;
 
 class EditComTest extends AbstractWebCasse
-{    protected function setUp(): void
 {
-    $this->reloadDataFixtures();
-}
+    protected function setUp(): void
+    {
+        $this->reloadDataFixtures();
+    }
     public function testEditComPageWithUnexsistCom()
     {
         $this->ensureKernelShutdown();
