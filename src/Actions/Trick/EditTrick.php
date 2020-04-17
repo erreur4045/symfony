@@ -91,7 +91,7 @@ class EditTrick
             'form' => $form->createView(),
             'h1' => 'Modification de la figure',
             'emptyMedia' => $this->isOtherMedia($figure),
-            'otherPicture' => $this->isOneOtherFirstImage($figure)
+            'otherPicture' => $this->pictureRepo->isOneOtherFirstImage($figure)
         ];
         return $this->responder->render(self::TRICKS_EDITTRICK_TWIG, $context);
     }

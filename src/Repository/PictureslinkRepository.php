@@ -67,4 +67,13 @@ class PictureslinkRepository extends ServiceEntityRepository
         $figureId = $figure->getId();
         return $this->findBy(['figure' => $figureId]);
     }
+
+    /**
+     * @param Figure $figure
+     * @return bool
+     */
+    protected function isOneOtherFirstImage(Figure $figure): bool
+    {
+        return empty($this->findBy(['figure' => $figure->getId(), 'first_image' => 0]));
+    }
 }

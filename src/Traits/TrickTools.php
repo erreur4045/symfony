@@ -9,14 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 trait TrickTools
 {
-    /**
-     * @param Figure $figure
-     * @return bool
-     */
-    protected function isOneOtherFirstImage(Figure $figure): bool
-    {
-        return empty($this->pictureRepo->findBy(['figure' => $figure->getId(), 'first_image' => 0]));
-    }
+
 
     /**
      * @param Figure $figure
@@ -33,12 +26,7 @@ trait TrickTools
      */
     protected function isOtherMedia(Figure $figure)
     {
-        return empty($this->pictureRepo->findBy(
-            [
-                'figure' => $figure->getId(),
-                'first_image' => 0
-            ]
-        )) && empty($this->videoRepo->getByTrick($figure));
+        return empty($this->pictureRepo->isOneOtherFirstImage($figure)) && empty($this->videoRepo->getByTrick($figure));
     }
 
     /**
