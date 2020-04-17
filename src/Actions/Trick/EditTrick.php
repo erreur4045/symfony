@@ -25,6 +25,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -74,7 +75,10 @@ class EditTrick
      */
     public function __invoke(Request $request)
     {
-        [$figure, $hasOtherMedia, $hasOtherPicture] = $this->checkFigureMedias($request);
+        $figure = $this->getFigureFrom($request);
+        if (is_null($figure)) {
+            throw new NotFoundHttpException('La figure n\'existe pas');
+        }
         /** @var Form $form */
         $form = $this->formResolverTricks->getForm($request, FigureEditType::class, $figure);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -86,8 +90,8 @@ class EditTrick
             'figure' => $figure,
             'form' => $form->createView(),
             'h1' => 'Modification de la figure',
-            'emptyMedia' => $hasOtherMedia,
-            'otherPicture' => $hasOtherPicture
+            'emptyMedia' => $this->isOtherMedia($figure),
+            'otherPicture' => $this->isOneOtherFirstImage($figure)
         ];
         return $this->responder->render(self::TRICKS_EDITTRICK_TWIG, $context);
     }

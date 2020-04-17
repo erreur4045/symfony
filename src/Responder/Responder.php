@@ -38,8 +38,11 @@ class Responder implements ResponderInterface
                 $this->twig->render($name, $context)
             );
         } catch (LoaderError $e) {
+            dd($e);
         } catch (RuntimeError $e) {
+            dd($e);
         } catch (SyntaxError $e) {
+            dd($e);
         }
     }
 

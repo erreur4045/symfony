@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Figure;
 use App\Entity\Videolink;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -23,5 +24,14 @@ class VideolinkRepository extends ServiceEntityRepository
     {
         $this->_em->remove($video);
         $this->_em->flush();
+    }
+
+    /**
+     * @param Figure $figure
+     * @return Videolink[]
+     */
+    public function getByTrick(Figure $figure) :array
+    {
+        return $this->findBy(['figure' => $figure->getId()]);
     }
 }

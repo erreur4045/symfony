@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Comments;
+use App\Entity\Figure;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -69,32 +70,12 @@ class CommentsRepository extends ServiceEntityRepository
         );
     }
 
-    // /**
-    //  * @return Comments[] Returns an array of Comments objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param Figure $figure
+     * @return Comments[]
+     */
+    public function getByTrick(Figure $figure)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->findBy(['figure' => $figure->getId()], [], Comments::LIMIT_PER_PAGE, null);
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Comments
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

@@ -27,18 +27,18 @@
                                         <img src="{{ asset('uploads/figureimage/') ~ images.linkpictures }}"
                                              class="rounded mt-4 img-fluid"
                                              alt="" style="max-height: 500px">
-                                        <div class="centered">{{ data.name }}</div>
+                                        <div class="centered">{{ figure.name }}</div>
                                         {% if app.user %}
                                             <div class="box_buttons_edit_delete">
                                                 <button type="button" class="btn btn-primary delete_modal"
                                                         data-toggle="modal"
-                                                        data-slug="{{ path('delete.trick', {slug: data.slug}) }}"
+                                                        data-slug="{{ path('delete.trick', {slug: figure.slug}) }}"
                                                         data-message="Êtes-vous sûr de vouloir supprimer cette figure ?">
                                                     <i class="material-icons"
                                                        style="color: #222222">delete_sweep</i>
                                                 </button>
                                                 <button type="button" class="btn btn-primary"><a
-                                                            href="{{ path('edit.trick', {slug: data.slug}) }}"><i
+                                                            href="{{ path('edit.trick', {slug: figure.slug}) }}"><i
                                                                 class="material-icons"
                                                                 style="color: #222222">create</i></a></button>
                                             </div>
@@ -87,14 +87,14 @@
                         <div class="col-12"><h1 class="text-center">Description de la figure</h1>
                             <div class="col-md-12 mt-4 p-2 d-inline-block text-center">
                                 <p>Catégorie : <span
-                                            class="badge badge-secondary">{{ data.idfiguregroup.name }}</span>
+                                            class="badge badge-secondary">{{ figure.idfiguregroup.name }}</span>
                                     Créée le : <span
-                                            class="badge badge-secondary">{{ data.datecreate|date('d-m-Y') }}</span>
-                                    {% if data.dateupdate is not null %}
+                                            class="badge badge-secondary">{{ figure.datecreate|date('d-m-Y') }}</span>
+                                    {% if figure.dateupdate is not null %}
                                         Modifié le : <span
-                                            class="badge badge-secondary"> {{ data.dateupdate|date('d-m-Y') }}</span>
+                                            class="badge badge-secondary"> {{ figure.dateupdate|date('d-m-Y') }}</span>
                                     {% endif %}</p>
-                                <p>{{ data.description|capitalize }}</p>
+                                <p>{{ figure.description|capitalize }}</p>
                             </div>
                         </div>
                         {% if app.user %}
@@ -142,7 +142,7 @@
                                 <a data-url="{{ path('more.coms') }}" type="button"
                                    class="btn btn-outline-primary btn_load_coms"
                                    id="btn_load_coms" data-page="2" data-pagemax="{{ pagemax }}"
-                                   data-figureid="{{ data.id }}">Affichier plus de commentaires</a>
+                                   data-figureid="{{ figure.id }}">Affichier plus de commentaires</a>
                             </div>
                         {% endif %}
                     </div>

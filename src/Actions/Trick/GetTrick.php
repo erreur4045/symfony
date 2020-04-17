@@ -12,7 +12,6 @@
 
 namespace App\Actions\Trick;
 
-use App\Entity\Comments;
 use App\Form\CommentType;
 use App\Repository\CommentsRepository;
 use App\Repository\FigureRepository;
@@ -59,6 +58,7 @@ class GetTrick
      * @param PictureslinkRepository $pictureRepo
      * @param FigureRepository $figureRepo
      * @param VideolinkRepository $videoRepo
+     * @param CommentsRepository $commentRepo
      */
     public function __construct(
         FlashBagInterface $bag,
@@ -67,7 +67,8 @@ class GetTrick
         ResponderInterface $responder,
         PictureslinkRepository $pictureRepo,
         FigureRepository $figureRepo,
-        VideolinkRepository $videoRepo
+        VideolinkRepository $videoRepo,
+        CommentsRepository $commentRepo
     ) {
         $this->bag = $bag;
         $this->tokenStorage = $tokenStorage;
@@ -76,6 +77,7 @@ class GetTrick
         $this->pictureRepo = $pictureRepo;
         $this->figureRepo = $figureRepo;
         $this->videoRepo = $videoRepo;
+        $this->commentRepo = $commentRepo;
     }
 
 
@@ -87,11 +89,11 @@ class GetTrick
      */
     public function __invoke(Request $request)
     {
-        $figure = $this->figureRepo->findOneBy(['slug' => $request->attributes->get('slug')]);
+        $figure = $this->getFigureFrom($request);
         if (is_null($figure)) {
             throw new EntityNotFoundException('Cette figure n\'existe pas');
         }
-        [$image, $video, $hasOtherMedia, $user] = $this->getDataForViewFrom($figure);
+        $user = $this->tokenStorage->getToken()->getUser();
         $form = $this->formResolverComment->getForm($request, CommentType::class);
         if ($form->isSubmitted() && $form->isValid() && $user != null) {
             $this->formResolverComment->addComment($form, $user, $figure);
@@ -100,18 +102,16 @@ class GetTrick
             return $this->responder->redirect(self::TRICK, $context);
         }
 
-        /** @var Comments $comments */
-        $comments = $this->commentRepo->findBy(['figure' => $figure->getId()], [], Comments::LIMIT_PER_PAGE, null);
         $contextView = [
             'form' => $form->createView(),
-            'data' => $figure,
-            'image' => $image,
-            'video' => $video,
-            'comment' => $comments,
+            'figure' => $figure,
+            'image' => $this->pictureRepo->getByTrick($figure),
+            'video' => $this->videoRepo->getByTrick($figure),
+            'comment' => $this->commentRepo->getByTrick($figure),
             'user' => $user,
-            'emptyMedia' => $hasOtherMedia,
+            'emptyMedia' => $this->isOtherMedia($figure),
+            'pagemax' => $this->getPageMaxCommentFrom($figure),
             'rest' => $this->getPageMaxCommentFrom($figure) > 1,
-            'pagemax' => $this->getPageMaxCommentFrom($figure)
         ];
         return $this->responder->render(self::TRICKS_TWIG, $contextView);
     }
