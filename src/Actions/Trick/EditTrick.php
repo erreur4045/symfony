@@ -12,87 +12,83 @@
 
 namespace App\Actions\Trick;
 
-use App\Actions\Interfaces\Trick\EditTrickInterface;
-use App\Entity\Figure;
-use App\Entity\Pictureslink;
-use App\Entity\Videolink;
 use App\Form\FigureEditType;
+use App\Repository\FigureRepository;
+use App\Repository\PictureslinkRepository;
+use App\Repository\VideolinkRepository;
+use App\Responder\Interfaces\ResponderInterface;
 use App\Services\FormResolvers\FormResolverTricks;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Traits\TrickTools;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Twig\Environment;
 
 /**
  * @Route("/edit/{slug}", name="edit.trick")
  * @IsGranted("ROLE_USER")
  */
-class EditTrick implements EditTrickInterface
+class EditTrick
 {
-    private Environment $templating;
-    private UrlGeneratorInterface $router;
-    private EntityManagerInterface $manager;
+    const TRICKS_EDITTRICK_TWIG = 'tricks/edittrick.html.twig';
+    const TRICK = 'trick';
+
+    use TrickTools;
+
     private FormResolverTricks $formResolverTricks;
+    private ResponderInterface $responder;
+    private PictureslinkRepository $pictureRepo;
+    private FigureRepository $figureRepo;
+    private VideolinkRepository $videoRepo;
 
     /**
      * EditTrick constructor.
-     * @param Environment $templating
-     * @param UrlGeneratorInterface $router
-     * @param EntityManagerInterface $manager
      * @param FormResolverTricks $formResolverTricks
+     * @param ResponderInterface $responder
+     * @param PictureslinkRepository $pictureRepo
+     * @param FigureRepository $figureRepo
+     * @param VideolinkRepository $videoRepo
      */
     public function __construct(
-        Environment $templating,
-        UrlGeneratorInterface $router,
-        EntityManagerInterface $manager,
-        FormResolverTricks $formResolverTricks
+        FormResolverTricks $formResolverTricks,
+        ResponderInterface $responder,
+        PictureslinkRepository $pictureRepo,
+        FigureRepository $figureRepo,
+        VideolinkRepository $videoRepo
     ) {
-        $this->templating = $templating;
-        $this->router = $router;
-        $this->manager = $manager;
         $this->formResolverTricks = $formResolverTricks;
+        $this->responder = $responder;
+        $this->pictureRepo = $pictureRepo;
+        $this->figureRepo = $figureRepo;
+        $this->videoRepo = $videoRepo;
     }
+
 
     /**
      * @param Request $request
      * @return RedirectResponse|Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws Exception
      */
     public function __invoke(Request $request)
     {
-        /** @var Figure $datatricks */
-        $figure = $this->manager->getRepository(Figure::class)
-            ->findOneBy(['slug' => $request->attributes->get('slug')]);
-        if (is_null($figure)) {
-            throw new NotFoundHttpException('La figure n\'existe pas');
-        }
-
-        /** @var Videolink $video */
-        $video = $this->manager->getRepository(Videolink::class)->findBy(['figure' => $figure->getId()]);
-        $hasOthermedia = empty($this->manager->getRepository(Pictureslink::class)
-            ->findBy(['figure' => $figure->getId(), 'first_image' => 0])) && empty($video) ? true : false;
-        $hasOtherPicture = empty($this->manager->getRepository(Pictureslink::class)
-            ->findBy(['figure' => $figure->getId(), 'first_image' => 0])) ? true : false;
+        [$figure, $hasOtherMedia, $hasOtherPicture] = $this->checkFigureMedias($request);
         /** @var Form $form */
         $form = $this->formResolverTricks->getForm($request, FigureEditType::class, $figure);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->formResolverTricks->updateTrick($figure);
-            return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
+            $context = ['slug' => $figure->getSlug()];
+            return $this->responder->redirect(self::TRICK, $context);
         }
-        return new Response($this->templating->render('tricks/edittrick.html.twig', [
-                    'figure' => $figure,
-                    'form' => $form->createView(),
-                    'h1' => 'Modification de la figure',
-                    'emptyMedia' => $hasOthermedia,
-                    'otherPicture' => $hasOtherPicture
-                ]));
+        $context = [
+            'figure' => $figure,
+            'form' => $form->createView(),
+            'h1' => 'Modification de la figure',
+            'emptyMedia' => $hasOtherMedia,
+            'otherPicture' => $hasOtherPicture
+        ];
+        return $this->responder->render(self::TRICKS_EDITTRICK_TWIG, $context);
     }
 }

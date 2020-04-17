@@ -12,64 +12,48 @@
 
 namespace App\Actions\Trick;
 
-use App\Actions\Interfaces\Trick\AddTrickInterface;
 use App\Entity\User;
 use App\Form\FigureType;
+use App\Responder\Interfaces\ResponderInterface;
 use App\Services\FormResolvers\FormResolverTricks;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 /**
  * @Route("/addtrick", name="addtrick")
  */
-class AddTrick implements AddTrickInterface
+class AddTrick
 {
-    private Environment $templating;
-    private UrlGeneratorInterface $router;
-    private EntityManagerInterface $manager;
+    const TRICKS_NEWTRICK_TWIG = 'tricks/newtrick.html.twig';
     private TokenStorageInterface $tokenStorage;
     private FormResolverTricks $formResolverTricks;
+    private ResponderInterface $responder;
 
     /**
      * AddTrick constructor.
-     * @param Environment $templating
-     * @param UrlGeneratorInterface $router
-     * @param EntityManagerInterface $manager
      * @param TokenStorageInterface $tokenStorage
      * @param FormResolverTricks $formResolverTricks
+     * @param ResponderInterface $responder
      */
     public function __construct(
-        Environment $templating,
-        UrlGeneratorInterface $router,
-        EntityManagerInterface $manager,
         TokenStorageInterface $tokenStorage,
-        FormResolverTricks $formResolverTricks
+        FormResolverTricks $formResolverTricks,
+        ResponderInterface $responder
     ) {
-        $this->templating = $templating;
-        $this->router = $router;
-        $this->manager = $manager;
         $this->tokenStorage = $tokenStorage;
         $this->formResolverTricks = $formResolverTricks;
+        $this->responder = $responder;
     }
 
 
     /**
      * @param Request $request
      * @return RedirectResponse|Response
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
      * @throws Exception
      */
     public function __invoke(Request $request)
@@ -80,12 +64,13 @@ class AddTrick implements AddTrickInterface
         $form = $this->formResolverTricks->getForm($request, FigureType::class);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->formResolverTricks->addTrick($form, $user);
-            return new RedirectResponse($this->router->generate('home'));
+            return $this->responder->redirect('/');
         }
 
-        return new Response($this->templating->render('tricks/newtrick.html.twig', [
-                    'form' => $form->createView(),
-                    'h1' => 'Ajout d\'une figure'
-                ]));
+        $contextView = [
+            'form' => $form->createView(),
+            'h1' => 'Ajout d\'une figure'
+        ];
+        return $this->responder->render(self::TRICKS_NEWTRICK_TWIG, $contextView);
     }
 }

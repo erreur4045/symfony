@@ -4,7 +4,6 @@ namespace App\Services\FormResolvers;
 
 use App\Entity\Comments;
 use App\Entity\Figure;
-use App\Entity\User;
 use App\Form\EditComType;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -56,11 +55,11 @@ class FormResolverComment extends FormResolver
 
     /**
      * @param FormInterface $form
-     * @param User $user
+     * @param $user
      * @param Figure $figure
      * @throws Exception
      */
-    public function addCom(FormInterface $form, User $user, Figure $figure)
+    public function addComment(FormInterface $form, $user, Figure $figure)
     {
         $comment = $form->getData();
         $comment->setDatecreate(new DateTime());

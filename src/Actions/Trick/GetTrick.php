@@ -12,112 +12,107 @@
 
 namespace App\Actions\Trick;
 
-use App\Actions\Interfaces\Trick\GetTrickInterface;
 use App\Entity\Comments;
-use App\Entity\Figure;
-use App\Entity\Pictureslink;
-use App\Entity\User;
-use App\Entity\Videolink;
 use App\Form\CommentType;
+use App\Repository\CommentsRepository;
+use App\Repository\FigureRepository;
+use App\Repository\PictureslinkRepository;
+use App\Repository\VideolinkRepository;
+use App\Responder\Interfaces\ResponderInterface;
 use App\Services\FormResolvers\FormResolverComment;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Traits\TrickTools;
+use App\Traits\ViewsTools;
 use Doctrine\ORM\EntityNotFoundException;
-use Symfony\Component\Form\Form;
+use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Twig\Environment;
 
 /**
  * @Route("/tricks/details/{slug}", name="trick")
  */
-class GetTrick implements GetTrickInterface
+class GetTrick
 {
-    private Environment $templating;
-    private UrlGeneratorInterface $router;
-    private EntityManagerInterface $manager;
+    const TRICK = 'trick';
+    const TRICKS_TWIG = 'tricks/trick.html.twig';
+
+    use TrickTools, ViewsTools;
+
     private FlashBagInterface $bag;
     private TokenStorageInterface $tokenStorage;
     private FormResolverComment $formResolverComment;
+    private ResponderInterface $responder;
+    private PictureslinkRepository $pictureRepo;
+    private FigureRepository $figureRepo;
+    private VideolinkRepository $videoRepo;
+    private CommentsRepository $commentRepo;
 
     /**
      * GetTrick constructor.
-     * @param Environment $templating
-     * @param UrlGeneratorInterface $router
-     * @param EntityManagerInterface $manager
      * @param FlashBagInterface $bag
      * @param TokenStorageInterface $tokenStorage
      * @param FormResolverComment $formResolverComment
+     * @param ResponderInterface $responder
+     * @param PictureslinkRepository $pictureRepo
+     * @param FigureRepository $figureRepo
+     * @param VideolinkRepository $videoRepo
      */
     public function __construct(
-        Environment $templating,
-        UrlGeneratorInterface $router,
-        EntityManagerInterface $manager,
         FlashBagInterface $bag,
         TokenStorageInterface $tokenStorage,
-        FormResolverComment $formResolverComment
+        FormResolverComment $formResolverComment,
+        ResponderInterface $responder,
+        PictureslinkRepository $pictureRepo,
+        FigureRepository $figureRepo,
+        VideolinkRepository $videoRepo
     ) {
-        $this->templating = $templating;
-        $this->router = $router;
-        $this->manager = $manager;
         $this->bag = $bag;
         $this->tokenStorage = $tokenStorage;
         $this->formResolverComment = $formResolverComment;
+        $this->responder = $responder;
+        $this->pictureRepo = $pictureRepo;
+        $this->figureRepo = $figureRepo;
+        $this->videoRepo = $videoRepo;
     }
+
 
     /**
      * @param Request $request
      * @return RedirectResponse|Response
      * @throws EntityNotFoundException
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws Exception
      */
     public function __invoke(Request $request)
     {
-        /** @var Figure $figure */
-        $figure = $this->manager->getRepository(Figure::class)
-            ->findOneBy(['slug' => $request->attributes->get('slug')]);
+        $figure = $this->figureRepo->findOneBy(['slug' => $request->attributes->get('slug')]);
         if (is_null($figure)) {
             throw new EntityNotFoundException('Cette figure n\'existe pas');
         }
-        /** @var Pictureslink $image */
-        $image = $this->manager->getRepository(Pictureslink::class)->findBy(['figure' => $figure->getId()]);
-        /** @var Videolink $video */
-        $video = $this->manager->getRepository(Videolink::class)->findBy(['figure' => $figure->getId()]);
-        $hasOthermedia = empty($this->manager->getRepository(Pictureslink::class)
-            ->findBy(['figure' => $figure->getId(), 'first_image' => 0])) && empty($video) ? true : false;
-        /** @var Form $form */
+        [$image, $video, $hasOtherMedia, $user] = $this->getDataForViewFrom($figure);
         $form = $this->formResolverComment->getForm($request, CommentType::class);
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
         if ($form->isSubmitted() && $form->isValid() && $user != null) {
-            $this->formResolverComment->addCom($form, $user, $figure);
-            $this->bag->add('success', 'Votre commentaire a été ajouté');
-            return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
+            $this->formResolverComment->addComment($form, $user, $figure);
+            $this->displayMessage('success', 'Votre commentaire a été ajouté');
+            $context = ['slug' => $figure->getSlug()];
+            return $this->responder->redirect(self::TRICK, $context);
         }
 
         /** @var Comments $comments */
-        $comments = $this->manager->getRepository(Comments::class)
-            ->findBy(['figure' => $figure->getId()], [], Comments::LIMIT_PER_PAGE, null);
-        $nbPageMaxCom = ceil(count($this->manager
-                    ->getRepository(Comments::class)
-                    ->findBy(['figure' => $figure->getId()])) / Comments::LIMIT_PER_PAGE);
-        $rest = $nbPageMaxCom > 1 ? true : false;
-        return new Response($this->templating->render('tricks/trick.html.twig', [
-                    'form' => $form->createView(),
-                    'data' => $figure,
-                    'image' => $image,
-                    'video' => $video,
-                    'comment' => $comments,
-                    'user' => $user,
-                    'emptyMedia' => $hasOthermedia,
-                    'rest' => $rest,
-                    'pagemax' => $nbPageMaxCom
-                ]));
+        $comments = $this->commentRepo->findBy(['figure' => $figure->getId()], [], Comments::LIMIT_PER_PAGE, null);
+        $contextView = [
+            'form' => $form->createView(),
+            'data' => $figure,
+            'image' => $image,
+            'video' => $video,
+            'comment' => $comments,
+            'user' => $user,
+            'emptyMedia' => $hasOtherMedia,
+            'rest' => $this->getPageMaxCommentFrom($figure) > 1,
+            'pagemax' => $this->getPageMaxCommentFrom($figure)
+        ];
+        return $this->responder->render(self::TRICKS_TWIG, $contextView);
     }
 }
