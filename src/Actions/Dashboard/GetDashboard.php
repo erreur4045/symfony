@@ -2,24 +2,18 @@
 
 namespace App\Actions\Dashboard;
 
-use App\Entity\Figure;
 use App\Entity\User;
 use App\Form\ProfilePictureType;
 use App\Repository\FigureRepository;
+use App\Responder\Interfaces\ResponderInterface;
 use App\Services\FormResolvers\FormResolverMedias;
 use App\Traits\DashboardTools;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 /**
  * @Route("/dashboard", name="app_dashboard")
@@ -33,58 +27,45 @@ class GetDashboard
     const PROFILE_PICTURE_FORM = ProfilePictureType::class;
     const ROUTE_NAME = 'app_dashboard';
 
-    /** @var Environment  */
-    private $environment;
-    /** @var TokenStorageInterface  */
-    private $tokenStorage;
-    /** @var FormResolverMedias  */
-    private $formResolverMedias;
-    /** @var UrlGeneratorInterface  */
-    private $router;
-    /** @var FigureRepository */
-    private $trickRepo;
+    private TokenStorageInterface $tokenStorage;
+    private FormResolverMedias $formResolverMedias;
+    private FigureRepository $trickRepo;
+    private ResponderInterface $responder;
 
     /**
      * GetDashboard constructor.
-     * @param Environment $environment
      * @param TokenStorageInterface $tokenStorage
      * @param FormResolverMedias $formResolverMedias
-     * @param UrlGeneratorInterface $router
      * @param FigureRepository $trickRepo
+     * @param ResponderInterface $responder
      */
     public function __construct(
-        Environment $environment,
         TokenStorageInterface $tokenStorage,
         FormResolverMedias $formResolverMedias,
-        UrlGeneratorInterface $router,
-        FigureRepository $trickRepo
+        FigureRepository $trickRepo,
+        ResponderInterface $responder
     ) {
-        $this->environment = $environment;
         $this->tokenStorage = $tokenStorage;
         $this->formResolverMedias = $formResolverMedias;
-        $this->router = $router;
         $this->trickRepo = $trickRepo;
+        $this->responder = $responder;
     }
+
 
     /**
      * @param Request $request
      * @return RedirectResponse|Response
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
      */
     public function __invoke(Request $request)
     {
         /** @var User $connectedUser */
         $connectedUser = $this->getConnectedUser();
-        /** @var Figure[] $figures */
         $figures = $this->trickRepo->getTricksFromUser($connectedUser);
-        /** @var FormInterface $form */
         $form = $this->getForm($request);
 
         if ($this->isConform($form)) {
             $this->updateProfilePicture($form);
-            return $this->getRedirect(self::ROUTE_NAME);
+            return $this->responder->redirect(self::ROUTE_NAME);
         }
 
         $contextView = [
@@ -94,12 +75,6 @@ class GetDashboard
             'figure' => $figures,
             'image' => $this->getProfilePicture()
         ];
-
-        return new Response(
-            $this->environment->render(
-                self::DASHBOARD_TWIG_PATH,
-                $contextView
-            )
-        );
+        return $this->responder->render(self::DASHBOARD_TWIG_PATH, $contextView);
     }
 }

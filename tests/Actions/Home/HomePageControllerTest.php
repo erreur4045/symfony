@@ -12,9 +12,9 @@
 
 namespace App\Tests\Actions\Home;
 
-use App\Tests\AbstractWebCasse;
+use App\Tests\AbstractWebCase;
 
-class HomePageControllerTest extends AbstractWebCasse
+class HomePageControllerTest extends AbstractWebCase
 {
     protected function setUp()
     {

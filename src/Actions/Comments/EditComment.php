@@ -38,21 +38,14 @@ use Twig\Error\SyntaxError;
 */
 class EditComment
 {
-
     use ViewsTools, CommentsTools, RequestTools;
 
-    /** @var FormResolverComment */
-    private $resolver;
-    /** @var EntityManagerInterface  */
-    private $manager;
-    /** @var TokenStorageInterface  */
-    private $tokenStorage;
-    /** @var FigureRepository */
-    private $tricksRepo;
-    /** @var CommentsRepository */
-    private $commentsRepo;
-    /** @var UrlGeneratorInterface  */
-    private $router;
+    private FormResolverComment $resolver;
+    private EntityManagerInterface $manager;
+    private TokenStorageInterface $tokenStorage;
+    private FigureRepository $tricksRepo;
+    private CommentsRepository $commentsRepo;
+    private UrlGeneratorInterface $router;
 
     /**
      * EditComment constructor.
@@ -93,7 +86,6 @@ class EditComment
         $comment = $this->commentsRepo->getCommentFrom($request);
         /** @var Figure $tricks */
         $tricks = $this->getTrick($request);
-        /** @var string $trickUrl */
         $trickUrl = $this->getTrickUrl($tricks);
         if (!$this->isConnectedUserConsistentWithCommentUser($comment)) {
             $this->displayMessage('warning', 'Vous ne pouvez pas modifier ce commentaire');

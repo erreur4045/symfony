@@ -18,10 +18,11 @@ class DeleteComTest extends AbstractWebCase
 {
     protected function setUp(): void
     {
-        $this->reloadDataFixtures();
+        parent::setUp();
+        parent::reloadDataFixtures();
     }
 
-    public function testDeleteComWithUnexsistCom()
+    public function testDeleteComWithUnexistCom()
     {
         $this->ensureKernelShutdown();
         $client = static::createClient();
@@ -29,7 +30,7 @@ class DeleteComTest extends AbstractWebCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
-    public function testDeleteComWithExsistCom()
+    public function testDeleteComWithExistCom()
     {
         $this->ensureKernelShutdown();
         $client = static::createClient();

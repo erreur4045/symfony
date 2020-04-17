@@ -11,9 +11,9 @@
 
 namespace App\Tests\Dashboard;
 
-use App\Tests\AbstractWebCasse;
+use App\Tests\AbstractWebCase;
 
-class GetDashboardTest extends AbstractWebCasse
+class GetDashboardTest extends AbstractWebCase
 {
     public function setUp(): void
     {

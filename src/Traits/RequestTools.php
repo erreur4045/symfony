@@ -4,18 +4,10 @@
 namespace App\Traits;
 
 use App\Entity\Figure;
-use App\Repository\CommentsRepository;
-use App\Repository\FigureRepository;
 use Symfony\Component\HttpFoundation\Request;
 
 trait RequestTools
 {
-
-    /** @var FigureRepository */
-    private $tricksRepo;
-    /** @var CommentsRepository */
-    private $commentsRepo;
-
     /**
      * @param Request $request
      * @return mixed

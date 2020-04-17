@@ -11,9 +11,9 @@
 
 namespace App\Tests\Actions\Trick;
 
-use App\Tests\AbstractWebCasse;
+use App\Tests\AbstractWebCase;
 
-class DeleteTrickTest extends AbstractWebCasse
+class DeleteTrickTest extends AbstractWebCase
 {
     protected function setUp(): void
     {

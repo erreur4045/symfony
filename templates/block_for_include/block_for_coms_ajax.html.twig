@@ -1,21 +1,26 @@
 {% for comment in commentsToShow %}
-        <div class="col-12">
-            <img src="{{ asset('uploads/profilepicture/' ~ comment.user.profilePicture) }}"
-                 class="mr-3 rounded-circle embed-responsive userimg d-inline-block p-1"
-                 alt="{{ 'image_utilisateur' }}">
+    <div class="col-12" >
+        <img src="{{ asset('uploads/profilepicture/' ~ comment.user.profilePicture) }}"
+             class="mr-3 rounded-circle embed-responsive userimg d-inline-block p-1"
+             alt="{{ 'image_utilisateur' }}">
 
-            <span >{{ comment.user.name|capitalize }} :</span>
-            <span >Le {{ comment.datecreate|date("d/m/Y") }}</span>
-            <span >a écrit :</span>
-            <span class="border border-dark rounded ">
-                                        <span >{{ comment.text }}</span>
+        <span >{{ comment.user.name|capitalize }} :</span>
+        <span >Le {{ comment.datecreate|date("d/m/Y") }}</span>
+        <span >a écrit :</span>
+        <br class="mobile-break">
+        <span class="border border-dark rounded d-inline-block pl-1 pr-1 margin_left_com">
+                                        <span>{{ comment.text }}</span>
                                         </span>
-            {% if user.name is defined and comment.user.name == user.name %}
-                    <button class=" btn btn-danger text-right  p-0 ml-1">
-                        <a href="{{ path('delete.comment', {id: comment.id}) }}">Supprimer</a>
-                    </button>
-                    <button class="btn btn-info text-right p-0"><a href="{{ path('edit.comment', {id: comment.id}) }}">Modifier</a>
-                    </button>
-                {% endif %}
-        </div>
+        {% if user.name is defined and comment.user.name == user.name %}
+            <br class="mobile-break">
+            <span class="d-inline-block margin_left_com">
+                                                <button class=" btn btn-danger text-right  p-0 pl-1 delete_modal" data-toggle="modal"
+                                                        data-slug="{{ path('delete.comment', {id: comment.id}) }}"
+                                                        data-message="Êtes-vous sûr de vouloir supprimer votre commentaire ?">Supprimer
+                                                </button>
+                                                <button class="btn btn-info text-right p-0"><a href="{{ path('edit.comment', {id: comment.id}) }}" style="color: white">Modifier</a>
+                                                </button>
+                                                </span>
+        {% endif %}
+    </div>
 {% endfor %}

@@ -11,9 +11,9 @@
 
 namespace App\Tests\Actions\Home;
 
-use App\Tests\AbstractWebCasse;
+use App\Tests\AbstractWebCase;
 
-class GetMoreTrickTest extends AbstractWebCasse
+class GetMoreTrickTest extends AbstractWebCase
 {
     protected function setUp(): void
     {

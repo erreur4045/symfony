@@ -14,14 +14,12 @@ namespace App\Actions\Home;
 
 use App\Entity\Figure;
 use App\Repository\FigureRepository;
+use App\Responder\Interfaces\ResponderInterface;
 use App\Traits\HomeTools;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 /**
  * @Route("/", name="home")
@@ -32,35 +30,33 @@ class GetHomePage
 
     const HOME_TWIG = 'home/index.html.twig';
 
-    /** @var Environment  */
-    private $environment;
-    /** @var EntityManagerInterface  */
-    private $manager;
-    /** @var FigureRepository */
-    private $tricksRepo;
+    private Environment $environment;
+    private EntityManagerInterface $manager;
+    private FigureRepository $tricksRepo;
+    private ResponderInterface $responder;
 
     /**
      * GetHomePage constructor.
      * @param Environment $environment
      * @param EntityManagerInterface $manager
      * @param FigureRepository $tricksRepo
+     * @param ResponderInterface $responder
      */
     public function __construct(
         Environment $environment,
         EntityManagerInterface $manager,
-        FigureRepository $tricksRepo
+        FigureRepository $tricksRepo,
+        ResponderInterface $responder
     ) {
         $this->environment = $environment;
         $this->manager = $manager;
         $this->tricksRepo = $tricksRepo;
+        $this->responder = $responder;
     }
 
 
     /**
      * @return Response
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
      */
     public function __invoke()
     {
@@ -74,11 +70,9 @@ class GetHomePage
             'lastPage' => $lastPage,
             'hasTricksToDisplay' => $lastPage > 1,
         ];
-        return new Response(
-            $this->environment->render(
-                self::HOME_TWIG,
-                $contextView
-            )
-        );
+         return $this->responder->render(
+             self::HOME_TWIG,
+             $contextView
+         );
     }
 }

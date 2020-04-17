@@ -4,18 +4,9 @@
 namespace App\Actions\Medias\Picture;
 
 use App\Entity\Pictureslink;
-use App\Repository\PictureslinkRepository;
-use Symfony\Component\Filesystem\Filesystem;
 
 trait PictureTools
 {
-    /** @var string */
-    private $tricksPicturesDirectory;
-    /** @var PictureslinkRepository */
-    private $pictureRepo;
-    /** @var Filesystem  */
-    private $filesystem;
-
     /**
      * @param Pictureslink $NewFirstImages
      */

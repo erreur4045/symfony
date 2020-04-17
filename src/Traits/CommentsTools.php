@@ -14,11 +14,6 @@ namespace App\Traits;
 
 use App\Entity\Comments;
 use App\Entity\Figure;
-use App\Repository\CommentsRepository;
-use App\Repository\FigureRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -27,17 +22,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 trait CommentsTools
 {
-    /** @var TokenStorageInterface  */
-    private $tokenStorage;
-    /** @var FigureRepository */
-    private $tricksRepo;
-    /** @var UrlGeneratorInterface  */
-    private $router;
-    /** @var EntityManagerInterface  */
-    private $manager;
-    /** @var CommentsRepository */
-    private $commentsRepo;
-
     /**
      * @param Comments $comment
      * @return bool

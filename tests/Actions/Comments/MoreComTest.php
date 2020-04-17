@@ -12,9 +12,9 @@
 namespace App\Tests\Comments;
 
 use App\Entity\Figure;
-use App\Tests\AbstractWebCasse;
+use App\Tests\AbstractWebCase;
 
-class MoreComTest extends AbstractWebCasse
+class MoreComTest extends AbstractWebCase
 {
     protected function setUp(): void
     {

@@ -12,57 +12,59 @@
 
 namespace App\Actions\Medias\Video;
 
-use App\Actions\Interfaces\Medias\Video\DeleteVideoInterface;
-use App\Entity\Videolink;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\VideolinkRepository;
+use App\Responder\Interfaces\ResponderInterface;
+use App\Traits\ViewsTools;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @Route("/media/delete/video/{id}", name="delete.video")
  * @IsGranted("ROLE_USER")
  */
-class DeleteVideo implements DeleteVideoInterface
+class DeleteVideo
 {
-    /** @var UrlGeneratorInterface  */
-    private $router;
-    /** @var FlashBagInterface  */
-    private $bag;
-    /** @var EntityManagerInterface  */
-    private $manager;
+    use ViewsTools;
+
+    const TRICK = 'trick';
+
+    private FlashBagInterface $bag;
+    private VideolinkRepository $videoRepo;
+    private ResponderInterface $responder;
 
     /**
      * DeleteVideo constructor.
-     * @param UrlGeneratorInterface $router
      * @param FlashBagInterface $bag
-     * @param EntityManagerInterface $manager
+     * @param VideolinkRepository $videoRepo
+     * @param ResponderInterface $responder
      */
-    public function __construct(UrlGeneratorInterface $router, FlashBagInterface $bag, EntityManagerInterface $manager)
-    {
-        $this->router = $router;
+    public function __construct(
+        FlashBagInterface $bag,
+        VideolinkRepository $videoRepo,
+        ResponderInterface $responder
+    ) {
         $this->bag = $bag;
-        $this->manager = $manager;
+        $this->videoRepo = $videoRepo;
+        $this->responder = $responder;
     }
+
 
     /**
      * @param Request $request
      * @return RedirectResponse
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request) :RedirectResponse
     {
-        $video = $this->manager->getRepository(Videolink::class)->findBy(['id' => $request->attributes->getInt('id')]);
-        $this->manager->remove($video[0]);
-        $this->manager->flush();
+        $idVideo = $request->attributes->getInt('id');
+        $video = $this->videoRepo->findOneBy(['id' => $idVideo]);
+        $this->videoRepo->removeVideo($video);
+
         $this->bag->add('success', 'La figure a été mise a jour');
-        return new RedirectResponse(
-            $this->router->generate(
-                'trick',
-                ['slug' => $video[0]->getFigure()->getSlug()]
-            )
-        );
+        $this->displayMessage('success', 'La figure a été mise a jour');
+        $context = ['slug' => $video[0]->getFigure()->getSlug()];
+        return $this->responder->redirect(self::TRICK, $context);
     }
 }

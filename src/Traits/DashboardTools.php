@@ -4,29 +4,12 @@
 namespace App\Traits;
 
 use App\Actions\Dashboard\GetDashboard;
-use App\Repository\FigureRepository;
-use App\Services\FormResolvers\FormResolverMedias;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Twig\Environment;
 
 trait DashboardTools
 {
-    /** @var Environment  */
-    private $environment;
-    /** @var TokenStorageInterface  */
-    private $tokenStorage;
-    /** @var FormResolverMedias  */
-    private $formResolverMedias;
-    /** @var UrlGeneratorInterface  */
-    private $router;
-    /** @var FigureRepository */
-    private $trickRepo;
-
     /**
      * @return string|UserInterface
      */
@@ -60,15 +43,6 @@ trait DashboardTools
     {
         $user = $this->getConnectedUser();
         $this->formResolverMedias->updateProfilePicture($form, $user);
-    }
-
-    /**
-     * @param $routeName
-     * @return RedirectResponse
-     */
-    public function getRedirect($routeName): RedirectResponse
-    {
-        return new RedirectResponse($this->router->generate($routeName));
     }
 
     /**

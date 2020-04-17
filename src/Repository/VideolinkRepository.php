@@ -19,32 +19,9 @@ class VideolinkRepository extends ServiceEntityRepository
         parent::__construct($registry, Videolink::class);
     }
 
-    // /**
-    //  * @return Videolink[] Returns an array of Videolink objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function removeVideo(?Videolink $video)
     {
-        return $this->createQueryBuilder('v')
-            ->andWhere('v.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('v.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $this->_em->remove($video);
+        $this->_em->flush();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Videolink
-    {
-        return $this->createQueryBuilder('v')
-            ->andWhere('v.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

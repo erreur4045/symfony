@@ -4,7 +4,6 @@
 namespace App\Traits;
 
 use App\Entity\Figure;
-use App\Repository\FigureRepository;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -13,10 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 trait HomeTools
 {
-
-    /** @var FigureRepository */
-    private $tricksRepo;
-
     /**
      * @param $pageId
      * @return float|int

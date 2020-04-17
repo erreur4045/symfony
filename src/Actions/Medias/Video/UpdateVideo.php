@@ -13,19 +13,17 @@
 namespace App\Actions\Medias\Video;
 
 use App\Actions\Interfaces\Medias\Video\UpdateVideoInterface;
-use App\Entity\Figure;
-use App\Entity\Videolink;
 use App\Form\VideolinkType;
+use App\Repository\FigureRepository;
+use App\Repository\VideolinkRepository;
+use App\Responder\Interfaces\ResponderInterface;
 use App\Services\FormResolvers\FormResolverMedias;
-use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Twig\Environment;
 
 /**
  * @Route("/media/update/video/{id}", name="update.video")
@@ -33,62 +31,59 @@ use Twig\Environment;
  */
 class UpdateVideo implements UpdateVideoInterface
 {
-    /** @var FormResolverMedias  */
-    private $formResolverMedias;
-    /** @var EntityManagerInterface  */
-    private $manager;
-    /** @var FlashBagInterface  */
-    private $bag;
-    /** @var Environment  */
-    private $environment;
-    /** @var UrlGeneratorInterface  */
-    private $router;
+    const TRICK = 'trick';
+    const UPDATE_VIDEO_TWIG = 'media/UpdateVideo.html.twig';
+    private FormResolverMedias $formResolverMedias;
+    private FlashBagInterface $bag;
+    private ResponderInterface $responder;
+    private FigureRepository $figureRepo;
+    private VideolinkRepository $videoRepo;
 
     /**
      * UpdateVideo constructor.
      * @param FormResolverMedias $formResolverMedias
-     * @param EntityManagerInterface $manager
      * @param FlashBagInterface $bag
-     * @param Environment $environment
-     * @param UrlGeneratorInterface $router
+     * @param ResponderInterface $responder
+     * @param FigureRepository $figureRepo
+     * @param VideolinkRepository $videoRepo
      */
     public function __construct(
         FormResolverMedias $formResolverMedias,
-        EntityManagerInterface $manager,
         FlashBagInterface $bag,
-        Environment $environment,
-        UrlGeneratorInterface $router
+        ResponderInterface $responder,
+        FigureRepository $figureRepo,
+        VideolinkRepository $videoRepo
     ) {
         $this->formResolverMedias = $formResolverMedias;
-        $this->manager = $manager;
         $this->bag = $bag;
-        $this->environment = $environment;
-        $this->router = $router;
+        $this->responder = $responder;
+        $this->figureRepo = $figureRepo;
+        $this->videoRepo = $videoRepo;
     }
+
 
     /**
      * @param Request $request
      * @return RedirectResponse|Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
      */
     public function __invoke(Request $request)
     {
-        /** @var Videolink $exVideo */
-        $exVideo = $this->manager->getRepository(Videolink::class)->find($request->attributes->getInt('id'));
-        /** @var Figure $figure */
-        $figure = $this->manager->getRepository(Figure::class)->findOneBy(['id' => $exVideo->getFigure()->getId()]);
+        $idVideo = $request->attributes->getInt('id');
+        $expiredVideo = $this->videoRepo->find($idVideo);
+        $idFigureFrom = $expiredVideo->getFigure()->getId();
+        $figure = $this->figureRepo->findOneBy(['id' => $idFigureFrom]);
         $form = $this->formResolverMedias->getForm($request, VideolinkType::class);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->formResolverMedias->updateVideoLink($form, $figure, $exVideo);
+            $this->formResolverMedias->updateVideoLink($form, $figure, $expiredVideo);
             $this->bag->add('success', 'La video a été modifiée');
-            return new RedirectResponse($this->router->generate('trick', ['slug' => $figure->getSlug()]));
+            $context = ['slug' => $figure->getSlug()];
+            return  $this->responder->redirect(self::TRICK, $context);
         }
 
-        return new Response($this->environment->render('media/UpdateVideo.html.twig', [
-                    'form' => $form->createView(),
-                    'title' => 'Changer une image'
-                ]));
+        $contextView = [
+            'form' => $form->createView(),
+            'title' => 'Changer une image'
+        ];
+        return $this->responder->render(self::UPDATE_VIDEO_TWIG, $contextView);
     }
 }

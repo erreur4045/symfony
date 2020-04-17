@@ -11,9 +11,9 @@
 
 namespace App\Tests\Comments;
 
-use App\Tests\AbstractWebCasse;
+use App\Tests\AbstractWebCase;
 
-class EditComTest extends AbstractWebCasse
+class EditComTest extends AbstractWebCase
 {
     protected function setUp(): void
     {

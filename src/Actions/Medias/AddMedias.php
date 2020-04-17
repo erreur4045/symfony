@@ -12,9 +12,9 @@
 
 namespace App\Actions\Medias;
 
-use App\Entity\Figure;
 use App\Form\FigureAddMediaType;
 use App\Repository\FigureRepository;
+use App\Responder\Interfaces\ResponderInterface;
 use App\Services\FormResolvers\FormResolverMedias;
 use App\Traits\RequestTools;
 use App\Traits\ViewsTools;
@@ -23,11 +23,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 /**
  * @Route("/edit/medias/{slug}", name="add.medias")
@@ -40,47 +35,35 @@ class AddMedias
     const MEDIA_UPDATE_TWIG = 'media/UpdateMedias.html.twig';
     const FORM = FigureAddMediaType::class;
 
-    /** @var Environment  */
-    private $environment;
-    /** @var UrlGeneratorInterface  */
-    private $router;
-    /** @var FormResolverMedias  */
-    private $formResolverMedias;
-    /** @var FigureRepository */
-    private $figureRepo;
+    private FormResolverMedias $formResolverMedias;
+    private FigureRepository $figureRepo;
+    private ResponderInterface $responder;
 
     /**
      * AddMedias constructor.
-     * @param Environment $environment
-     * @param UrlGeneratorInterface $router
      * @param FormResolverMedias $formResolverMedias
      * @param FigureRepository $figureRepo
+     * @param ResponderInterface $responder
      */
     public function __construct(
-        Environment $environment,
-        UrlGeneratorInterface $router,
         FormResolverMedias $formResolverMedias,
-        FigureRepository $figureRepo
+        FigureRepository $figureRepo,
+        ResponderInterface $responder
     ) {
-        $this->environment = $environment;
-        $this->router = $router;
         $this->formResolverMedias = $formResolverMedias;
         $this->figureRepo = $figureRepo;
+        $this->responder = $responder;
     }
 
 
     /**
      * @param Request $request
      * @return RedirectResponse|Response
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
      */
     public function __invoke(Request $request)
     {
         $figureSlug = $this->getSlugFrom($request);
 
-        /** @var Figure $figure */
         $figure = $this->figureRepo->getTrickFromSlug($figureSlug);
 
         $form = $this->formResolverMedias->getForm($request, self::FORM);
@@ -88,13 +71,13 @@ class AddMedias
             $this->formResolverMedias->updateMedias($form, $figure);
             $this->displayMessage('success', 'Les medias ont a été ajoutés');
             $context = ['slug' => $figureSlug];
-            return new RedirectResponse($this->router->generate('trick', $context));
+            return $this->responder->redirect('trick', $context);
         }
 
         $contextView = ['form' => $form->createView(),];
-        return new Response($this->environment->render(
+        return $this->responder->render(
             self::MEDIA_UPDATE_TWIG,
             $contextView
-        ));
+        );
     }
 }

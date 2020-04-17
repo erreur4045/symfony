@@ -4,6 +4,7 @@ namespace App\Actions\Comments;
 
 use App\Repository\CommentsRepository;
 use App\Repository\FigureRepository;
+use App\Responder\Interfaces\ResponderInterface;
 use App\Traits\CommentsTools;
 use App\Traits\RequestTools;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,9 +14,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 /**
  * Class MoreCom
@@ -30,18 +28,13 @@ class MoreComments
 
     const BLOCK_COMMENTS_TWIG = 'block_for_include/block_for_coms_ajax.html.twig';
 
-    /** @var EntityManagerInterface  */
-    private $manager;
-    /** @var TokenStorageInterface  */
-    private $tokenStorage;
-    /** @var FigureRepository */
-    private $tricksRepo;
-    /** @var CommentsRepository */
-    private $commentsRepo;
-    /** @var UrlGeneratorInterface  */
-    private $router;
-    /** @var Environment  */
-    private $environment;
+    private EntityManagerInterface $manager;
+    private TokenStorageInterface $tokenStorage;
+    private FigureRepository $tricksRepo;
+    private CommentsRepository $commentsRepo;
+    private UrlGeneratorInterface $router;
+    private Environment $environment;
+    private ResponderInterface $responder;
 
     /**
      * MoreComments constructor.
@@ -51,6 +44,7 @@ class MoreComments
      * @param CommentsRepository $commentsRepo
      * @param UrlGeneratorInterface $router
      * @param Environment $environment
+     * @param ResponderInterface $responder
      */
     public function __construct(
         EntityManagerInterface $manager,
@@ -58,7 +52,8 @@ class MoreComments
         FigureRepository $tricksRepo,
         CommentsRepository $commentsRepo,
         UrlGeneratorInterface $router,
-        Environment $environment
+        Environment $environment,
+        ResponderInterface $responder
     ) {
         $this->manager = $manager;
         $this->tokenStorage = $tokenStorage;
@@ -66,17 +61,15 @@ class MoreComments
         $this->commentsRepo = $commentsRepo;
         $this->router = $router;
         $this->environment = $environment;
+        $this->responder = $responder;
     }
 
 
     /**
      * @param Request $request
      * @return Response
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request) :Response
     {
         $pageId = $this->getPageId($request);
         $trickId = $this->getTrickId($request);
@@ -87,11 +80,6 @@ class MoreComments
             'commentsToShow' => $this->commentsRepo->getCommentsToShow($trickId, $offset),
             'rest' => $this->isRest($countComments, $pageId)
         ];
-        return new Response(
-            $this->environment->render(
-                self::BLOCK_COMMENTS_TWIG,
-                $contextView
-            )
-        );
+        return $this->responder->render(self::BLOCK_COMMENTS_TWIG, $contextView);
     }
 }
