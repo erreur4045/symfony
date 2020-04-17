@@ -9,13 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 abstract class FormResolver implements FormResolverInterface
 {
-    /** @var FormFactoryInterface  */
-    protected $formFactory;
+    protected FormFactoryInterface $formFactory;
 
-    /**
-     * FormResolver constructor.
-     * @param FormFactoryInterface $formFactory
-     */
     public function __construct(FormFactoryInterface $formFactory)
     {
         $this->formFactory = $formFactory;

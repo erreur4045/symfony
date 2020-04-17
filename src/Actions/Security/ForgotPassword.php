@@ -29,11 +29,11 @@ use Twig\Environment;
 class ForgotPassword implements ForgotPasswordInterface
 {
     /** @var Environment  */
-    private $templating;
+    private Environment $templating;
     /** @var  FormResolverPasswordRecovery */
-    private $formResolverPasswordRecovery;
+    private FormResolverPasswordRecovery $formResolverPasswordRecovery;
     /** @var UrlGeneratorInterface  */
-    private $router;
+    private UrlGeneratorInterface $router;
 
     /**
      * ForgotPassword constructor.

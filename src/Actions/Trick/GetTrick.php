@@ -37,18 +37,12 @@ use Twig\Environment;
  */
 class GetTrick implements GetTrickInterface
 {
-    /** @var Environment  */
-    private $templating;
-    /** @var UrlGeneratorInterface  */
-    private $router;
-    /** @var EntityManagerInterface  */
-    private $manager;
-    /** @var FlashBagInterface  */
-    private $bag;
-    /** @var TokenStorageInterface  */
-    private $tokenStorage;
-    /** @var FormResolverComment  */
-    private $formResolverComment;
+    private Environment $templating;
+    private UrlGeneratorInterface $router;
+    private EntityManagerInterface $manager;
+    private FlashBagInterface $bag;
+    private TokenStorageInterface $tokenStorage;
+    private FormResolverComment $formResolverComment;
 
     /**
      * GetTrick constructor.

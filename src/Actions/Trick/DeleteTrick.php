@@ -35,18 +35,12 @@ class DeleteTrick
 {
     use UploaderFileTools, PictureTools, DoctrineTools, ViewsTools;
 
-    /** @var UrlGeneratorInterface  */
-    private $router;
-    /** @var EntityManagerInterface  */
-    private $manager;
-    /** @var FlashBagInterface  */
-    private $bag;
-    /** @var Filesystem  */
-    private $filesystem;
-    /** @var string */
-    private $tricksPicturesDirectory;
-    /** @var PictureslinkRepository */
-    private $pictureRepo;
+    private UrlGeneratorInterface $router;
+    private EntityManagerInterface $manager;
+    private FlashBagInterface $bag;
+    private Filesystem $filesystem;
+    private string $tricksPicturesDirectory;
+    private PictureslinkRepository $pictureRepo;
 
     /**
      * DeleteTrick constructor.

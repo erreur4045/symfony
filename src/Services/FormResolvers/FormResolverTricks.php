@@ -17,15 +17,10 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class FormResolverTricks extends FormResolver implements FormResolverTricksInterface
 {
-
-    /** @var string */
-    private $tricksPicturesDirectory;
-    /** @var EntityManagerInterface  */
-    private $manager;
-    /** @var FlashBagInterface  */
-    private $bag;
-    /** @var FormFactoryInterface  */
-    protected $formFactory;
+    private string $tricksPicturesDirectory;
+    private EntityManagerInterface $manager;
+    private FlashBagInterface $bag;
+    protected FormFactoryInterface $formFactory;
 
     /**
      * FormResolverTricks constructor.

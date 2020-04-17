@@ -35,14 +35,10 @@ use Twig\Environment;
  */
 class EditTrick implements EditTrickInterface
 {
-    /** @var Environment  */
-    private $templating;
-    /** @var UrlGeneratorInterface  */
-    private $router;
-    /** @var EntityManagerInterface  */
-    private $manager;
-    /** @var FormResolverTricks */
-    private $formResolverTricks;
+    private Environment $templating;
+    private UrlGeneratorInterface $router;
+    private EntityManagerInterface $manager;
+    private FormResolverTricks $formResolverTricks;
 
     /**
      * EditTrick constructor.

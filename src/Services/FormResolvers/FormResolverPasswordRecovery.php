@@ -14,16 +14,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class FormResolverPasswordRecovery extends FormResolver implements FormResolverPasswordRecoveryInterface
 {
-    /** @var EntityManagerInterface  */
-    private $manager;
-    /** @var FlashBagInterface  */
-    private $bag;
-    /** @var UrlGeneratorInterface  */
-    private $router;
-    /** @var MailSender  */
-    private $mailSender;
-    /** @var FormFactoryInterface  */
-    protected $formFactory;
+    private EntityManagerInterface $manager;
+    private FlashBagInterface $bag;
+    private UrlGeneratorInterface $router;
+    private MailSender $mailSender;
+    protected FormFactoryInterface $formFactory;
 
     /**
      * FormResolverPasswordRecovery constructor.

@@ -18,19 +18,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class AppFixtures extends Fixture
 {
 
-    /**
-     * Allows the password to be encoded for storage in the database
-     *
-     * @var UserPasswordEncoderInterface
-     */
-    private $encoder;
-
-    /**
-     * Path to the folder that contains the pictures
-     *
-     * @var string
-     */
-    private $tricksPicturesDirectory;
+    private UserPasswordEncoderInterface $encoder;
+    private string $tricksPicturesDirectory;
 
     public function __construct(
         UserPasswordEncoderInterface $encoder,

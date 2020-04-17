@@ -28,18 +28,12 @@ class FormResolverMedias extends FormResolver
 
     use PictureTools, DoctrineTools, ViewsTools, UploaderFileTools;
 
-    /** @var EntityManagerInterface  */
-    private $manager;
-    /** @var FlashBagInterface  */
-    private $bag;
-    /** @var UploaderPicture  */
-    private $uploaderPicture;
-    /** @var Filesystem  */
-    private $filesystem;
-    /** @var string */
-    private $tricksPicturesDirectory;
-    /** @var FormFactoryInterface  */
-    protected $formFactory;
+    private EntityManagerInterface $manager;
+    private FlashBagInterface $bag;
+    private UploaderPicture $uploaderPicture;
+    private Filesystem $filesystem;
+    private string $tricksPicturesDirectory;
+    protected FormFactoryInterface $formFactory;
 
     /**
      * FormResolverMedias constructor.

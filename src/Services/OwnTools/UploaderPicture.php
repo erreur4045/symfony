@@ -12,14 +12,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class UploaderPicture
 {
-    /** @var string  */
-    private $pictureLinkDirectory;
-
-    /** @var Filesystem  */
-    private $filesystem;
-
-    /** @var EntityManagerInterface  */
-    private $manager;
+    private string $pictureLinkDirectory;
+    private Filesystem $filesystem;
+    private EntityManagerInterface $manager;
 
     /**
      * UploaderPicture constructor.

@@ -10,8 +10,7 @@ use Symfony\Component\Mailer\SentMessage;
 
 class MailSender implements MailSenderInterface
 {
-    /** @var MailerInterface  */
-    private $mailer;
+    private MailerInterface $mailer;
 
     /**
      * MailSender constructor.

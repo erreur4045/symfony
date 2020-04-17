@@ -12,7 +12,6 @@
 
 namespace App\Actions\Medias\Video;
 
-use App\Actions\Interfaces\Medias\Video\UpdateVideoInterface;
 use App\Form\VideolinkType;
 use App\Repository\FigureRepository;
 use App\Repository\VideolinkRepository;
@@ -29,7 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * @Route("/media/update/video/{id}", name="update.video")
  * @IsGranted("ROLE_USER")
  */
-class UpdateVideo implements UpdateVideoInterface
+class UpdateVideo
 {
     const TRICK = 'trick';
     const UPDATE_VIDEO_TWIG = 'media/UpdateVideo.html.twig';

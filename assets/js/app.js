@@ -17,7 +17,7 @@ function openModal(slug,message)
 {
     $('#exampleModal').modal('show');
     $('#exampleModal .modal-body').text(message);
-    $('#exampleModal .btn_delete_modal').off('click').on('click', function() {
+    $('#exampleModal .btn_delete_modal').off('click').on('click', function () {
         location.href = slug;
     });
 }
@@ -33,7 +33,7 @@ $('#btn_see_media').on('click',function () {
     document.getElementById("btn_see_media").style.display = "none";
 });
 
-$(document).scroll(function() {
+$(document).scroll(function () {
     var y = $(this).scrollTop();
     if (y > 300) {
         $('.bottom-buttom').fadeIn();

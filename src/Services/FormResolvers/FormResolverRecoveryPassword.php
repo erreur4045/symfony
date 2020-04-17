@@ -12,14 +12,10 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class FormResolverRecoveryPassword extends FormResolver implements FormResolverRecoveryPasswordInterface
 {
-    /** @var EntityManagerInterface  */
-    private $manager;
-    /** @var FlashBagInterface  */
-    private $bag;
-    /** @var UserPasswordEncoderInterface  */
-    private $encoder;
-    /** @var FormFactoryInterface  */
-    protected $formFactory;
+    private EntityManagerInterface $manager;
+    private FlashBagInterface $bag;
+    private UserPasswordEncoderInterface $encoder;
+    protected FormFactoryInterface $formFactory;
 
     /**
      * FormResolverRecoveryPassword constructor.

@@ -31,14 +31,10 @@ use Twig\Environment;
  */
 class ResetPassword implements ResetPasswordInterface
 {
-    /** @var Environment  */
-    private $templating;
-    /** @var UrlGeneratorInterface  */
-    private $router;
-    /** @var EntityManagerInterface  */
-    private $manager;
-    /** @var FormResolverRecoveryPassword */
-    private $formResolverRecoveryPassword;
+    private Environment $templating;
+    private UrlGeneratorInterface $router;
+    private EntityManagerInterface $manager;
+    private FormResolverRecoveryPassword $formResolverRecoveryPassword;
 
     /**
      * ResetPassword constructor.

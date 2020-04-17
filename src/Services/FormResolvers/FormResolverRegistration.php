@@ -12,20 +12,14 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use App\Services\FormResolvers\FormResolver;
 
 class FormResolverRegistration extends FormResolver implements FormResolverRegistrationInterface
 {
-    /** @var EntityManagerInterface  */
-    private $manager;
-    /** @var FlashBagInterface  */
-    private $bag;
-    /** @var UserPasswordEncoderInterface  */
-    private $encoder;
-    /** @var UploaderPicture  */
-    private $uploaderPicture;
-    /** @var FormFactoryInterface  */
-    protected $formFactory;
+    private EntityManagerInterface $manager;
+    private FlashBagInterface $bag;
+    private UserPasswordEncoderInterface $encoder;
+    private UploaderPicture $uploaderPicture;
+    protected FormFactoryInterface $formFactory;
 
     /**
      * FormResolverRegistration constructor.

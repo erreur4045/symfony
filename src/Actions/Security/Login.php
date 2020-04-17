@@ -23,8 +23,7 @@ use Twig\Environment;
  */
 class Login implements LoginInterface
 {
-    /** @var Environment  */
-    private $environment;
+    private Environment $environment;
 
     /**
      * Login constructor.
@@ -38,9 +37,6 @@ class Login implements LoginInterface
     /**
      * @param AuthenticationUtils $authenticationUtils
      * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
      */
     public function __invoke(AuthenticationUtils $authenticationUtils): Response
     {

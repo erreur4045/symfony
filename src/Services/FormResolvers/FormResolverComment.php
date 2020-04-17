@@ -21,12 +21,9 @@ use Twig\Error\SyntaxError;
 
 class FormResolverComment extends FormResolver
 {
-    /** @var EntityManagerInterface  */
-    private $manager;
-    /** @var FormFactoryInterface  */
-    protected $formFactory;
-    /** @var Environment  */
-    private $environment;
+    private EntityManagerInterface $manager;
+    protected FormFactoryInterface $formFactory;
+    private Environment $environment;
 
     /**
      * FormResolverComment constructor.

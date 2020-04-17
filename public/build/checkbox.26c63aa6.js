@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([["checkbox"],{kJSn:function(c,n,e){(function(c){c((function(){c(document).delegate(".checkbox_check","change",(function(n){if(c(this).is(":checked")){var e=c(".checkbox_check"),i=c(this).data("id");e.each((function(n,e){c(e).data("id")!==i&&c(e).prop("checked",!1)}))}}))}))}).call(this,e("EVdn"))}},[["kJSn","runtime",0]]]);

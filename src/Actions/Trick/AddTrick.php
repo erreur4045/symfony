@@ -35,16 +35,11 @@ use Twig\Error\SyntaxError;
  */
 class AddTrick implements AddTrickInterface
 {
-    /** @var Environment  */
-    private $templating;
-    /** @var UrlGeneratorInterface  */
-    private $router;
-    /** @var EntityManagerInterface  */
-    private $manager;
-    /** @var TokenStorageInterface  */
-    private $tokenStorage;
-    /** @var FormResolverTricks */
-    private $formResolverTricks;
+    private Environment $templating;
+    private UrlGeneratorInterface $router;
+    private EntityManagerInterface $manager;
+    private TokenStorageInterface $tokenStorage;
+    private FormResolverTricks $formResolverTricks;
 
     /**
      * AddTrick constructor.

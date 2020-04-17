@@ -14,11 +14,11 @@ $('.btn_load_coms').on('click', function () {
         url: url,
         success: function (response) {
             coms.append(response);
-            loadMore.data('page', page + 1 );
+            loadMore.data('page', page + 1);
             document.getElementById("loader").style.visibility = "hidden";
             $('#coms_list').css('pointer-events', 'all');
             $('#btn_load_coms').css('pointer-events', 'all');
-            if (page >= pagemax){
+            if (page >= pagemax) {
                 $('.btn_load_coms').remove();
             }
         }

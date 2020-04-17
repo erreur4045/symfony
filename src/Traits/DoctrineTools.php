@@ -3,13 +3,8 @@
 
 namespace App\Traits;
 
-use Doctrine\ORM\EntityManagerInterface;
-
 trait DoctrineTools
 {
-    /** @var EntityManagerInterface  */
-    private $manager;
-
     /**
      * @param object $object
      */

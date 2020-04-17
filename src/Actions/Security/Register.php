@@ -28,12 +28,10 @@ use Twig\Environment;
  */
 class Register implements RegisterInterface
 {
-    /** @var FormResolverRegistration */
-    private $fromResolverRegistration;
-    /** @var UrlGeneratorInterface  */
-    private $router;
-    /** @var Environment  */
-    private $templating;
+
+    private FormResolverRegistration $fromResolverRegistration;
+    private UrlGeneratorInterface $router;
+    private Environment $templating;
 
     /**
      * Register constructor.
